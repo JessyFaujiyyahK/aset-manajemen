@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laporan</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../../public/css/admin-aset.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="../../public/images/logo.png" class="logo-stmik" />
+        </a>
+        <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
+        <span class="navbar-brand-admin">Admin</span>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-3 sidebar">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#"
+                ><img
+                  src="../../public/images/Dashboard.png"
+                  alt="Logo"
+                  class="logo-sidebar"
+                />Dashboard</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"
+                ><img
+                  src="../../public/images/aset.png"
+                  alt="Logo"
+                  class="logo-sidebar"
+                />Data Aset</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <img
+                  src="../../public/images/laporan.png"
+                  alt="Logo"
+                  class="logo-sidebar"
+                />Laporan</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-8 content-box">
+          <!-- Konten dalam kotak -->
+          <h2>Laporan</h2>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="entriesDropdown" class="form-label">Show:</label>
+              <select class="form-select" id="entriesDropdown">
+                <option selected>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+              </select>
+              <span>entries</span>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search..." aria-label="Search">
+                <button class="btn btn-outline-secondary" type="button">Search</button>
+              </div>
+            </div>
+          </div>          
+          <!-- Elemen tabel -->
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">ID Kategori</th>
+                <th scope="col">Nama Jenis</th>
+                <th scope="col">Jumlah</th>
+                <th scope="col">Lokasi</th>
+                <th scope="col">Sumber</th>
+                <th scope="col">Nilai</th>
+                <th scope="col">Kondisi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <!-- Tambahkan lebih banyak baris sesuai dengan data Anda -->
+            </tbody>
+          </table>
+          <div class="text-center">
+            <button class="btn btn-primary mx-2">.pdf</button>
+            <button class="btn btn-primary mx-2">.xls</button>
+          </div>          
+        </div>
+        
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

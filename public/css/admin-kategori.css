@@ -1,0 +1,199 @@
+body {
+  background-color: #edf2f4;
+}
+
+.navbar {
+  background-color: #e2eef3;
+}
+
+.navbar-brand {
+  line-height: 33px;
+  color: #000000;
+  margin-left: 30px;
+}
+
+.navbar-brand-judul {
+  margin-left: 50px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 33px;
+  color: #665b5b;
+  text-decoration: none;
+}
+
+.navbar-brand-admin {
+  margin-left: auto; /* Mendorong tulisan "Admin" ke sisi kanan */
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 33px;
+  color: #665b5b;
+}
+
+.logo-stmik {
+  width: 150px;
+}
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-item {
+  margin-bottom: 10px;
+  position: relative;
+  color: #665b5b;
+}
+
+.nav-link {
+  display: block;
+  padding: 10px 20px;
+  transition: background-color 0.1s ease;
+  text-decoration: none;
+  color: #665b5b;
+}
+
+.nav-link:visited {
+  color: #665b5b; /* Warna teks submenu dan submenu yang sudah dikunjungi */
+  text-decoration: none;
+  transition: color 0.1s ease;
+}
+.nav-link:hover {
+  background-color: #e2eef3;
+  color: #665b5b;
+}
+
+/* Sembunyikan submenu secara default */
+.submenu {
+  display: none;
+  padding-left: 20px; /* Tambahkan padding agar terlihat terpisah dari menu utama */
+}
+
+/* Tampilkan submenu saat menu "Master Data" dihover */
+.nav-item:hover .submenu {
+  display: block;
+}
+
+/* Gaya untuk submenu item */
+.submenu .nav-item {
+  margin-bottom: 10px;
+  display: inline;
+}
+
+.submenu .navlink {
+  margin-left: 20px; /* Atur margin kiri submenu item */
+}
+
+/* Gaya untuk tautan submenu */
+.submenu .nav-link,
+.submenu .nav-link:visited {
+  color: #665b5b; /* Warna teks submenu dan submenu yang sudah dikunjungi */
+  text-decoration: none;
+  transition: color 0.1s ease;
+}
+
+/* Gaya untuk tautan submenu saat dihover */
+.submenu .nav-link:hover {
+  color: #665b5b;
+}
+
+.logo-sidebar {
+  width: 20px;
+  height: auto;
+  margin-right: 10px;
+}
+/*------------------------------------------------------------------------------------*/
+.content-box {
+  width: 70%; /* Mengatur lebar konten box */
+  margin-left: 5%; /* Mengatur margin kiri agar konten terpusat */
+  margin-bottom: auto;
+  margin-top: 30px;
+  padding: 20px; /* Mengatur ruang dalam konten box */
+  background-color: #ffffff;
+  border-radius: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+  width: 100%; /* Menyesuaikan lebar tabel dengan parentnya */
+  font-size: 14px; /* Mengurangi ukuran font dalam tabel */
+  margin-top: 40px; /* Mengatur margin atas */
+}
+
+.table th,
+.table td {
+  padding: 10px; /* Mengatur padding dalam sel tabel */
+  text-align: center; /* Pusatkan teks dalam sel tabel */
+}
+
+.btn-primary {
+  margin-top: 10px; /* Mengatur margin atas tombol "Add" */
+  background-color: #e2eef3;
+  border-color: #e2eef3;
+  color: #665b5b;
+  font-size: 15px;
+  font-weight: bold;
+  width: auto; /* Atur lebar kotak */
+  height: auto; /* Atur tinggi kotak */
+  transition: color 0.1s ease;
+}
+
+.form-select {
+  font-size: 15px;
+  height: 40px;
+  width: 90px; /* Lebar dropdown */
+  display: inline-block;
+  margin-top: 30px; /* Mengatur margin atas tombol "Add" */
+  margin-right: 10px; /* Jarak antara dropdown dan teks "entries" */
+}
+
+.input-group {
+  margin-top: 30px;
+  width: 200px;
+  height: auto;
+  margin-left: auto;
+}
+
+.input-group input[type="text"] {
+  font-size: 15px;
+  height: 40px;
+  background-color: white;
+  color: #665b5b;
+  padding: 10px;
+  border-radius: 5px;
+  /* Efek transisi saat berubah warna */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.input-group button {
+  font-size: 15px;
+  height: 40px;
+  background-color: #e2eef3;
+  color: #665b5b;
+  border: none;
+  border-radius: 5px;
+  margin-left: -1px; /* Menghilangkan spasi antara input dan tombol */
+  /* Efek transisi saat berubah warna */
+  transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+.input-group:hover {
+  background-color: #e2eef3;
+  color: #665b5b;
+}
+
+.input-group:hover input[type="text"] {
+  background-color: white; /* Ubah warna latar belakang input menjadi biru saat dihover */
+  color: white; /* Ubah warna teks input menjadi putih saat dihover */
+}
+
+.input-group:hover button {
+  background-color: blue; /* Ubah warna latar belakang tombol menjadi biru saat dihover */
+  color: white; /* Ubah warna teks tombol menjadi putih saat dihover */
+}

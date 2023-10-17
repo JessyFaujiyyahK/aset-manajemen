@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/login.css" />
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-content">
+              <h3 class="text-center">Manajemen Aset</h3>
+              <div class="card-body">
+                <form action="/auth-mhs" method="POST">
+                  <div class="form-group">
+                    <label for="username">
+                      <img src="/images/mdi_user.png" alt="Logo" class="logo" />
+                      <b>Username : </b></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="username"
+                      name="username"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="password">
+                      <img
+                        src="/images/material-symbols_key.png"
+                        alt="Logo"
+                        class="logo"
+                      />
+                      <b>Password : </b></label
+                    >
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      name="password"
+                      required
+                    />
+                    <!-- <a href="#" class="forgot-password">Forgot Password</a> -->
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                      Sign In
+                    </button>
+                    <br />
+                    <div class="signup-text">
+                      <span
+                        >Don't Have an account?
+                        <a href="/register">Register</a></span
+                      >
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tambah Aset</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../../public/css/admin-tambah.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="../../public/images/logo.png" class="logo-stmik" />
+        </a>
+        <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
+        <span class="navbar-brand-admin">Admin</span>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="sidebar">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#"
+                ><img
+                  src="../../public/images/Dashboard.png"
+                  alt="Logo"
+                  class="logo-sidebar"
+                />Dashboard</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"
+                ><img
+                  src="../../public/images/aset.png"
+                  alt="Logo"
+                  class="logo-sidebar"
+                />Data Aset</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <img
+                  src="../../public/images/laporan.png"
+                  alt="Logo"
+                  class="logo-sidebar"
+                />Laporan</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-md-8 content-box">
+          <h2>Tambah Data Aset</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <form action="/submit" method="post">
+                <div class="form-group">
+                  <label for="kategori">ID Kategori : </label>
+                  <select
+                    id="kategori"
+                    name="kategori"
+                    class="form-select"
+                    required
+                  >
+                    <option value="">Pilih Kategori :</option>
+                    <option value="1">Kategori 1</option>
+                    <option value="2">Kategori 2</option>
+                    <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="jenis">Nama Jenis :</label>
+                  <select id="jenis" name="jenis" class="form-select" required>
+                    <option value="">Pilih Jenis</option>
+                    <option value="1">Jenis 1</option>
+                    <option value="2">Jenis 2</option>
+                    <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="Jumlah">Jumlah :</label>
+                  <input
+                    type="number"
+                    id="Jumlah"
+                    name="Jumlah"
+                    required
+                    class="form-control"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="lokasi">Lokasi :</label>
+                  <select
+                    id="lokasi"
+                    name="lokasi"
+                    class="form-select"
+                    required
+                  >
+                    <option value="">Pilih Lokasi</option>
+                    <option value="1">Lokasi 1</option>
+                    <option value="2">Lokasi 2</option>
+                    <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
+                  </select>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <form action="/submit" method="post">
+                <div class="form-group">
+                  <label for="sumber">Sumber :</label>
+                  <select
+                    id="sumber"
+                    name="sumber"
+                    class="form-select"
+                    required
+                  >
+                    <option value="">Pilih Sumber</option>
+                    <option value="1">Baik</option>
+                    <option value="2">Rusak</option>
+                    <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="kondisi">Kondisi :</label>
+                  <select
+                    id="kondisi"
+                    name="kondisi"
+                    class="form-select"
+                    required
+                  >
+                    <option value="">Pilih Kondisi</option>
+                    <option value="1">Baik</option>
+                    <option value="2">Rusak</option>
+                    <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="nilai">Nilai :</label>
+                  <input
+                    type="number"
+                    id="nilai"
+                    name="nilai"
+                    required
+                    class="form-control"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center mt-3">
+            <button type="submit" class="btn btn-primary me-2">Tambah</button>
+            <button type="button" class="btn btn-secondary">Batal</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

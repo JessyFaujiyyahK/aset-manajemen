@@ -1,0 +1,69 @@
+body {
+  background-image: url("/images/manajemen-aset.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.card {
+  background: rgba(234, 233, 233, 0.9);
+  border: 1px solid #000000;
+  border-radius: 30px;
+  max-width: 350px;
+  margin: auto;
+}
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  height: 100%;
+}
+.text-center {
+  font-family: "Bebas Neue";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 25px;
+  line-height: 50px;
+  text-align: center;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6da0ed;
+  margin-top: 30px;
+}
+
+.form-control {
+  font-size: 15px;
+  width: 250px;
+  height: 35px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+  border: 1px solid #000000;
+}
+
+.forgot-password {
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.7);
+  float: right;
+}
+
+.btn.btn-primary {
+  margin-top: 10px;
+  font-size: 15px;
+  width: 250px;
+  height: 35px;
+  left: 562px;
+  top: 598px;
+  background: #198754;
+  border-radius: 10px;
+}
+
+.signup-text {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.7);
+}

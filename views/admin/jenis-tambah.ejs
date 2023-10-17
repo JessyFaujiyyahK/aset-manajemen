@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tambah Jenis Admin</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../../public/css/admin-tambah.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="../../public/images/logo.png" class="logo-stmik" />
+        </a>
+        <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
+        <span class="navbar-brand-admin">Admin</span>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="sidebar">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/dashboard">
+                <img
+                  src="/images/Dashboard.png"
+                  alt="Logo"
+                  class="logo-sidebar"
+                />
+                Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/aset">
+                <img src="/images/aset.png" alt="Logo" class="logo-sidebar" />
+                Master Data
+              </a>
+              <ul class="submenu">
+                <li class="nav-item">
+                  <a class="nav-link" href="/aset">Aset</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/kategori">Kategori</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/jenis">Jenis</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/lokasi">Lokasi</a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/laporan">
+                <img
+                  src="/images/laporan.png"
+                  alt="Logo"
+                  class="logo-sidebar"
+                />
+                Laporan
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-md-8 content-box">
+          <h2>Tambah Jenis</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <form action="/jenis/tambah" method="post">
+                <label for="id_kategori">ID Kategori:</label>
+                <input
+                  type="number"
+                  id="id_kategori"
+                  name="id_kategori"
+                  required
+                /><br />
+                <label for="nama_jenis">Nama Jenis:</label>
+                <input
+                  type="text"
+                  id="nama_jenis"
+                  name="nama_jenis"
+                  required
+                /><br />
+                <button type="submit">Tambah</button>
+              </form>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center mt-3">
+            <button type="submit" class="btn btn-primary me-2">Tambah</button>
+            <button type="button" class="btn btn-secondary">Batal</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,156 @@
+body {
+  background-color: #edf2f4;
+}
+
+.navbar {
+  background-color: #e2eef3;
+}
+
+.navbar-brand {
+  line-height: 33px;
+  color: #000000;
+  margin-left: 30px;
+}
+
+.navbar-brand-judul {
+  margin-left: 50px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 33px;
+  color: #665b5b;
+  text-decoration: none;
+}
+
+.navbar-brand-admin {
+  margin-left: auto; /* Mendorong tulisan "Admin" ke sisi kanan */
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 33px;
+  color: #665b5b;
+}
+
+.logo-stmik {
+  width: 150px;
+}
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-item {
+  margin-bottom: 10px;
+  position: relative;
+  color: #665b5b;
+}
+
+.nav-link {
+  display: block;
+  padding: 10px 20px;
+  transition: background-color 0.1s ease;
+  text-decoration: none;
+  color: #665b5b;
+}
+
+.nav-link:visited {
+  color: #665b5b; /* Warna teks submenu dan submenu yang sudah dikunjungi */
+  text-decoration: none;
+  transition: color 0.1s ease;
+}
+.nav-link:hover {
+  background-color: #e2eef3;
+  color: #665b5b;
+}
+
+/* Sembunyikan submenu secara default */
+.submenu {
+  display: none;
+  padding-left: 20px; /* Tambahkan padding agar terlihat terpisah dari menu utama */
+}
+
+/* Tampilkan submenu saat menu "Master Data" dihover */
+.nav-item:hover .submenu {
+  display: block;
+}
+
+/* Gaya untuk submenu item */
+.submenu .nav-item {
+  margin-bottom: 10px;
+  display: inline;
+}
+
+.submenu .navlink {
+  margin-left: 20px; /* Atur margin kiri submenu item */
+}
+
+/* Gaya untuk tautan submenu */
+.submenu .nav-link,
+.submenu .nav-link:visited {
+  color: #665b5b; /* Warna teks submenu dan submenu yang sudah dikunjungi */
+  text-decoration: none;
+  transition: color 0.1s ease;
+}
+
+/* Gaya untuk tautan submenu saat dihover */
+.submenu .nav-link:hover {
+  color: #665b5b;
+}
+
+.logo-sidebar {
+  width: 20px;
+  height: auto;
+  margin-right: 10px;
+}
+/*------------------------------------------------------------------------------------*/
+.content-box {
+  width: 70%; /* Mengatur lebar konten box */
+  margin-left: 5%; /* Mengatur margin kiri agar konten terpusat */
+  margin-bottom: auto;
+  margin-top: 30px;
+  padding: 20px; /* Mengatur ruang dalam konten box */
+  background-color: #ffffff;
+  border-radius: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 25px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+}
+
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-group input[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.form-group input[type="submit"]:hover {
+  background-color: #0056b3;
+}
