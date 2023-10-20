@@ -95,11 +95,20 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="jenis">Nama Jenis :</label>
+                  <label for="jenis">ID Jenis :</label>
                   <select id="jenis" name="jenis" class="form-select" required>
                     <option value="">Pilih Jenis</option>
                     <option value="1">Jenis 1</option>
                     <option value="2">Jenis 2</option>
+                    <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="aset">ID Aset :</label>
+                  <select id="aset" name="aset" class="form-select" required>
+                    <option value="">Pilih Aset</option>
+                    <option value="1">Aset 1</option>
+                    <option value="2">Aset 2</option>
                     <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
                   </select>
                 </div>
@@ -113,6 +122,10 @@
                     class="form-control"
                   />
                 </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <form action="/submit" method="post">
                 <div class="form-group">
                   <label for="lokasi">Lokasi :</label>
                   <select
@@ -127,23 +140,15 @@
                     <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
                   </select>
                 </div>
-              </form>
-            </div>
-            <div class="col-md-6">
-              <form action="/submit" method="post">
                 <div class="form-group">
                   <label for="sumber">Sumber :</label>
-                  <select
+                  <input
+                    type="string"
                     id="sumber"
                     name="sumber"
-                    class="form-select"
                     required
-                  >
-                    <option value="">Pilih Sumber</option>
-                    <option value="1">Baik</option>
-                    <option value="2">Rusak</option>
-                    <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
-                  </select>
+                    class="form-control"
+                  />
                 </div>
                 <div class="form-group">
                   <label for="kondisi">Kondisi :</label>

@@ -40,8 +40,6 @@ app.use(express.static("public"));
 //set view engine to ejs
 app.set("view engine", "ejs");
 
-app.use(express.urlencoded({ extended: true }));
-
 app.get("/", (req, res) => {
   req.session.register = false;
   const test = true;
@@ -132,37 +130,40 @@ app.post("/account-register", (req, res) => {
   });
 });
 
-//endpoint admin
-
-// Rute untuk halaman dashboard
 app.get("/dashboard/admin", (req, res) => {
-  // Anda dapat menyesuaikan data yang akan ditampilkan pada dashboard di sini
-  const totalAset = 100;
-  const nilaiAsetLokasi = {
-    Lokasi1: 50000,
-    Lokasi2: 70000,
-  };
-  const jumlahAsetKategori = {
-    Kategori1: 40,
-    Kategori2: 60,
-  };
+  if (req.session.isadmin) {
+    // Rute ini sekarang dilindungi dan hanya dapat diakses oleh pengguna yang sudah login dan adalah admin
+    const totalAset = 100;
+    const nilaiAsetLokasi = {
+      Lokasi1: 50000,
+      Lokasi2: 70000,
+    };
+    const jumlahAsetKategori = {
+      Kategori1: 40,
+      Kategori2: 60,
+    };
 
-  // Render halaman dashboard.ejs dengan data yang diberikan
-  res.render("admin/dashboard", {
-    totalAset: totalAset,
-    nilaiAsetLokasi: nilaiAsetLokasi,
-    jumlahAsetKategori: jumlahAsetKategori,
-  });
+    // Render halaman dashboard.ejs dengan data yang diberikan
+    res.render("admin/dashboard", {
+      totalAset: totalAset,
+      nilaiAsetLokasi: nilaiAsetLokasi,
+      jumlahAsetKategori: jumlahAsetKategori,
+    });
+  } else {
+    res.redirect("/");
+  }
 });
 
 // Menampilkan halaman kategori
 app.get("/kategori", (req, res) => {
-  // Mengambil data kategori dari basis data MySQL
-  connection.query("SELECT * FROM kategori", (error, results) => {
-    if (error) throw error;
-    // Menampilkan halaman kategori dengan data kategori
-    res.render("admin/kategori", { kategoris: results });
-  });
+  if (req.session.isadmin) {
+    // Mengambil data kategori dari basis data MySQL
+    connection.query("SELECT * FROM kategori", (error, results) => {
+      if (error) throw error;
+      // Menampilkan halaman kategori dengan data kategori
+      res.render("admin/kategori", { kategoris: results });
+    });
+  }
 });
 
 // Menampilkan tampilan tambah kategori (GET request)
@@ -172,13 +173,17 @@ app.get("/kategori/tambah", (req, res) => {
 
 // Handle POST request to add a new category
 app.post("/kategori/tambah", (req, res) => {
-  const { idkategori, kategori } = req.body;
-  const query = `INSERT INTO kategori (id_kategori, nama_kategori) VALUES (${idkategori}, '${kategori}')`;
-  connection.query(query, (error, results, fields) => {
-    if (error) throw error;
-    console.log("Category added successfully!");
-    res.redirect("/kategori");
-  });
+  if (req.session.isadmin) {
+    const { idkategori, kategori } = req.body;
+    const query = `INSERT INTO kategori (id_kategori, nama_kategori) VALUES (${idkategori}, '${kategori}')`;
+    connection.query(query, (error, results, fields) => {
+      if (error) throw error;
+      console.log("Category added successfully!");
+      res.redirect("/kategori");
+    });
+  } else {
+    res.redirect("/");
+  }
 });
 
 // Menampilkan halaman edit kategori
@@ -219,10 +224,14 @@ app.get("/kategori/delete/:id", (req, res) => {
 
 // Endpoint untuk menampilkan daftar jenis
 app.get("/jenis", (req, res) => {
-  connection.query("SELECT * FROM jenis", (error, results, fields) => {
-    if (error) throw error;
-    res.render("admin/jenis", { jenis: results });
-  });
+  if (req.session.isadmin) {
+    connection.query("SELECT * FROM jenis", (error, results, fields) => {
+      if (error) throw error;
+      res.render("admin/jenis", { jenis: results });
+    });
+  } else {
+    res.redirect("/");
+  }
 });
 
 // Endpoint untuk menampilkan halaman tambah jenis
@@ -273,12 +282,16 @@ app.get("/jenis/tambah", (req, res) => {
 
 // Menampilkan halaman kategori
 app.get("/lokasi", (req, res) => {
-  // Mengambil data kategori dari basis data MySQL
-  connection.query("SELECT * FROM lokasi", (error, results) => {
-    if (error) throw error;
-    // Menampilkan halaman kategori dengan data kategori
-    res.render("admin/lokasi", { lokasi: results });
-  });
+  if (req.session.isadmin) {
+    // Mengambil data kategori dari basis data MySQL
+    connection.query("SELECT * FROM lokasi", (error, results) => {
+      if (error) throw error;
+      // Menampilkan halaman kategori dengan data kategori
+      res.render("admin/lokasi", { lokasi: results });
+    });
+  } else {
+    res.redirect("/");
+  }
 });
 
 // Menampilkan tampilan tambah kategori (GET request)
@@ -288,16 +301,20 @@ app.get("/lokasi/tambah", (req, res) => {
 
 // Handle POST request to add a new location
 app.post("/lokasi/tambah", (req, res) => {
-  const lokasi = req.body.Lokasi;
-  const query = `INSERT INTO lokasi (nama_lokasi) VALUES ('${lokasi}')`;
+  if (req.session.isadmin) {
+    const lokasi = req.body.Lokasi;
+    const query = `INSERT INTO lokasi (nama_lokasi) VALUES ('${lokasi}')`;
 
-  connection.query(query, (error, results, fields) => {
-    if (error) {
-      return res.status(500).send("Gagal menambah lokasi baru");
-    }
+    connection.query(query, (error, results, fields) => {
+      if (error) {
+        return res.status(500).send("Gagal menambah lokasi baru");
+      }
 
-    res.redirect("/lokasi");
-  });
+      res.redirect("/lokasi");
+    });
+  } else {
+    res.redirect("/");
+  }
 });
 
 app.get("/lokasi/edit/:id", (req, res) => {
@@ -341,6 +358,11 @@ app.get("/lokasi/delete/:id", (req, res) => {
       res.redirect("/lokasi");
     }
   );
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/");
 });
 
 app.listen(port, () => {

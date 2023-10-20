@@ -213,3 +213,29 @@ td .btn-danger {
   justify-content: center; /* Mengatur teks secara horizontal di tengah tombol */
   align-items: center; /* Mengatur teks secara vertikal di tengah tombol */
 }
+
+#asset-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#asset-table th,
+#asset-table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ccc;
+}
+
+#asset-table th {
+  background-color: #f2f2f2;
+}
+
+#asset-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#asset-table tbody tr:hover {
+  background-color: #d9edf7;
+  cursor: pointer;
+}
