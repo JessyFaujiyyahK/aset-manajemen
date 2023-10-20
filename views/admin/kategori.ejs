@@ -10,14 +10,17 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="../../public/css/admin-aset.css" />
+    <link rel="stylesheet" href="/css/admin-aset.css" />
   </head>
+
+  
+  
 
   <body>
     <nav class="navbar">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
-          <img src="../../public/images/logo.png" class="logo-stmik" />
+          <img src="/images/logo.png" class="logo-stmik" />
         </a>
         <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
         <span class="navbar-brand-admin">Admin</span>
@@ -29,7 +32,7 @@
         <div class="col-3 sidebar">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/dashboard">
+              <a class="nav-link active" aria-current="page" href="/dashboard/admin">
                 <img
                   src="/images/Dashboard.png"
                   alt="Logo"
@@ -54,6 +57,9 @@
                   <a class="nav-link" href="/jenis">Jenis</a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link" href="/namaaset">Nama Aset</a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link" href="/lokasi">Lokasi</a>
                 </li>
               </ul>
@@ -75,7 +81,9 @@
           <!-- Konten dalam kotak -->
           <h2>Kategori</h2>
           <!-- Tombol "Add" -->
-          <button class="btn btn-primary">Tambah +</button>
+         <!-- Tombol "Add" diganti menjadi tautan -->
+        <a href="/kategori/tambah" class="btn btn-primary">Tambah +</a>
+
           <div class="row mb-3">
             <div class="col-md-6">
               <label for="entriesDropdown" class="form-label">Show:</label>
@@ -89,10 +97,10 @@
             </div>
             <div class="col-md-6">
               <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search..." aria-label="Search">
-                <button class="btn btn-outline-secondary" type="button">Search</button>
+                <input type="text" class="form-control" placeholder="Search..." aria-label="Search" id="searchInput">
+                <button class="btn btn-outline-secondary" type="button" onclick="searchKategori()">Cari</button>
               </div>
-            </div>
+          </div>          
           </div>          
           <!-- Elemen tabel -->
           <table class="table table-bordered">
@@ -124,5 +132,71 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+    
+      function searchKategori() {
+        var input, filter, table, tbody, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.querySelector(".table");
+        tbody = table.getElementsByTagName("tbody");
+        tr = tbody[0].getElementsByTagName("tr");
+  
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[1]; // Kolom kedua berisi nama kategori
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+  
+      const entriesDropdown = document.getElementById("entriesDropdown");
+      const rows = document.querySelectorAll(".table tbody tr");
+let currentPage = 1;
+let itemsPerPage = parseInt(entriesDropdown.value);
+
+entriesDropdown.addEventListener("change", function() {
+  const selectedValue = parseInt(entriesDropdown.value);
+  itemsPerPage = selectedValue;
+  const totalPages = Math.ceil(rows.length / itemsPerPage);
+  currentPage = 1;
+  showRows(currentPage, itemsPerPage);
+});
+
+function showRows(page, itemsPerPage) {
+  rows.forEach((row, index) => {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    if (index >= start && index < end) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
+}
+
+function nextSlide() {
+  const totalItems = rows.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  if (currentPage < totalPages) {
+    currentPage++;
+    showRows(currentPage, itemsPerPage);
+  }
+}
+
+function prevSlide() {
+  if (currentPage > 1) {
+    currentPage--;
+    showRows(currentPage, itemsPerPage);
+  }
+}
+
+    </script>
   </body>
 </html>

@@ -10,14 +10,14 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="../../public/css/admin-tambah.css" />
+    <link rel="stylesheet" href="/css/admin-tambah.css" />
   </head>
 
   <body>
     <nav class="navbar">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
-          <img src="../../public/images/logo.png" class="logo-stmik" />
+          <img src="/images/logo.png" class="logo-stmik" />
         </a>
         <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
         <span class="navbar-brand-admin">Admin</span>
@@ -54,6 +54,9 @@
                   <a class="nav-link" href="/jenis">Jenis</a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link" href="">Nama Aset</a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link" href="/lokasi">Lokasi</a>
                 </li>
               </ul>
@@ -77,14 +80,13 @@
             <div class="col-md-6">
               <form action="/lokasi/edit/<%= lokasi.id %>" method="post">
                 <div class="form-group">
-                  <label for="Lokasi">Lokasi :</label>
+                  <label for="nama_lokasi">Nama Lokasi:</label>
                   <input
                     type="text"
-                    id="Lokasi"
-                    name="Lokasi"
-                    required
-                    class="form-control"
+                    id="nama_lokasi"
+                    name="nama_lokasi"
                     value="<%= lokasi.nama_lokasi %>"
+                    required
                   />
                 </div>
                 <button type="submit" class="btn btn-primary me-2">Ubah</button>

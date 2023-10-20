@@ -130,6 +130,10 @@ h2 {
   margin-top: 40px; /* Mengatur margin atas */
 }
 
+th:last-child {
+  width: 20%; /* Sesuaikan dengan persentase yang diinginkan */
+}
+
 .table th,
 .table td {
   padding: 10px; /* Mengatur padding dalam sel tabel */
@@ -138,7 +142,6 @@ h2 {
 }
 
 .btn-primary {
-  margin-top: 10px; /* Mengatur margin atas tombol "Add" */
   background-color: #e2eef3;
   border-color: #e2eef3;
   color: #665b5b;
@@ -188,17 +191,25 @@ h2 {
   transition: background-color 0.1s ease, color 0.1s ease;
 }
 
-.input-group:hover {
+/* .input-group:hover {
   background-color: #e2eef3;
   color: #665b5b;
 }
 
-.input-group:hover input[type="text"] {
+/* .input-group:hover input[type="text"] {
   background-color: white; /* Ubah warna latar belakang input menjadi biru saat dihover */
-  color: white; /* Ubah warna teks input menjadi putih saat dihover */
-}
+color: white; /* Ubah warna teks input menjadi putih saat dihover 
+} */
 
 .input-group:hover button {
   background-color: blue; /* Ubah warna latar belakang tombol menjadi biru saat dihover */
   color: white; /* Ubah warna teks tombol menjadi putih saat dihover */
+}
+*/ td .btn-primary,
+td .btn-danger {
+  margin-top: 3px; /* Memberi ruang sebelah kanan antara tombol "Edit" dan "Hapus" */
+  height: 30px;
+  font-size: 15px;
+  justify-content: center; /* Mengatur teks secara horizontal di tengah tombol */
+  align-items: center; /* Mengatur teks secara vertikal di tengah tombol */
 }

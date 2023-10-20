@@ -10,14 +10,14 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="../../public/css/admin-tambah.css" />
+    <link rel="stylesheet" href="/css/admin-tambah.css" />
   </head>
 
   <body>
     <nav class="navbar">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
-          <img src="../../public/images/logo.png" class="logo-stmik" />
+          <img src="/images/logo.png" class="logo-stmik" />
         </a>
         <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
         <span class="navbar-brand-admin">Admin</span>
@@ -54,6 +54,9 @@
                   <a class="nav-link" href="/jenis">Jenis</a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link" href="">Nama Aset</a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link" href="/lokasi">Lokasi</a>
                 </li>
               </ul>
@@ -72,10 +75,13 @@
         </div>
 
         <div class="col-md-8 content-box">
-          <h2>Tambah Kategori</h2>
+          <h2>Edit Kategori</h2>
           <div class="row">
             <div class="col-md-6">
-              <form action="/submit" method="post">
+              <form
+                action="/kategori/edit/<%= kategori.id_kategori %>"
+                method="post"
+              >
                 <div class="form-group">
                   <label for="idkategori">ID Kategori :</label>
                   <input
@@ -84,6 +90,7 @@
                     name="idkategori"
                     required
                     class="form-control"
+                    value="<%= kategori.id_kategori %>"
                   />
                 </div>
                 <div class="form-group">
@@ -94,42 +101,13 @@
                     name="kategori"
                     required
                     class="form-control"
+                    value="<%= kategori.nama_kategori %>"
                   />
                 </div>
+                <button type="submit" class="btn btn-primary me-2">Ubah</button>
+                <a href="/kategori" class="btn btn-secondary">Batal</a>
               </form>
             </div>
-          </div>
-          <div class="d-flex justify-content-center mt-3">
-            <form
-              action="/kategori/edit/<%= kategori.id_kategori %>"
-              method="post"
-            >
-              <div class="form-group">
-                <label for="idkategori">ID Kategori :</label>
-                <input
-                  type="number"
-                  id="idkategori"
-                  name="idkategori"
-                  required
-                  class="form-control"
-                  value="<%= kategori.id_kategori %>"
-                />
-              </div>
-              <div class="form-group">
-                <label for="kategori">Kategori :</label>
-                <input
-                  type="text"
-                  id="kategori"
-                  name="kategori"
-                  required
-                  class="form-control"
-                  value="<%= kategori.nama_kategori %>"
-                />
-              </div>
-              <button type="submit" class="btn btn-primary me-2">Ubah</button>
-              <a href="/kategori" class="btn btn-danger me-2">Hapus</a>
-              <a href="/kategori" class="btn btn-secondary">Batal</a>
-            </form>
           </div>
         </div>
       </div>

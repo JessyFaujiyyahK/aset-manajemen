@@ -40,6 +40,8 @@ app.use(express.static("public"));
 //set view engine to ejs
 app.set("view engine", "ejs");
 
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/", (req, res) => {
   req.session.register = false;
   const test = true;
@@ -146,11 +148,26 @@ app.get("/dashboard/admin", (req, res) => {
   };
 
   // Render halaman dashboard.ejs dengan data yang diberikan
-  res.render("dashboard", {
+  res.render("admin/dashboard", {
     totalAset: totalAset,
     nilaiAsetLokasi: nilaiAsetLokasi,
     jumlahAsetKategori: jumlahAsetKategori,
   });
+});
+
+// Menampilkan halaman kategori
+app.get("/kategori", (req, res) => {
+  // Mengambil data kategori dari basis data MySQL
+  connection.query("SELECT * FROM kategori", (error, results) => {
+    if (error) throw error;
+    // Menampilkan halaman kategori dengan data kategori
+    res.render("admin/kategori", { kategoris: results });
+  });
+});
+
+// Menampilkan tampilan tambah kategori (GET request)
+app.get("/kategori/tambah", (req, res) => {
+  res.render("admin/kategori-tambah"); // Ganti "tambah-kategori" dengan nama file EJS Anda
 });
 
 // Handle POST request to add a new category
@@ -164,12 +181,25 @@ app.post("/kategori/tambah", (req, res) => {
   });
 });
 
-// Handle POST request to edit a category
+// Menampilkan halaman edit kategori
+app.get("/kategori/edit/:id", (req, res) => {
+  const categoryId = req.params.id;
+  connection.query(
+    "SELECT * FROM kategori WHERE id_kategori = ?",
+    [categoryId],
+    (error, results) => {
+      if (error) throw error;
+      res.render("admin/kategori-edit", { kategori: results[0] }); // Ganti "edit-kategori.ejs" dengan nama file EJS Anda
+    }
+  );
+});
+
+// Menangani permintaan untuk menyimpan perubahan kategori yang telah diedit
 app.post("/kategori/edit/:id", (req, res) => {
   const categoryId = req.params.id;
   const { idkategori, kategori } = req.body;
   const query = `UPDATE kategori SET id_kategori = ${idkategori}, nama_kategori = '${kategori}' WHERE id_kategori = ${categoryId}`;
-  connection.query(query, (error, results, fields) => {
+  connection.query(query, (error, results) => {
     if (error) throw error;
     console.log("Category updated successfully!");
     res.redirect("/kategori");
@@ -191,54 +221,69 @@ app.get("/kategori/delete/:id", (req, res) => {
 app.get("/jenis", (req, res) => {
   connection.query("SELECT * FROM jenis", (error, results, fields) => {
     if (error) throw error;
-    res.render("jenis", { jenis: results });
+    res.render("admin/jenis", { jenis: results });
   });
 });
 
 // Endpoint untuk menampilkan halaman tambah jenis
 app.get("/jenis/tambah", (req, res) => {
-  res.render("jenis-tambah");
+  res.render("admin/jenis-tambah");
 });
 
-// Endpoint untuk menangani penambahan jenis
-app.post("/jenis/tambah", (req, res) => {
-  const { id_kategori, nama_jenis } = req.body;
-  const query = `INSERT INTO jenis (id_kategori, nama_jenis) VALUES (${id_kategori}, '${nama_jenis}')`;
+// // Endpoint untuk menangani penambahan jenis
+// app.post("/jenis/tambah", (req, res) => {
+//   const { id_kategori, nama_jenis } = req.body;
+//   const query = `INSERT INTO jenis (id_kategori, nama_jenis) VALUES (${id_kategori}, '${nama_jenis}')`;
 
-  connection.query(query, (error, results, fields) => {
-    if (error) {
-      return res.status(500).send("Gagal menambah jenis baru");
-    }
+//   connection.query(query, (error, results, fields) => {
+//     if (error) {
+//       return res.status(500).send("Gagal menambah jenis baru");
+//     }
 
-    res.redirect("/jenis");
+//     res.redirect("/jenis");
+//   });
+// });
+
+// // Endpoint untuk menampilkan halaman edit jenis
+// app.get("/jenis/edit/:id", (req, res) => {
+//   const jenisId = req.params.id;
+//   connection.query(
+//     `SELECT * FROM jenis WHERE id = ${jenisId}`,
+//     (error, results, fields) => {
+//       if (error) throw error;
+//       res.render("admin/jenis-edit", { jenis: results[0] });
+//     }
+//   );
+// });
+
+// // Endpoint untuk menangani pengeditan jenis
+// app.post("/jenis/edit/:id", (req, res) => {
+//   const jenisId = req.params.id;
+//   const { id_kategori, nama_jenis } = req.body;
+//   const query = `UPDATE jenis SET id_kategori = ${id_kategori}, nama_jenis = '${nama_jenis}' WHERE id = ${jenisId}`;
+
+//   connection.query(query, (error, results, fields) => {
+//     if (error) {
+//       return res.status(500).send("Gagal mengedit jenis");
+//     }
+
+//     res.redirect("/jenis");
+//   });
+// });
+
+// Menampilkan halaman kategori
+app.get("/lokasi", (req, res) => {
+  // Mengambil data kategori dari basis data MySQL
+  connection.query("SELECT * FROM lokasi", (error, results) => {
+    if (error) throw error;
+    // Menampilkan halaman kategori dengan data kategori
+    res.render("admin/lokasi", { lokasi: results });
   });
 });
 
-// Endpoint untuk menampilkan halaman edit jenis
-app.get("/jenis/edit/:id", (req, res) => {
-  const jenisId = req.params.id;
-  connection.query(
-    `SELECT * FROM jenis WHERE id = ${jenisId}`,
-    (error, results, fields) => {
-      if (error) throw error;
-      res.render("jenis-edit", { jenis: results[0] });
-    }
-  );
-});
-
-// Endpoint untuk menangani pengeditan jenis
-app.post("/jenis/edit/:id", (req, res) => {
-  const jenisId = req.params.id;
-  const { id_kategori, nama_jenis } = req.body;
-  const query = `UPDATE jenis SET id_kategori = ${id_kategori}, nama_jenis = '${nama_jenis}' WHERE id = ${jenisId}`;
-
-  connection.query(query, (error, results, fields) => {
-    if (error) {
-      return res.status(500).send("Gagal mengedit jenis");
-    }
-
-    res.redirect("/jenis");
-  });
+// Menampilkan tampilan tambah kategori (GET request)
+app.get("/lokasi/tambah", (req, res) => {
+  res.render("admin/lokasi-tambah"); // Ganti "tambah-kategori" dengan nama file EJS Anda
 });
 
 // Handle POST request to add a new location
@@ -255,44 +300,47 @@ app.post("/lokasi/tambah", (req, res) => {
   });
 });
 
-// Handle GET request to edit a location
 app.get("/lokasi/edit/:id", (req, res) => {
   const lokasiId = req.params.id;
+  // Query data lokasi berdasarkan ID
   connection.query(
-    `SELECT * FROM lokasi WHERE id = ${lokasiId}`,
+    "SELECT * FROM lokasi WHERE id = ?",
+    [lokasiId],
     (error, results, fields) => {
       if (error) throw error;
-      res.render("lokasi-edit", { lokasi: results[0] });
+      // Kirim data lokasi yang akan diedit ke halaman edit
+      res.render("admin/lokasi-edit", { lokasi: results[0] });
     }
   );
 });
 
-// Handle POST request to edit a location
 app.post("/lokasi/edit/:id", (req, res) => {
   const lokasiId = req.params.id;
-  const lokasi = req.body.Lokasi;
-  const query = `UPDATE lokasi SET nama_lokasi = '${lokasi}' WHERE id = ${lokasiId}`;
-
-  connection.query(query, (error, results, fields) => {
-    if (error) {
-      return res.status(500).send("Gagal mengedit lokasi");
+  const { nama_lokasi } = req.body;
+  // Update data lokasi berdasarkan ID
+  connection.query(
+    "UPDATE lokasi SET nama_lokasi = ? WHERE id = ?",
+    [nama_lokasi, lokasiId],
+    (error, results, fields) => {
+      if (error) throw error;
+      // Redirect ke halaman lokasi setelah mengedit data
+      res.redirect("/lokasi");
     }
-
-    res.redirect("/lokasi");
-  });
+  );
 });
 
-// Handle GET request to delete a location
 app.get("/lokasi/delete/:id", (req, res) => {
   const lokasiId = req.params.id;
-  const query = `DELETE FROM lokasi WHERE id = ${lokasiId}`;
-  connection.query(query, (error, results, fields) => {
-    if (error) {
-      return res.status(500).send("Gagal menghapus lokasi");
+  // Hapus data lokasi berdasarkan ID
+  connection.query(
+    "DELETE FROM lokasi WHERE id = ?",
+    [lokasiId],
+    (error, results, fields) => {
+      if (error) throw error;
+      // Redirect ke halaman lokasi setelah menghapus data
+      res.redirect("/lokasi");
     }
-
-    res.redirect("/lokasi");
-  });
+  );
 });
 
 app.listen(port, () => {

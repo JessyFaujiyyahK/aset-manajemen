@@ -10,7 +10,7 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="../../public/css/admin-tambah.css" />
+    <link rel="stylesheet" href="/css/admin-tambah.css" />
   </head>
 
   <body>
@@ -54,6 +54,9 @@
                   <a class="nav-link" href="/jenis">Jenis</a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link" href="/namaaset">Nama Aset</a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link" href="/lokasi">Lokasi</a>
                 </li>
               </ul>
@@ -75,24 +78,41 @@
           <h2>Tambah Jenis</h2>
           <div class="row">
             <div class="col-md-6">
-              <form action="/jenis/edit/<%= jenis.id %>" method="post">
-                <label for="id_kategori">ID Kategori:</label>
-                <input
-                  type="number"
-                  id="id_kategori"
-                  name="id_kategori"
-                  value="<%= jenis.id_kategori %>"
-                  required
-                /><br />
-                <label for="nama_jenis">Nama Jenis:</label>
-                <input
-                  type="text"
-                  id="nama_jenis"
-                  name="nama_jenis"
-                  value="<%= jenis.nama_jenis %>"
-                  required
-                /><br />
-                <button type="submit">Simpan Perubahan</button>
+              <form action="/jenis/tambah" method="post">
+                <div class="form-group">
+                  <label for="idkategori">ID Kategori :</label>
+                  <input
+                    type="number"
+                    id="idkategori"
+                    name="idkategori"
+                    required
+                    class="form-control"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="idjenis">ID Jenis :</label>
+                  <input
+                    type="number"
+                    id="idjenis"
+                    name="idjenis"
+                    required
+                    class="form-control"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="kategori">Nama Jenis :</label>
+                  <input
+                    type="text"
+                    id="jenis"
+                    name="jenis"
+                    required
+                    class="form-control"
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary me-2">
+                  Tambah
+                </button>
+                <a href="/kategori" class="btn btn-secondary">Batal</a>
               </form>
             </div>
           </div>
