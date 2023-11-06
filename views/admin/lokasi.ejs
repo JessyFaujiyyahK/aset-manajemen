@@ -10,47 +10,31 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+    <!-- Datatable CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="/css/admin-aset.css" />
   </head>
 
   <body>
-    <script>
-      function searchLokasi() {
-var input, filter, table, tbody, tr, td, i, txtValue;
-input = document.getElementById("searchInput");
-filter = input.value.toUpperCase();
-table = document.querySelector(".table");
-tbody = table.getElementsByTagName("tbody");
-tr = tbody[0].getElementsByTagName("tr");
-
-for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0]; // Kolom pertama berisi nama lokasi
-    if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = ""; // Tampilkan baris jika teks cocok
-        } else {
-            tr[i].style.display = "none"; // Sembunyikan baris jika teks tidak cocok
-        }
-    }
-}}
-    </script>
     <nav class="navbar">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
           <img src="/images/logo.png" class="logo-stmik" />
         </a>
         <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
-        <span class="navbar-brand-admin">Admin</span>
+        <a style="margin-left: 700px"><%= userName %></a>
+        <div class="logout">
+          <a href="/logout" class="btn custom-btn">Logout</a>
+        </div>
       </div>
     </nav>
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-3 sidebar">
+        <div class="sidebar">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/dashboard">
+              <a class="nav-link active" aria-current="page" href="/dashboard/admin">
                 <img
                   src="/images/Dashboard.png"
                   alt="Logo"
@@ -75,7 +59,7 @@ for (i = 0; i < tr.length; i++) {
                   <a class="nav-link" href="/jenis">Jenis</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/namaaset">Nama Aset</a>
+                  <a class="nav-link" href="/nama/aset">Nama Aset</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/lokasi">Lokasi</a>
@@ -95,14 +79,14 @@ for (i = 0; i < tr.length; i++) {
           </ul>
         </div>
 
-        <div class="col-8 content-box">
+        <div class="col-8 content-box mb-5">
           <!-- Konten dalam kotak -->
           <h2>Lokasi</h2>
           <!-- Tombol "Tambah" -->
-          <a href="/lokasi/tambah" class="btn btn-primary">Tambah +</a>
+          <a href="/lokasi/tambah" class="btn btn-primary my-4">Tambah +</a>
           <!-- Elemen tabel -->
           <div class="row mb-3">
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <label for="entriesDropdown" class="form-label">Show:</label>
               <select class="form-select" id="entriesDropdown">
                 <option selected>10</option>
@@ -118,8 +102,8 @@ for (i = 0; i < tr.length; i++) {
                 <button class="btn btn-outline-secondary" type="button" onclick="searchLokasi()">Cari</button>
               </div>
           </div>          
-          </div> 
-          <table class="table table-bordered">
+          </div>  -->
+          <!-- <table class="table table-bordered">
             <thead>
               <tr>
                 <th scope="col">Lokasi</th>
@@ -137,6 +121,24 @@ for (i = 0; i < tr.length; i++) {
                 </tr>
               <% }); %>
             </tbody>
+          </table> -->
+
+          <table id="location" class="display" style="width: 100%;">
+            <thead>
+              <tr>
+                <th scope="col">Lokasi</th>
+                <th scope="col">Aksi</th>
+               </tr>
+            </thead>
+            <tbody>
+              <% lokasi.forEach(function(lokal) { %>
+                  <tr>
+                    <td><%= lokal.nama_lokasi %></td>
+                    <td><a href="/lokasi/edit/<%= lokal.id %>" class="btn btn-sm btn-primary">Edit</a>
+                      <a onclick="return confirm('Apakah Anda yakin mau dihapus?')" href="/lokasi/delete/<%= lokal.id %>" class="btn btn-sm btn-danger">Hapus</a></td>
+                  </tr>
+              <% }); %>
+            </tbody>
           </table>
         </div>
         
@@ -148,5 +150,15 @@ for (i = 0; i < tr.length; i++) {
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+    <!-- Datatable js -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <!-- Panggil Datatable -->
+    <script>
+      new DataTable('#location', {
+        lengthMenu: [5, 10, 15]
+      });
+    </script>
   </body>
 </html>

@@ -38,11 +38,16 @@ body {
 }
 
 .sidebar {
+  display: flex;
   width: 250px;
   height: 100vh;
   background-color: #f8f9fa;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex: 0 0 250px; /* Lebar tetap, tidak fleksibel */
+  position: sticky;
+  top: 0;
+  bottom: 0;
 }
 
 .nav-item {
@@ -196,4 +201,12 @@ body {
 .input-group:hover button {
   background-color: blue; /* Ubah warna latar belakang tombol menjadi biru saat dihover */
   color: white; /* Ubah warna teks tombol menjadi putih saat dihover */
+}
+
+.custom-btn {
+  background-color: #d9d9d9;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

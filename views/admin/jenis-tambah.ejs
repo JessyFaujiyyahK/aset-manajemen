@@ -20,7 +20,10 @@
           <img src="/images/logo.png" class="logo-stmik" />
         </a>
         <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
-        <span class="navbar-brand-admin">Admin</span>
+        <a style="margin-left: 700px"><%= userName %></a>
+        <div class="logout">
+          <a href="/logout" class="btn custom-btn">Logout</a>
+        </div>
       </div>
     </nav>
 
@@ -29,7 +32,7 @@
         <div class="sidebar">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/dashboard">
+              <a class="nav-link active" aria-current="page" href="/dashboard/admin">
                 <img
                   src="/images/Dashboard.png"
                   alt="Logo"
@@ -54,7 +57,7 @@
                   <a class="nav-link" href="/jenis">Jenis</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="">Nama Aset</a>
+                  <a class="nav-link" href="/nama/aset">Nama Aset</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/lokasi">Lokasi</a>
@@ -81,15 +84,23 @@
               <form action="/jenis/tambah" method="post">
                 <div class="form-group">
                   <label for="idkategori">ID Kategori :</label>
-                  <input
+                  <!-- <input
                     type="number"
                     id="idkategori"
                     name="idkategori"
                     required
                     class="form-control"
-                  />
+                  /> -->
+                 
+                  <select name="idkategori" class="form-select" aria-label="Default select example">
+                    <option selected>Open this select menu</option>
+                    <% kategoris.forEach(function(kategori) { %>
+                    <option value='<%= kategori.id_kategori %>'><%= kategori.nama_kategori %></option>
+                       <% }); %>
+                  </select>
+               
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label for="idjenis">ID Jenis :</label>
                   <input
                     type="number"
@@ -98,9 +109,9 @@
                     required
                     class="form-control"
                   />
-                </div>
+                </div> -->
                 <div class="form-group">
-                  <label for="kategori">Nama Jenis :</label>
+                  <label for="jenis">Nama Jenis :</label>
                   <input
                     type="text"
                     id="jenis"
@@ -112,7 +123,7 @@
                 <button type="submit" class="btn btn-primary me-2">
                   Tambah
                 </button>
-                <a href="/kategori" class="btn btn-secondary">Batal</a>
+                <a href="/jenis" class="btn btn-secondary">Batal</a>
               </form>
             </div>
           </div>
@@ -122,10 +133,46 @@
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+      // Mendengarkan pengiriman formulir
+      document.getElementById('jenisForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah formulir melakukan pengiriman standar
+  
+        const idkategori = document.getElementById('idkategori').value;
+        const jenis = document.getElementById('jenis').value;
+  
+        fetch("/jenis/tambah", {
+          method: "POST",
+          body: JSON.stringify({ idkategori: idkategori, jenis: jenis }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Menampilkan notifikasi popup dengan pesan dari server
+          Swal.fire({
+            icon: data.message === "Berhasil menambahkan jenis." ? "success" : "error",
+            title: data.message === "Berhasil menambahkan jenis." ? "Success" : "Oops...",
+            text: data.message
+          });
+  
+          if (data.message === "Berhasil menambahkan jenis.") {
+            window.location.href = "/jenis/tambah"; // Redirect jika jenis berhasil ditambahkan
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+      });
+    </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+
   </body>
 </html>

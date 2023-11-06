@@ -43,6 +43,10 @@ body {
   background-color: #f8f9fa;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex: 0 0 250px; /* Lebar tetap, tidak fleksibel */
+  position: sticky;
+  top: 0;
+  bottom: 0;
 }
 
 .nav-item {
@@ -145,4 +149,22 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.info-box {
+  background-color: #75b1da;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
+  width: 200px;
+  height: 80px;
+  text-align: center;
+  line-height: 1;
+  margin: 0 auto;
+  font-size: 20px;
+  font-weight: bold;
+}
+.info-box:hover {
+  background-color: #2980b9; /* Warna latar belakang saat hover */
+  transition: background-color 0.3s ease; /* Efek transisi saat perubahan warna latar belakang */
 }

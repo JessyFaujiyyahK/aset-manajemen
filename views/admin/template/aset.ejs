@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laporan Aset</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Laporan Manajemen Aset</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ID Aset</th>
+          <th>Nama Aset</th>
+          <th>Jumlah</th>
+          <th>Nilai</th>
+          <th>Lokasi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% aset.forEach(function(aset) { %>
+        <tr>
+          <td><%= aset.id_aset %></td>
+          <td><%= aset.nama_aset %></td>
+          <td><%= aset.jumlah %></td>
+          <td><%= aset.nilai %></td>
+          <td><%= aset.nama_lokasi %></td>
+        </tr>
+        <% }); %>
+        <tr>
+          <td colspan="5">
+            <strong>Total Jumlah Aset :</strong>
+            <span style="float: right"><%= totalJumlah %></span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5">
+            <strong>Total Nilai :</strong>
+            <span style="float: right">Rp <%= totalNilai %></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

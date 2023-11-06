@@ -20,7 +20,10 @@
           <img src="/images/logo.png" class="logo-stmik" />
         </a>
         <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
-        <span class="navbar-brand-admin">Admin</span>
+        <a style="margin-left: 700px"><%= userName %></a>
+        <div class="logout">
+          <a href="/logout" class="btn custom-btn">Logout</a>
+        </div>
       </div>
     </nav>
 
@@ -29,7 +32,11 @@
         <div class="sidebar">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/dashboard">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/dashboard/admin"
+              >
                 <img
                   src="/images/Dashboard.png"
                   alt="Logo"
@@ -54,7 +61,7 @@
                   <a class="nav-link" href="/jenis">Jenis</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="">Nama Aset</a>
+                  <a class="nav-link" href="/nama/aset">Nama Aset</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/lokasi">Lokasi</a>

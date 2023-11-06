@@ -43,6 +43,10 @@ body {
   background-color: #f8f9fa;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex: 0 0 250px; /* Lebar tetap, tidak fleksibel */
+  position: sticky;
+  top: 0;
+  bottom: 0;
 }
 
 .nav-item {
@@ -109,3 +113,10 @@ body {
   margin-right: 10px;
 }
 /*------------------------------------------------------------------------------------*/
+.custom-btn {
+  background-color: #d9d9d9;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -3,20 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kategori Admin</title>
+    <title>Aset Admin</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <!-- Datatable CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+     <!-- Datatable CSS -->
+     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="/css/admin-aset.css" />
   </head>
-
-  
-  
 
   <body>
     <nav class="navbar">
@@ -25,7 +22,7 @@
           <img src="/images/logo.png" class="logo-stmik" />
         </a>
         <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
-        <a style="margin-left: 700px"><%= userName %></a>
+        <a style="margin-left: 600px"><%= userName %></a>serName %></a>
         <div class="logout">
           <a href="/logout" class="btn custom-btn">Logout</a>
         </div>
@@ -37,7 +34,7 @@
         <div class="sidebar">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/dashboard/admin">
+              <a class="nav-link active" aria-current="page" href="/dashboard/user">
                 <img
                   src="/images/Dashboard.png"
                   alt="Logo"
@@ -49,28 +46,11 @@
             <li class="nav-item">
               <a class="nav-link" href="/aset">
                 <img src="/images/aset.png" alt="Logo" class="logo-sidebar" />
-                Master Data
+                Data Aset
               </a>
-              <ul class="submenu">
-                <li class="nav-item">
-                  <a class="nav-link" href="/aset">Aset</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/kategori">Kategori</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/jenis">Jenis</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/nama/aset">Nama Aset</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/lokasi">Lokasi</a>
-                </li>
-              </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/laporan">
+              <a class="nav-link" href="/laporan/user">
                 <img
                   src="/images/laporan.png"
                   alt="Logo"
@@ -84,33 +64,26 @@
 
         <div class="col-8 content-box mb-5">
           <!-- Konten dalam kotak -->
-          <h2>Kategori</h2>
+          <h2>Data Aset</h2>
           <!-- Tombol "Add" -->
-          <a href="/kategori/tambah" class="btn btn-primary my-4">Tambah +</a>
-          <div class="row mb-3">
-          <table id="example" class="display" style="width: 100%;">
-            <thead>
-              <tr>
-                <th scope="col">ID Kategori</th>
-                <th scope="col">Kategori</th>
-                <th scope="col">Aksi</th>
-               </tr>
-            </thead>
-            <tbody>
-              <% kategoris.forEach(function(kategori) { %>
-                  <tr>
-                    <td><%= kategori.id_kategori %></td>
-                    <td><%= kategori.nama_kategori %></td>
-                    <td>
-                      <a href="/kategori/edit/<%= kategori.id_kategori %>" class="btn btn-sm btn-primary">Edit</a>
-                      <a onclick="return confirm('Apakah Anda yakin mau dihapus?')" href="/kategori/delete/<%= kategori.id_kategori %>" class="btn btn-sm btn-danger">Hapus</a></td>
-                  </tr>
-              <% }); %>
-            </tbody>
-          </table>
+          <!-- <a href="/aset/tambah" class="btn btn-primary my-4" >Tambah +</a> -->
+          <!-- <div class="row mb-3"> -->
+            <% aset.forEach(function(aset) { %>
+            <div class="card mt-5" style="width: 100%;">
+              <div class="card-header text-capitalize fs-3 text-center">
+                <%= aset.nama_aset %>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Lokasi : <%= aset.nama_lokasi %></li>
+                <li class="list-group-item">Jumlah : <%= aset.jumlah %></li>
+                <li class="list-group-item">Nilai : <%= aset.nilai %></li>
+                <li class="list-group-item">Kondisi : <%= aset.kondisi %></li>
+                <li class="list-group-item">Sumber : <%= aset.sumber %></li>
+              </ul>
+            </div>
+            <% }); %>
+        <!-- </div> -->
         </div>
-      </div>
-
         
 
     <script
@@ -118,16 +91,15 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
-
     <!-- Datatable js -->
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <!-- Panggil Datatable -->
     <script>
-      new DataTable('#example', {
+      new DataTable('#detail', {
         lengthMenu: [5, 10, 15]
       });
-    </script>
+      </script>
   </body>
 </html>

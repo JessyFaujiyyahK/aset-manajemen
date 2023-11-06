@@ -3,16 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jenis Admin</title>
+    <title>Tambah Nama Aset Admin</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <!-- Datatable CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="/css/admin-aset.css" />
+    <link rel="stylesheet" href="/css/admin-tambah.css" />
   </head>
 
   <body>
@@ -79,57 +77,59 @@
           </ul>
         </div>
 
-        <div class="col-8 content-box mb-5">
-          <!-- Konten dalam kotak -->
-          <h2>Jenis</h2>
-          <!-- Tombol "Add" -->
-          <a href="/jenis/tambah" class="btn btn-primary my-4">Tambah +</a>
-          <div class="row mb-3">
-              <table id="jenis" class="display" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th scope="col">ID Kategori</th>
-                        <th scope="col">ID Jenis</th>
-                        <th scope="col">Nama Jenis</th>
-                        <th scope="col">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div class="col-md-8 content-box">
+          <h2>Tambah Nama Aset</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <form action="/nama/aset/tambah" method="post">
+                <div class="form-group">
+                  <label for="idJenis">ID Jenis :</label>
+                  <select name="idJenis" class="form-select" aria-label="Default select example">
+              
+                    <option selected>Open this select menu</option>
                     <% jenis.forEach(function(jenis) { %>
-                        <tr>
-                            <td><%= jenis.id_kategori %></td>
-                            <td><%= jenis.id_jenis %></td>
-                            <td><%= jenis.nama_jenis %></td>
-                            <td>
-                                <!-- Tambahkan tombol edit dan hapus sesuai kebutuhan -->
-                                <a href="/jenis/edit/<%= jenis.id_jenis %>" class="btn btn-sm btn-primary">Edit</a>
-                                <!-- Tambahkan tombol hapus dengan menggunakan form untuk mengonfirmasi penghapusan -->
-                                <a onclick="return confirm('Apakah Anda yakin mau dihapus?')" href="/jenis/delete/<%= jenis.id_jenis %>" class="btn btn-sm btn-danger">Hapus</a>
-                            </td>
-                        </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-          </div>          
-          <!-- Elemen tabel -->
+                    <option value='<%= jenis.id_jenis%>'><%= jenis.nama_jenis %> : <%= jenis.id_jenis%></option>
+                       <% }); %>
+                  </select>
+               
+                </div>
+                <!-- <div class="form-group">
+                  <label for="idjenis">ID Jenis :</label>
+                  <input
+                    type="number"
+                    id="idjenis"
+                    name="idjenis"
+                    required
+                    class="form-control"
+                  />
+                </div> -->
+                <div class="form-group">
+                  <label for="nama-aset">Nama Aset :</label>
+                  <input
+                    type="text"
+                    id="aset"
+                    name="aset"
+                    required
+                    class="form-control"
+                  />
+                </div>
+                <button href="/nama/aset" type="submit" class="btn btn-primary me-2">
+                  Tambah
+                </button>
+                <a href="/nama/aset" class="btn btn-secondary">Batal</a>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
-        
+    </div>
+      </div>
+    </div>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
-
-    <!-- Datatable js -->
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-    <!-- Panggil Datatable -->
-    <script>
-      new DataTable('#jenis', {
-        lengthMenu: [5, 10, 15]
-      });
-    </script>
   </body>
 </html>

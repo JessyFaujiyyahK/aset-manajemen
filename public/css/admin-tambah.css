@@ -43,6 +43,10 @@ body {
   background-color: #f8f9fa;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex: 0 0 250px; /* Lebar tetap, tidak fleksibel */
+  position: sticky;
+  top: 0;
+  bottom: 0;
 }
 
 .nav-item {
@@ -153,4 +157,132 @@ h2 {
 
 .form-group input[type="submit"]:hover {
   background-color: #0056b3;
+}
+/* Import Google Font - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+::selection {
+  color: #fff;
+  background: #4285f4;
+}
+
+/* ... (CSS lainnya) ... */
+
+/* Menyesuaikan gaya dropdown "Select Country" */
+.wrapper {
+  width: 100%; /* Lebar dropdown mengikuti lebar formulir lainnya */
+  margin: 0 0 20px; /* Margin diatur agar terlihat sejajar dengan formulir Lokasi */
+}
+
+.select-btn {
+  height: 50px; /* Tinggi dropdown disesuaikan dengan formulir Lokasi */
+  width: 100%; /* Lebar dropdown mengikuti lebar formulir lainnya */
+  padding: 0 20px;
+  font-size: 17px; /* Ukuran font dropdown disesuaikan dengan formulir Lokasi */
+  background: #fff;
+  border-radius: 5px;
+  justify-content: space-between;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.options {
+  max-height: 200px; /* Tinggi maksimum dropdown agar tidak terlalu panjang */
+}
+
+/* ... (CSS lainnya) ... */
+
+.select-btn i {
+  font-size: 24px; /* Sesuaikan dengan ukuran font icon formulir lainnya */
+  transition: transform 0.3s linear;
+}
+
+.wrapper.active .select-btn i {
+  transform: rotate(-180deg);
+}
+
+/* ... (CSS lainnya) ... */
+
+.content .search {
+  position: relative;
+}
+
+.search i {
+  top: 50%;
+  left: 15px;
+  color: #999;
+  font-size: 20px;
+  pointer-events: none;
+  transform: translateY(-50%);
+  position: absolute;
+}
+
+.search input {
+  height: 50px;
+  width: 100%;
+  outline: none;
+  font-size: 17px;
+  border-radius: 5px;
+  padding: 0 20px 0 43px;
+  border: 1px solid #b3b3b3;
+}
+
+.search input:focus {
+  padding-left: 42px;
+  border: 2px solid #4285f4;
+}
+
+.search input::placeholder {
+  color: #bfbfbf;
+}
+
+.content .options {
+  margin-top: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 7px;
+}
+
+.options::-webkit-scrollbar {
+  width: 7px;
+}
+
+.options::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 25px;
+}
+
+.options::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 25px;
+}
+
+.options::-webkit-scrollbar-thumb:hover {
+  background: #b3b3b3;
+}
+
+.options li {
+  height: 50px;
+  padding: 0 13px;
+  font-size: 17px; /* Sesuaikan dengan ukuran font input-form */
+}
+
+.options li:hover,
+li.selected {
+  border-radius: 5px;
+  background: #f2f2f2;
+}
+
+.custom-btn {
+  background-color: #d9d9d9;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

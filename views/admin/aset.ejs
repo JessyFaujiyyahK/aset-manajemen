@@ -10,6 +10,8 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+       <!-- Datatable CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="/css/admin-aset.css" />
   </head>
 
@@ -20,104 +22,100 @@
           <img src="/images/logo.png" class="logo-stmik" />
         </a>
         <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
-        <span class="navbar-brand-admin">Admin</span>
+        <a style="margin-left: 700px"><%= userName %></a>
+        <div class="logout">
+          <a href="/logout" class="btn custom-btn">Logout</a>
+        </div>
       </div>
     </nav>
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-3 sidebar">
+        <div class="sidebar">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#"
-                ><img
+              <a class="nav-link active" aria-current="page" href="/dashboard/admin">
+                <img
                   src="/images/Dashboard.png"
                   alt="Logo"
                   class="logo-sidebar"
-                />Dashboard</a
-              >
+                />
+                Dashboard
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#"
-                ><img
-                  src="/images/aset.png"
-                  alt="Logo"
-                  class="logo-sidebar"
-                />Master Data</a
-              >
+              <a class="nav-link" href="/aset">
+                <img src="/images/aset.png" alt="Logo" class="logo-sidebar" />
+                Master Data
+              </a>
               <ul class="submenu">
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Aset</a>
+                  <a class="nav-link" href="/aset">Aset</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Kategori</a>
+                  <a class="nav-link" href="/kategori">Kategori</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Jenis</a>
+                  <a class="nav-link" href="/jenis">Jenis</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="">Nama Aset</a>
+                  <a class="nav-link" href="/nama/aset">Nama Aset</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Lokasi</a>
+                  <a class="nav-link" href="/lokasi">Lokasi</a>
                 </li>
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="/laporan">
                 <img
-                  src="../../public/images/laporan.png"
+                  src="/images/laporan.png"
                   alt="Logo"
                   class="logo-sidebar"
-                />Laporan</a
-              >
+                />
+                Laporan
+              </a>
             </li>
           </ul>
         </div>
 
-        <div class="col-8 content-box">
+        <div class="col-8 content-box mb-5">
           <!-- Konten dalam kotak -->
           <h2>Data Aset</h2>
           <!-- Tombol "Add" -->
-          <button class="btn btn-primary">Tambah +</button>
+          <a href="/aset/tambah" class="btn btn-primary my-4" >Tambah +</a>
           <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="entriesDropdown" class="form-label">Show:</label>
-              <select class="form-select" id="entriesDropdown">
-                <option selected>10</option>
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-              </select>
-              <span>entries</span>
-            </div>
-            <div class="col-md-6">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search..." aria-label="Search">
-                <button class="btn btn-outline-secondary" type="button">Search</button>
-              </div>
-            </div>
-          </div>          
-          <!-- Elemen tabel -->
-          <table class="table table-bordered">
+            <table id="aset" class="display" style="width: 100%;">
             <thead>
               <tr>
                 <th scope="col">ID Aset</th>
                 <th scope="col">Nama Aset</th>
                 <th scope="col">Jumlah</th>
                 <th scope="col">Nilai</th>
+                <th scope="col">Lokasi</th>
+                <th scope="col">Aksi</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
+              <% aset.forEach(function(aset) { %>
+                <tr data-href="/aset/detail/<%= aset.id %>">
+                    <td><%= aset.id_aset %></td>
+                    <td><%= aset.nama_aset %></td>
+                    <td><%= aset.jumlah %></td>
+                    <td><%= aset.nilai %></td>
+                    <td><%= aset.nama_lokasi %></td>
+                    <td>
+                        <!-- Tambahkan tombol edit dan hapus sesuai kebutuhan -->
+                        <a href="/aset/edit/<%= aset.id %>" class="btn btn-sm btn-primary">edit</a>
+                        <!-- Tambahkan tombol hapus dengan menggunakan form untuk mengonfirmasi penghapusan -->
+                        <a onclick="return confirm('Apakah Anda yakin mau dihapus?')" href="/aset/delete/<%= aset.id %>" class="btn btn-sm btn-danger">Hapus</a>
+                    </td>
+                </tr>
+            <% }); %>
               <!-- Tambahkan lebih banyak baris sesuai dengan data Anda -->
             </tbody>
           </table>
+        </div>
         </div>
         
 
@@ -126,5 +124,22 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+
+    <!-- Datatable js -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <!-- Panggil Datatable -->
+    <script>
+      document.querySelectorAll("tr[data-href]").forEach(function(row) {
+        row.style.cursor = "pointer";
+        row.addEventListener("click", function() {
+          window.location.href = this.getAttribute("data-href");
+        });
+      });
+      new DataTable('#aset', {
+        lengthMenu: [5, 10, 15]
+      });
+      </script>
   </body>
 </html>

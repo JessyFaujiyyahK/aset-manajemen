@@ -20,7 +20,7 @@
           <img src="/images/logo.png" class="logo-stmik" />
         </a>
         <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
-        <a style="margin-left: 700px"><%= userName %></a>
+        <a style="margin-left: 600px"><%= userName %></a>
         <div class="logout">
           <a href="/logout" class="btn custom-btn">Logout</a>
         </div>
@@ -35,7 +35,7 @@
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="/dashboard/admin"
+                href="/dashboard/user"
               >
                 <img
                   src="/images/Dashboard.png"
@@ -46,30 +46,13 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/aset">
+              <a class="nav-link" href="/aset/user">
                 <img src="/images/aset.png" alt="Logo" class="logo-sidebar" />
-                Master Data
+                Data Aset
               </a>
-              <ul class="submenu">
-                <li class="nav-item">
-                  <a class="nav-link" href="/aset">Aset</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/kategori">Kategori</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/jenis">Jenis</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/nama/aset">Nama Aset</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/lokasi">Lokasi</a>
-                </li>
-              </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/laporan">
+              <a class="nav-link" href="/laporan/user">
                 <img
                   src="/images/laporan.png"
                   alt="Logo"
@@ -87,14 +70,14 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="info-box text-center">
-                  <p>Jumlah Aset</p>
-                  <p>Total : <%= totalAset %></p>
+                  <h4>Jumlah Aset</h4>
+                  <p>Total: <%= totalAset %></p>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="info-box text-center">
-                  <p>Jumlah Nilai</p>
-                  <p>Total : <%= totalNilai %></p>
+                  <h4>Jumlah Nilai</h4>
+                  <p>Total: <%= totalNilai %></p>
                 </div>
               </div>
             </div>
