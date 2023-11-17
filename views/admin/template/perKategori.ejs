@@ -34,11 +34,11 @@
       <tbody>
         <% aset.forEach(function(aset) { %>
         <tr>
+          <td><%= aset.nama_kategori %></td>
           <td><%= aset.id_aset %></td>
           <td><%= aset.nama_aset %></td>
           <td><%= aset.jumlah %></td>
           <td><%= aset.nilai %></td>
-          <td><%= aset.nama_lokasi %></td>
           <td><%= new Date(aset.created_at).toLocaleDateString() %></td>
         </tr>
         <% }); %>

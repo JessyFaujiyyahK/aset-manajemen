@@ -130,22 +130,7 @@ app.post("/account-register", (req, res) => {
   });
 });
 
-// app.get("/dashboard/admin", (req, res) => {
-//   if (req.session.isadmin) {
-//     const query =
-//       "SELECT LEFT(a.id_aset, LOCATE('.', a.id_aset) - 1) AS kategori, k.nama_kategori, SUM(a.jumlah) as total FROM aset a JOIN kategori k ON LEFT(a.id_aset, LOCATE('.', a.id_aset) - 1) = k.id_kategori GROUP BY kategori, k.nama_kategori";
-
-//     connection.query(query, (error, results, fields) => {
-//       if (error) {
-//         throw error;
-//       }
-//       // Render halaman dashboard.ejs dengan data yang diberikan
-//       res.render("admin/dashboard", { data: results });
-//     });
-//   } else {
-//     res.redirect("/");
-//   }
-// });
+// -------------------------------- DASHBOARD  -------------------------------- //
 
 app.get("/dashboard/admin", (req, res) => {
   if (req.session.isadmin) {
@@ -223,6 +208,8 @@ app.get("/dashboard/admin", (req, res) => {
   }
 });
 
+// -------------------------------- ASET  -------------------------------- //
+
 // Menampilkan halaman aset
 app.get("/aset", (req, res) => {
   if (req.session.isadmin) {
@@ -231,8 +218,6 @@ app.get("/aset", (req, res) => {
       "SELECT *, nama_aset.nama_aset, lokasi.nama_lokasi, aset.id as id FROM aset JOIN nama_aset ON aset.id_aset=nama_aset.id_aset JOIN lokasi ON aset.id_lokasi=lokasi.id",
       (error, results) => {
         if (error) throw error;
-        // Menampilkan halaman kategori dengan data kategori
-        // console.log(results);
         res.render("admin/aset", {
           aset: results,
           userName: req.session.username,
@@ -251,7 +236,6 @@ app.get("/aset/tambah", (req, res) => {
     const sql = `SELECT * From nama_aset; SELECT * FROM lokasi`;
     connection.query(sql, (error, results) => {
       if (error) throw error;
-      // Menampilkan halaman kategori dengan data kategori
       res.render("admin/aset-tambah", {
         aset: results[0],
         lokasi: results[1],
@@ -299,7 +283,6 @@ app.get("/aset/edit/:id", (req, res) => {
 
     connection.query(sql, (error, results) => {
       if (error) throw error;
-      // Menampilkan halaman kategori dengan data kategori
       console.log(results[2][0]);
       const sumber = results[2][0].sumber;
       const jumlah = results[2][0].jumlah;
@@ -366,6 +349,7 @@ app.get("/aset/delete/:id", (req, res) => {
   });
 });
 
+// -------------------------------- KATEGORI  -------------------------------- //
 // Menampilkan halaman kategori
 app.get("/kategori", (req, res) => {
   if (req.session.isadmin) {
@@ -434,24 +418,80 @@ app.get("/kategori/edit/:id", (req, res) => {
 app.post("/kategori/edit/:id", (req, res) => {
   const categoryId = req.params.id;
   const { idkategori, kategori } = req.body;
-  const query = `UPDATE kategori SET id_kategori = ${idkategori}, nama_kategori = '${kategori}' WHERE id_kategori = ${categoryId}`;
-  connection.query(query, (error, results) => {
-    if (error) throw error;
-    console.log("Category updated successfully!");
-    res.redirect("/kategori");
+
+  // Check if the new idkategori or kategori already exists in the database
+  const checkExistingQuery = `SELECT * FROM kategori WHERE (id_kategori = ${idkategori} OR nama_kategori = '${kategori}') AND id_kategori != ${categoryId}`;
+
+  connection.query(checkExistingQuery, (error, results) => {
+    if (error) {
+      const errorMessage = "Terjadi kesalahan pada server.";
+      return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/kategori";
+        </script>
+      `);
+    }
+
+    if (results.length > 0) {
+      // New idkategori or kategori already exists, return an error message
+      const errorMessage = "Nama Kategori sudah digunakan";
+      return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/kategori";
+        </script>
+      `);
+    } else {
+      // Check if the category is associated with jenis or nama aset
+      const checkAssociationQuery = `SELECT * FROM jenis WHERE id_kategori = ${categoryId} OR id_kategori = ${idkategori}`;
+
+      connection.query(checkAssociationQuery, (error, results) => {
+        if (error) {
+          const errorMessage = "Terjadi kesalahan pada server.";
+          return res.send(`
+            <script>
+              alert("${errorMessage}");
+              window.location.href = "/kategori";
+            </script>
+          `);
+        }
+
+        if (results.length > 0) {
+          // Category is associated with jenis or nama aset, return an error message
+          const errorMessage =
+            "Kategori terhubung dengan jenis atau nama aset dan tidak dapat diedit.";
+          return res.send(`
+            <script>
+              alert("${errorMessage}");
+              window.location.href = "/kategori";
+            </script>
+          `);
+        } else {
+          // Category is not associated, proceed with the update
+          const updateQuery = `UPDATE kategori SET id_kategori = ${idkategori}, nama_kategori = '${kategori}' WHERE id_kategori = ${categoryId}`;
+
+          connection.query(updateQuery, (error, results) => {
+            if (error) {
+              const errorMessage = "Gagal mengedit kategori.";
+              return res.send(`
+                <script>
+                  alert("${errorMessage}");
+                  window.location.href = "/kategori";
+                </script>
+              `);
+            }
+
+            console.log("Category updated successfully!");
+            res.redirect("/kategori");
+          });
+        }
+      });
+    }
   });
 });
 
 // Handle GET request to delete a category
-// app.get("/kategori/delete/:id", (req, res) => {
-//   const categoryId = req.params.id;
-//   const query = `DELETE FROM kategori WHERE id_kategori = ${categoryId}`;
-//   connection.query(query, (error, results, fields) => {
-//     if (error) throw error;
-//     console.log("Category deleted successfully!");
-//     res.redirect("/kategori");
-//   });
-// });
 app.get("/kategori/delete/:id", (req, res) => {
   const categoryId = req.params.id;
   const query = `DELETE FROM kategori WHERE id_kategori = ${categoryId}`;
@@ -487,6 +527,8 @@ app.get("/kategori/delete/:id", (req, res) => {
     }
   });
 });
+
+// -------------------------------- JENIS  -------------------------------- //
 
 // Endpoint untuk menampilkan daftar jenis
 app.get("/jenis", (req, res) => {
@@ -527,103 +569,7 @@ app.get("/jenis/tambah", (req, res) => {
   // res.render("admin/jenis-tambah");
 });
 
-// // Endpoint untuk menangani penambahan jenis
-// app.post("/jenis/tambah", (req, res) => {
-//   // Ambil payload dari body
-//   const { idkategori, jenis } = req.body;
-
-//   // Ambil id jenis terakhir
-//   const getLastIdJenis = `SELECT MAX(id_jenis) AS lastIdJenis FROM jenis WHERE id_kategori = ${idkategori}`;
-
-//   connection.query(getLastIdJenis, (error, results, fields) => {
-//     if (error) {
-//       res.status(400).json({ msg: "ID Jenis Tidak Ditemukan" });
-//     } else {
-//       /*
-//       Ambil idJenis => diambil dari payload body
-//       ambil lastIdAset => diambil dari query
-//       newIdAset = parseint + 1
-//       tambah idjenis dengan idasetbaru => ${idjeins}.${idAset}
-//       insert query buat ke table aset
-//       */
-//       const lastIdJenis = results[0].lastIdJenis || 0;
-//       let splitIdJenis;
-//       if (typeof lastIdJenis === "string") {
-//         splitIdJenis = lastIdJenis.split(".")[1];
-//       }
-//       // console.log("type: ", typeof splitIdJenis);
-//       // console.log("value: ", splitIdJenis);
-//       const newIdJenis =
-//         splitIdJenis === undefined
-//           ? parseInt(lastIdJenis) + 1
-//           : parseInt(splitIdJenis) + 1;
-//       const idJenis = `${idkategori}.${newIdJenis}`;
-//       const insertJenis = `INSERT INTO jenis (id_jenis, id_kategori, nama_jenis) values ('${idJenis}', ${idkategori}, '${jenis}')`;
-
-//       connection.query(insertJenis, (error, results) => {
-//         if (error) {
-//           return res.status(500).json({ msg: error.message });
-//         } else {
-//           // res.status(201).json({ msg: "Berhasil tambah jenis", data: results });
-//           res.redirect("/jenis");
-//         }
-//       });
-//     }
-//     // res.redirect("/jenis");
-//   });
-// });
-
-// app.post("/jenis/tambah", (req, res) => {
-//   const { idkategori, jenis } = req.body;
-
-//   // Periksa apakah jenis sudah ada di database
-//   const checkJenisQuery = `SELECT * FROM jenis WHERE id_kategori = ${idkategori} AND nama_jenis = '${jenis}'`;
-
-//   connection.query(checkJenisQuery, (error, results) => {
-//     if (error) {
-//       return res
-//         .status(500)
-//         .json({ message: "Terjadi kesalahan pada server." });
-//     }
-
-//     // Jika jenis sudah ada, kirim notifikasi alert ke klien
-//     if (results.length > 0) {
-//       return res.status(400).json({ message: "Jenis sudah ada di database." });
-//     }
-
-//     // Jika jenis belum ada, lakukan penambahan data jenis
-//     const getLastIdJenis = `SELECT MAX(id_jenis) AS lastIdJenis FROM jenis WHERE id_kategori = ${idkategori}`;
-
-//     connection.query(getLastIdJenis, (error, results, fields) => {
-//       if (error) {
-//         return res.status(400).json({ message: "ID Jenis Tidak Ditemukan." });
-//       }
-
-//       const lastIdJenis = results[0].lastIdJenis || 0;
-//       let splitIdJenis;
-//       if (typeof lastIdJenis === "string") {
-//         splitIdJenis = lastIdJenis.split(".")[1];
-//       }
-//       const newIdJenis =
-//         splitIdJenis === undefined
-//           ? parseInt(lastIdJenis) + 1
-//           : parseInt(splitIdJenis) + 1;
-//       const idJenis = `${idkategori}.${newIdJenis}`;
-//       const insertJenis = `INSERT INTO jenis (id_jenis, id_kategori, nama_jenis) VALUES ('${idJenis}', ${idkategori}, '${jenis}')`;
-
-//       connection.query(insertJenis, (error, results) => {
-//         if (error) {
-//           return res.status(500).json({ message: "Gagal menambahkan jenis." });
-//         } else {
-//           return res
-//             .status(200)
-//             .json({ message: "Berhasil menambahkan jenis." });
-//         }
-//       });
-//     });
-//   });
-// });
-
+// Endpoint untuk menangani penambahan jenis
 app.post("/jenis/tambah", (req, res) => {
   const { idkategori, jenis } = req.body;
 
@@ -669,11 +615,22 @@ app.post("/jenis/tambah", (req, res) => {
 
       connection.query(insertJenis, (error, results) => {
         if (error) {
-          return res.status(500).json({ message: "Gagal menambahkan jenis." });
+          // return res.status(500).json({ message: "Gagal menambahkan jenis." });
+          const failMessage = "Gagal menambahkan jenis";
+          return res.send(`
+            <script>
+              alert("${failMessage}");
+              window.location.href = "/jenis";
+            </script>
+          `);
         } else {
-          return res
-            .status(200)
-            .json({ message: "Berhasil menambahkan jenis." });
+          const successMessage = "Jenis berhasil ditambahkan ke database.";
+          return res.send(`
+            <script>
+              alert("${successMessage}");
+              window.location.href = "/jenis";
+            </script>
+          `);
         }
       });
     });
@@ -747,6 +704,8 @@ app.get("/jenis/delete/:id", (req, res) => {
     }
   });
 });
+
+// -------------------------------- NAMA ASET  -------------------------------- //
 
 // Endpoint untuk menampilkan daftar nama aset
 app.get("/nama/aset", (req, res) => {
@@ -859,20 +818,54 @@ app.get("/nama/aset/edit/:id", (req, res) => {
   );
 });
 
-// Endpoint untuk menangani pengeditan jenis
+// Endpoint untuk menangani halaman edit nama aset
 app.post("/nama/aset/edit", (req, res) => {
-  const { nama_aset, idAset } = req.body; // Pastikan variabel ini adalah string
-  const query = `UPDATE nama_aset SET nama_aset = '${nama_aset}' WHERE id_aset = '${idAset}'`; // Gunakan tanda kutip satu di sekitar idAset
-  connection.query(query, (error, results, fields) => {
+  const { nama_aset, idAset } = req.body;
+
+  // Check if the new asset name is already in use by another asset
+  const checkExistingQuery = `SELECT * FROM nama_aset WHERE nama_aset = '${nama_aset}' AND id_aset != '${idAset}'`;
+
+  connection.query(checkExistingQuery, (error, results) => {
     if (error) {
-      throw error;
+      const errorMessage = "Terjadi kesalahan pada server.";
+      return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/nama/aset";
+        </script>
+      `);
     }
 
-    res.redirect("/nama/aset");
+    if (results.length > 0) {
+      // Asset name is already in use by another asset, return an error message
+      const errorMessage = "Nama aset sudah digunakan oleh aset lain.";
+      return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/nama/aset";
+        </script>
+      `);
+    } else {
+      // Asset name is not in use, proceed with the update
+      const updateQuery = `UPDATE nama_aset SET nama_aset = '${nama_aset}' WHERE id_aset = '${idAset}'`;
+
+      connection.query(updateQuery, (error, results, fields) => {
+        if (error) {
+          const errorMessage = "Gagal mengedit aset.";
+          return res.send(`
+            <script>
+              alert("${errorMessage}");
+              window.location.href = "/nama/aset";
+            </script>
+          `);
+        }
+        // Redirect to the asset page after editing data
+        res.redirect("/nama/aset");
+      });
+    }
   });
 });
 
-// Endpoint untuk menangani hapus jenis
 app.get("/nama/aset/delete/:id", (req, res) => {
   const asetId = req.params.id;
   const query = `DELETE FROM nama_aset WHERE id_aset = '${asetId}'`; // Gunakan tanda kutip satu di sekitar asetId
@@ -882,6 +875,8 @@ app.get("/nama/aset/delete/:id", (req, res) => {
     res.redirect("/nama/aset");
   });
 });
+
+// -------------------------------- LOKASI  -------------------------------- //
 
 // Menampilkan halaman lokasi
 app.get("/lokasi", (req, res) => {
@@ -905,18 +900,71 @@ app.get("/lokasi/tambah", (req, res) => {
   res.render("admin/lokasi-tambah", { userName: req.session.username }); // Ganti "tambah-kategori" dengan nama file EJS Anda
 });
 
+// // Handle POST request to add a new location
+// app.post("/lokasi/tambah", (req, res) => {
+//   if (req.session.isadmin) {
+//     const lokasi = req.body.Lokasi;
+//     const query = `INSERT INTO lokasi (nama_lokasi) VALUES ('${lokasi}')`;
+
+//     connection.query(query, (error, results, fields) => {
+//       if (error) {
+//         return res.status(500).send("Gagal menambah lokasi baru");
+//       }
+
+//       res.redirect("/lokasi");
+//     });
+//   } else {
+//     res.redirect("/");
+//   }
+// });
+
 // Handle POST request to add a new location
+
 app.post("/lokasi/tambah", (req, res) => {
   if (req.session.isadmin) {
     const lokasi = req.body.Lokasi;
-    const query = `INSERT INTO lokasi (nama_lokasi) VALUES ('${lokasi}')`;
 
-    connection.query(query, (error, results, fields) => {
+    // Check if the location already exists in the database
+    const checkExistingQuery = `SELECT * FROM lokasi WHERE nama_lokasi = '${lokasi}'`;
+
+    connection.query(checkExistingQuery, (error, results) => {
       if (error) {
-        return res.status(500).send("Gagal menambah lokasi baru");
+        const errorMessage = "Terjadi kesalahan pada server.";
+        return res.send(`
+          <script>
+            alert("${errorMessage}");
+            window.location.href = "/lokasi";
+          </script>
+        `);
       }
 
-      res.redirect("/lokasi");
+      if (results.length > 0) {
+        // Location already exists, return an error message
+        const errorMessage = "Lokasi sudah ada di database.";
+        return res.send(`
+          <script>
+            alert("${errorMessage}");
+            window.location.href = "/lokasi";
+          </script>
+        `);
+      } else {
+        // Location doesn't exist, proceed with the insertion
+        const insertQuery = `INSERT INTO lokasi (nama_lokasi) VALUES ('${lokasi}')`;
+
+        connection.query(insertQuery, (error, results, fields) => {
+          if (error) {
+            const errorMessage = "Gagal menambah lokasi baru.";
+            return res.send(`
+              <script>
+                alert("${errorMessage}");
+                window.location.href = "/lokasi";
+              </script>
+            `);
+          }
+
+          res.redirect("/lokasi");
+        });
+      }
     });
   } else {
     res.redirect("/");
@@ -940,19 +988,69 @@ app.get("/lokasi/edit/:id", (req, res) => {
   );
 });
 
+// app.post("/lokasi/edit/:id", (req, res) => {
+//   const lokasiId = req.params.id;
+//   const { nama_lokasi } = req.body;
+//   // Update data lokasi berdasarkan ID
+//   connection.query(
+//     "UPDATE lokasi SET nama_lokasi = ? WHERE id = ?",
+//     [nama_lokasi, lokasiId],
+//     (error, results, fields) => {
+//       if (error) throw error;
+//       // Redirect ke halaman lokasi setelah mengedit data
+//       res.redirect("/lokasi");
+//     }
+//   );
+// });
+
 app.post("/lokasi/edit/:id", (req, res) => {
   const lokasiId = req.params.id;
   const { nama_lokasi } = req.body;
-  // Update data lokasi berdasarkan ID
-  connection.query(
-    "UPDATE lokasi SET nama_lokasi = ? WHERE id = ?",
-    [nama_lokasi, lokasiId],
-    (error, results, fields) => {
-      if (error) throw error;
-      // Redirect ke halaman lokasi setelah mengedit data
-      res.redirect("/lokasi");
+
+  // Check if the new location name is already in use by another location
+  const checkExistingQuery = `SELECT * FROM lokasi WHERE nama_lokasi = '${nama_lokasi}' AND id != ${lokasiId}`;
+
+  connection.query(checkExistingQuery, (error, results) => {
+    if (error) {
+      const errorMessage = "Terjadi kesalahan pada server.";
+      return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/lokasi";
+        </script>
+      `);
     }
-  );
+
+    if (results.length > 0) {
+      // Location name is already in use by another location, return an error message
+      const errorMessage = "Nama lokasi sudah digunakan oleh lokasi lain.";
+      return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/lokasi";
+        </script>
+      `);
+    } else {
+      // Location name is not in use, proceed with the update
+      connection.query(
+        "UPDATE lokasi SET nama_lokasi = ? WHERE id = ?",
+        [nama_lokasi, lokasiId],
+        (error, results, fields) => {
+          if (error) {
+            const errorMessage = "Gagal mengedit lokasi.";
+            return res.send(`
+              <script>
+                alert("${errorMessage}");
+                window.location.href = "/lokasi";
+              </script>
+            `);
+          }
+          // Redirect ke halaman lokasi setelah mengedit data
+          res.redirect("/lokasi");
+        }
+      );
+    }
+  });
 });
 
 app.get("/lokasi/delete/:id", (req, res) => {
@@ -1267,84 +1365,53 @@ app.get("/laporan/user", (req, res) => {
 const fs = require("fs");
 const puppeteer = require("puppeteer");
 const ExcelJS = require("exceljs");
-// const htmlToXlsx = require("html-to-xlsx");
-const cheerio = require("cheerio");
+// const cheerio = require("cheerio");
 const path = require("path");
 const ejs = require("ejs");
+const html2canvas = require("html2canvas");
 
-// Kueri SQL untuk mengambil data dari tabel aset dan nama_aset menggunakan JOIN
-const sqlQuery =
-  "SELECT aset.id_aset, nama_aset.nama_aset, aset.jumlah, aset.nilai, aset.id_lokasi, lokasi.nama_lokasi FROM aset JOIN nama_aset ON aset.id_aset = nama_aset.id_aset JOIN lokasi ON aset.id_lokasi = lokasi.id";
+const calculateTotal = (results) => {
+  let totalJumlah = 0;
+  let totalNilai = 0;
 
-app.get("/generatePDF", async (req, res) => {
+  results.forEach((aset) => {
+    totalJumlah += aset.jumlah;
+    totalNilai += aset.nilai;
+  });
+
+  return { totalJumlah, totalNilai };
+};
+
+// Fungsi untuk generate PDF
+const generatePDF = async (res, htmlContent) => {
   try {
-    const results = await new Promise((resolve, reject) => {
-      connection.query(sqlQuery, (error, results, fields) => {
-        if (error) reject(error);
-        resolve(results);
-      });
-    });
-
-    // Baca template HTML dari file
-    const template = fs.readFileSync(
-      path.join(__dirname, "views", "admin", "template", "aset.ejs"),
-      "utf-8"
-    );
-
-    // Menghitung total jumlah dan total nilai dari data aset
-    let totalJumlah = 0;
-    let totalNilai = 0;
-    results.forEach((aset) => {
-      totalJumlah += aset.jumlah;
-      totalNilai += aset.nilai;
-    });
-
-    // Render template dengan data menggunakan EJS
-    const htmlContent = ejs.render(template, {
-      aset: results,
-      totalJumlah: totalJumlah,
-      totalNilai: totalNilai,
-    });
-
-    // Menggunakan Puppeteer dengan async/await
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(htmlContent);
 
-    // Membuat file PDF dari konten halaman
-    const pdfBuffer = await page.pdf();
+    // Format created_at before adding it to the PDF
+    const formattedHtmlContent = htmlContent.replace(
+      /aset\.created_at/g,
+      "new Date(aset.created_at).toLocaleDateString()"
+    );
 
-    // Menutup browser setelah selesai
+    await page.setContent(formattedHtmlContent);
+
+    const pdfBuffer = await page.pdf();
     await browser.close();
 
-    // Mengirimkan file PDF sebagai respons HTTP dengan header yang menginstruksikan browser untuk mengunduhnya
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
     res.send(pdfBuffer);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send("Error generating PDF");
   }
-});
+};
 
-app.get("/generateExcel", async (req, res) => {
+// Fungsi untuk generate Excel
+const generateExcel = async (res, results, totalJumlah, totalNilai) => {
   try {
-    const results = await new Promise((resolve, reject) => {
-      connection.query(sqlQuery, (error, results, fields) => {
-        if (error) reject(error);
-        resolve(results);
-      });
-    });
-
-    // Menghitung total jumlah dan total nilai dari data aset
-    let totalJumlah = 0;
-    let totalNilai = 0;
-    results.forEach((aset) => {
-      totalJumlah += aset.jumlah;
-      totalNilai += aset.nilai;
-    });
-
-    // Membuat workbook dan worksheet ExcelJS
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Aset Data");
 
@@ -1355,6 +1422,7 @@ app.get("/generateExcel", async (req, res) => {
       "Jumlah",
       "Nilai",
       "Lokasi",
+      "Dibuat pada",
     ]);
     headerRow.font = { bold: true }; // Membuat teks header menjadi tebal
     headerRow.fill = {
@@ -1367,6 +1435,7 @@ app.get("/generateExcel", async (req, res) => {
     worksheet.getColumn(3).width = 30; // Mengatur lebar kolom Jumlah
     worksheet.getColumn(4).width = 30; // Mengatur lebar kolom Nilai
     worksheet.getColumn(5).width = 30; // Mengatur lebar kolom Lokasi
+    worksheet.getColumn(6).width = 30; // Mengatur lebar kolom Created at
 
     // Menambahkan data ke worksheet dengan gaya yang ditingkatkan
     results.forEach((aset) => {
@@ -1376,6 +1445,7 @@ app.get("/generateExcel", async (req, res) => {
         aset.jumlah,
         aset.nilai,
         aset.nama_lokasi,
+        aset.created_at,
       ]);
 
       // Mengatur rata tengah untuk kolom ID Aset, Nama Aset, Jumlah, Nilai, dan Lokasi
@@ -1410,6 +1480,115 @@ app.get("/generateExcel", async (req, res) => {
 
     await workbook.xlsx.write(res);
     res.end();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error generating Excel");
+  }
+};
+
+app.get("/", (req, res) => {
+  // Tampilkan formulir di sini
+  res.send(`
+    <form action="/generateReport" method="get">
+      <label for="startDate">Mulai Tanggal:</label>
+      <input type="date" id="startDate" name="startDate" required>
+
+      <label for="endDate">Sampai Tanggal:</label>
+      <input type="date" id="endDate" name="endDate" required>
+
+      <label for="format">Pilih Format:</label>
+      <select id="format" name="format" required>
+        <option value="pdf">PDF</option>
+        <option value="excel">Excel</option>
+      </select>
+
+      <button type="submit">Generate Report</button>
+    </form>
+  `);
+});
+
+// Mendefinisikan rute untuk generate report
+app.get("/generateReport", async (req, res) => {
+  try {
+    const { startDate, endDate, format } = req.query;
+
+    // Lakukan validasi atau manipulasi tanggal sesuai kebutuhan
+    // Validasi Format Tanggal
+    const isValidDateFormat = (dateString) => {
+      const regex = /^\d{4}-\d{2}-\d{2}$/;
+      return regex.test(dateString);
+    };
+
+    // Pastikan Tanggal Mulai Kurang dari atau Sama dengan Tanggal Akhir
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
+
+    if (!isValidDateFormat(startDate) || !isValidDateFormat(endDate)) {
+      return res.status(400).send("Invalid date format");
+    }
+
+    if (startDateObj > endDateObj) {
+      return res
+        .status(400)
+        .send("Start date must be before or equal to end date");
+    }
+
+    // Batasi Rentang Tanggal
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 30); // Batas maksimal 30 hari dari tanggal saat ini
+
+    const selectedEndDateObj = new Date(endDate);
+
+    if (selectedEndDateObj > maxDate) {
+      return res.status(400).send("Date range exceeds maximum allowed");
+    }
+
+    // Buat SQL Query berdasarkan rentang tanggal
+    const sqlQuery = `
+      SELECT
+        aset.id_aset,
+        nama_aset.nama_aset,
+        aset.jumlah,
+        aset.nilai,
+        lokasi.nama_lokasi,
+        aset.created_at
+      FROM aset
+      JOIN nama_aset ON aset.id_aset = nama_aset.id_aset
+      JOIN lokasi ON aset.id_lokasi = lokasi.id
+      WHERE aset.created_at BETWEEN '${startDate}' AND '${endDate}';
+    `;
+
+    const results = await new Promise((resolve, reject) => {
+      connection.query(sqlQuery, (error, results, fields) => {
+        if (error) reject(error);
+        resolve(results);
+      });
+    });
+
+    // Hitung total jumlah dan nilai
+    const { totalJumlah, totalNilai } = calculateTotal(results);
+
+    // Baca template HTML dari file
+    const template = fs.readFileSync(
+      path.join(__dirname, "views", "admin", "template", "aset.ejs"),
+      "utf-8"
+    );
+
+    // Render template dengan data menggunakan EJS
+    const htmlContent = ejs.render(template, {
+      aset: results,
+      totalJumlah: totalJumlah,
+      totalNilai: totalNilai,
+    });
+
+    // Generate report berdasarkan format yang dipilih
+    if (format === "pdf") {
+      generatePDF(res, htmlContent);
+    } else if (format === "excel") {
+      generateExcel(res, results, totalJumlah, totalNilai);
+    } else {
+      res.status(400).send("Invalid format");
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

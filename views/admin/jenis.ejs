@@ -12,7 +12,8 @@
     />
     <!-- Datatable CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="/css/admin-aset.css" />
+    <!-- <link rel="stylesheet" href="/css/admin-aset.css" /> -->
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
 
   <body>
@@ -21,10 +22,12 @@
         <a class="navbar-brand" href="#">
           <img src="/images/logo.png" class="logo-stmik" />
         </a>
-        <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
-        <a style="margin-left: 700px"><%= userName %></a>
-        <div class="logout">
-          <a href="/logout" class="btn custom-btn">Logout</a>
+        <p class="navbar-brand-judul" href="#">Manajemen Aset</p>
+        <div class="user-container">
+          <p class="username"><%= userName %></p>
+          <div class="logout">
+            <a href="/logout" class="btn custom-btn">Logout</a>
+          </div>
         </div>
       </div>
     </nav>

@@ -12,7 +12,8 @@
     />
     <!-- Datatable CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="/css/admin-aset.css" />
+    <!-- <link rel="stylesheet" href="/css/admin-aset.css" /> -->
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
 
   <body>
@@ -21,10 +22,12 @@
         <a class="navbar-brand" href="#">
           <img src="/images/logo.png" class="logo-stmik" />
         </a>
-        <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
-        <a style="margin-left: 700px"><%= userName %></a>
-        <div class="logout">
-          <a href="/logout" class="btn custom-btn">Logout</a>
+        <p class="navbar-brand-judul" href="#">Manajemen Aset</p>
+        <div class="user-container">
+          <p class="username"><%= userName %></p>
+          <div class="logout">
+            <a href="/logout" class="btn custom-btn">Logout</a>
+          </div>
         </div>
       </div>
     </nav>
@@ -86,43 +89,6 @@
           <a href="/lokasi/tambah" class="btn btn-primary my-4">Tambah +</a>
           <!-- Elemen tabel -->
           <div class="row mb-3">
-            <!-- <div class="col-md-6">
-              <label for="entriesDropdown" class="form-label">Show:</label>
-              <select class="form-select" id="entriesDropdown">
-                <option selected>10</option>
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-              </select>
-              <span>entries</span>
-            </div>
-            <div class="col-md-6">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search..." aria-label="Search" id="searchInput">
-                <button class="btn btn-outline-secondary" type="button" onclick="searchLokasi()">Cari</button>
-              </div>
-          </div>          
-          </div>  -->
-          <!-- <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">Lokasi</th>
-                <th scope="col">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% lokasi.forEach(function(lokal) { %>
-                <tr>
-                  <td><%= lokal.nama_lokasi %></td>
-                  <td>
-                    <a href="/lokasi/edit/<%= lokal.id %>" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="/lokasi/delete/<%= lokal.id %>" class="btn btn-sm btn-danger">Hapus</a>
-                  </td>
-                </tr>
-              <% }); %>
-            </tbody>
-          </table> -->
-
           <table id="location" class="display" style="width: 100%;">
             <thead>
               <tr>

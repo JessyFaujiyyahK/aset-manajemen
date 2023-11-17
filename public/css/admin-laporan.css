@@ -13,7 +13,8 @@ body {
 }
 
 .navbar-brand-judul {
-  margin-left: 50px;
+  margin: 0;
+  margin-right: 520px;
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
@@ -119,4 +120,22 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.user-container {
+  display: flex;
+  align-items: center;
+}
+
+p {
+  margin: 0; /* Atur margin menjadi 0 agar tidak ada margin atas dan bawah */
+}
+
+.username {
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.logout {
+  margin-left: auto; /* Ini akan membuat elemen "Logout" berada di sebelah kanan */
 }

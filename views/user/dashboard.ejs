@@ -10,19 +10,22 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="/css/admin-dashboard.css" />
-    <!-- Sesuaikan dengan path CSS Anda -->
+    <!-- <link rel="stylesheet" href="/css/admin-dashboard.css" /> -->
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
+
   <body>
     <nav class="navbar">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
           <img src="/images/logo.png" class="logo-stmik" />
         </a>
-        <a class="navbar-brand-judul" href="#">Manajemen Aset </a>
-        <a style="margin-left: 600px"><%= userName %></a>
-        <div class="logout">
-          <a href="/logout" class="btn custom-btn">Logout</a>
+        <p class="navbar-brand-judul" href="#">Manajemen Aset</p>
+        <div class="user-container">
+          <p class="username"><%= userName %></p>
+          <div class="logout">
+            <a href="/logout" class="btn custom-btn">Logout</a>
+          </div>
         </div>
       </div>
     </nav>
@@ -64,32 +67,36 @@
           </ul>
         </div>
 
-        <div class="col-8 content-box">
+        <div class="col-8 content-box mb-5">
           <h2>Dashboard</h2>
           <div class="container">
             <div class="row">
               <div class="col-md-6">
                 <div class="info-box text-center">
-                  <h4>Jumlah Aset</h4>
+                  <h5>Jumlah Aset</h5>
                   <p>Total: <%= totalAset %></p>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="info-box text-center">
-                  <h4>Jumlah Nilai</h4>
-                  <p>Total: <%= totalNilai %></p>
+                  <h5>Jumlah Nilai</h5>
+                  <p>Total: Rp <%= totalNilai %></p>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
-                <canvas id="assetChartKategori"></canvas>
-              </div>
-              <div class="col-md-6">
-                <canvas id="assetChartNilaiLokasi"></canvas>
-              </div>
-              <div class="col-md-6">
                 <canvas id="assetChartSumber"></canvas>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-12">
+                    <canvas id="assetChartKategori"></canvas>
+                  </div>
+                  <div class="col-md-12">
+                    <canvas id="assetChartNilaiLokasi"></canvas>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -105,66 +112,118 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-          document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function() {
             var ctxKategori = document.getElementById('assetChartKategori').getContext('2d');
             var dataKategori = <%- JSON.stringify(dataKategori) %>;
             var labelsKategori = dataKategori.map(item => item.nama_kategori);
             var valuesKategori = dataKategori.map(item => item.total);
 
+            var backgroundColorsKategori = generateRandomColors(dataKategori.length);
+
             var assetChartKategori = new Chart(ctxKategori, {
-              type: 'bar',
-              data: {
-                labels: labelsKategori,
-                datasets: [{
-                  label: 'Jumlah Aset per Kategori',
-                  data: valuesKategori,
-                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                  borderColor: 'rgba(75, 192, 192, 1)',
-                  borderWidth: 1
-                }]
-              }
-            });
+            type: 'bar',
+            data: {
+            labels: labelsKategori,
+            datasets: [{
+              data: valuesKategori,
+              backgroundColor: backgroundColorsKategori,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+            options: {
+            plugins: {
+            title: {
+              display: true,
+              text: 'Jumlah Aset per Kategori'
+            },
+              legend: {
+              display: false, // Menyembunyikan legend
+            }
+          }
+        }
+      });
+
+
 
             var ctxNilaiLokasi = document.getElementById('assetChartNilaiLokasi').getContext('2d');
             var dataNilaiLokasi = <%- JSON.stringify(dataNilaiLokasi) %>;
             var labelsNilaiLokasi = dataNilaiLokasi.map(item => item.lokasi);
             var valuesNilaiLokasi = dataNilaiLokasi.map(item => item.total);
 
+            var backgroundColorsNilaiLokasi = generateRandomColors(dataNilaiLokasi.length);
+
             var assetChartNilaiLokasi = new Chart(ctxNilaiLokasi, {
-              type: 'bar',
+              type: 'line',
               data: {
                 labels: labelsNilaiLokasi,
                 datasets: [{
-                  label: 'Nilai Aset per Lokasi',
+                  // label: 'Nilai Aset per Lokasi',
                   data: valuesNilaiLokasi,
-                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                  backgroundColor: backgroundColorsNilaiLokasi,
                   borderColor: 'rgba(255, 99, 132, 1)',
                   borderWidth: 1
                 }]
+              },
+              options: {
+                plugins: {
+                  title: {
+                    display: true,
+                    text: 'Nilai Aset per Lokasi'
+                  },
+                  legend: {
+                  display: false, // Menyembunyikan legend
+                }
+                }
               }
             });
 
             var ctxSumber = document.getElementById('assetChartSumber').getContext('2d');
-      var dataSumber = <%- JSON.stringify(dataSumber) %>;
+            var dataSumber = <%- JSON.stringify(dataSumber) %>;
 
-      var labelsSumber = dataSumber.map(item => item.sumber);
-      var valuesSumber = dataSumber.map(item => item.total);
+            var labelsSumber = dataSumber.map(item => item.sumber);
+            var valuesSumber = dataSumber.map(item => item.total);
 
-      var assetChartSumber = new Chart(ctxSumber, {
-        type: 'bar',
-        data: {
-          labels: labelsSumber,
-          datasets: [{
-            label: 'Jumlah Aset per Sumber',
-            data: valuesSumber,
-            backgroundColor: 'rgba(128, 0, 128, 0.2)',
-            borderColor: 'rgba(128, 0, 128, 1)',
+            var backgroundColorsSumber = generateRandomColors(dataSumber.length);
 
-            borderWidth: 1
-          }]
-        }
-      });
+            var assetChartSumber = new Chart(ctxSumber, {
+              type: 'pie',
+              data: {
+                labels: labelsSumber,
+                datasets: [{
+                  data: valuesSumber,
+                  backgroundColor: backgroundColorsSumber,
+                  borderColor: backgroundColorsSumber,
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                plugins: {
+                  title: {
+                    display: true,
+                    text: 'Jumlah Aset per Sumber'
+                  },
+              legend: {
+              display: false, // Menyembunyikan legend
+            }
+                }
+              }
+            });
 
+            // Fungsi untuk menghasilkan warna acak
+            function generateRandomColors(count) {
+              var colors = [];
+              for (var i = 0; i < count; i++) {
+                var color = 'rgba(' + getRandomInt(0, 255) + ',' + getRandomInt(0, 255) + ',' + getRandomInt(0, 255) + ', 0.2)';
+                colors.push(color);
+              }
+              return colors;
+            }
+
+            // Fungsi untuk mendapatkan angka bulat acak
+            function getRandomInt(min, max) {
+              return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
           });
     </script>
   </body>
