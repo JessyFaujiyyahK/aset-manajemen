@@ -1309,6 +1309,8 @@ app.get("/aset/delete/:id", (req, res) => {
   });
 });
 
+// -----------------------------------------------------LAPORAN-----------------------------------------------------
+
 // Menampilkan halaman laporan
 app.get("/laporan/user", (req, res) => {
   if (req.session.loggedin) {
@@ -1382,8 +1384,222 @@ const calculateTotal = (results) => {
   return { totalJumlah, totalNilai };
 };
 
+// // Fungsi untuk generate PDF
+// const generatePDF = async (res, htmlContent) => {
+//   try {
+//     const browser = await puppeteer.launch();
+//     const page = await browser.newPage();
+//     await page.setContent(htmlContent);
+
+//     // Format created_at before adding it to the PDF
+//     const formattedHtmlContent = htmlContent.replace(
+//       /aset\.created_at/g,
+//       "new Date(aset.created_at).toLocaleDateString()"
+//     );
+
+//     await page.setContent(formattedHtmlContent);
+
+//     const pdfBuffer = await page.pdf();
+//     await browser.close();
+
+//     res.setHeader("Content-Type", "application/pdf");
+//     res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
+//     res.send(pdfBuffer);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Error generating PDF");
+//   }
+// };
+
+// // Fungsi untuk generate Excel
+// const generateExcel = async (res, results, totalJumlah, totalNilai) => {
+//   try {
+//     const workbook = new ExcelJS.Workbook();
+//     const worksheet = workbook.addWorksheet("Aset Data");
+
+//     // Menambahkan header ke worksheet dengan gaya yang ditingkatkan
+//     const headerRow = worksheet.addRow([
+//       "ID Aset",
+//       "Nama Aset",
+//       "Jumlah",
+//       "Nilai",
+//       "Lokasi",
+//       "Dibuat pada",
+//     ]);
+//     headerRow.font = { bold: true }; // Membuat teks header menjadi tebal
+//     headerRow.fill = {
+//       type: "pattern",
+//       pattern: "solid",
+//       fgColor: { argb: "DDDDDD" }, // Warna latar belakang header
+//     };
+//     worksheet.getColumn(1).width = 30; // Mengatur lebar kolom ID Aset
+//     worksheet.getColumn(2).width = 30; // Mengatur lebar kolom Nama Aset
+//     worksheet.getColumn(3).width = 30; // Mengatur lebar kolom Jumlah
+//     worksheet.getColumn(4).width = 30; // Mengatur lebar kolom Nilai
+//     worksheet.getColumn(5).width = 30; // Mengatur lebar kolom Lokasi
+//     worksheet.getColumn(6).width = 30; // Mengatur lebar kolom Created at
+
+//     // Menambahkan data ke worksheet dengan gaya yang ditingkatkan
+//     results.forEach((aset) => {
+//       const row = worksheet.addRow([
+//         aset.id_aset,
+//         aset.nama_aset,
+//         aset.jumlah,
+//         aset.nilai,
+//         aset.nama_lokasi,
+//         aset.created_at,
+//       ]);
+
+//       // Mengatur rata tengah untuk kolom ID Aset, Nama Aset, Jumlah, Nilai, dan Lokasi
+//       row.alignment = { horizontal: "left" };
+//     });
+
+//     // Menambahkan total jumlah dan total nilai ke worksheet dengan gaya yang ditingkatkan
+//     const totalJumlahRow = worksheet.addRow([
+//       "Total Jumlah Aset :",
+//       totalJumlah.toString(),
+//       "",
+//       "",
+//     ]);
+//     totalJumlahRow.font = { bold: true };
+//     totalJumlahRow.alignment = { horizontal: "left" }; // Mengatur rata tengah untuk sel total jumlah
+
+//     const totalNilaiRow = worksheet.addRow([
+//       "Total Nilai :",
+//       `Rp ${totalNilai.toString()}`,
+//       "",
+//       "",
+//     ]);
+//     totalNilaiRow.font = { bold: true };
+//     totalNilaiRow.alignment = { horizontal: "left" }; // Mengatur rata tengah untuk sel total nilai
+
+//     // Menghasilkan file Excel dan mengirimkannya sebagai respons HTTP
+//     res.setHeader(
+//       "Content-Type",
+//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+//     );
+//     res.setHeader("Content-Disposition", "attachment; filename=aset_data.xlsx");
+
+//     await workbook.xlsx.write(res);
+//     res.end();
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Error generating Excel");
+//   }
+// };
+
+// app.get("/", (req, res) => {
+//   // Tampilkan formulir di sini
+//   res.send(`
+//     <form action="/generateReport" method="get">
+//       <label for="startDate">Mulai Tanggal:</label>
+//       <input type="date" id="startDate" name="startDate" required>
+
+//       <label for="endDate">Sampai Tanggal:</label>
+//       <input type="date" id="endDate" name="endDate" required>
+
+//       <label for="format">Pilih Format:</label>
+//       <select id="format" name="format" required>
+//         <option value="pdf">PDF</option>
+//         <option value="excel">Excel</option>
+//       </select>
+
+//       <button type="submit">Generate Report</button>
+//     </form>
+//   `);
+// });
+
+// // Mendefinisikan rute untuk generate report
+// app.get("/generateReport", async (req, res) => {
+//   try {
+//     const { startDate, endDate, format } = req.query;
+
+//     // Lakukan validasi atau manipulasi tanggal sesuai kebutuhan
+//     // Validasi Format Tanggal
+//     const isValidDateFormat = (dateString) => {
+//       const regex = /^\d{4}-\d{2}-\d{2}$/;
+//       return regex.test(dateString);
+//     };
+
+//     // Pastikan Tanggal Mulai Kurang dari atau Sama dengan Tanggal Akhir
+//     const startDateObj = new Date(startDate);
+//     const endDateObj = new Date(endDate);
+
+//     if (!isValidDateFormat(startDate) || !isValidDateFormat(endDate)) {
+//       return res.status(400).send("Invalid date format");
+//     }
+
+//     if (startDateObj > endDateObj) {
+//       return res
+//         .status(400)
+//         .send("Start date must be before or equal to end date");
+//     }
+
+//     // Batasi Rentang Tanggal
+//     const maxDate = new Date();
+//     maxDate.setDate(maxDate.getDate() + 30); // Batas maksimal 30 hari dari tanggal saat ini
+
+//     const selectedEndDateObj = new Date(endDate);
+
+//     if (selectedEndDateObj > maxDate) {
+//       return res.status(400).send("Date range exceeds maximum allowed");
+//     }
+
+//     // Buat SQL Query berdasarkan rentang tanggal
+//     const sqlQuery = `
+//       SELECT
+//         aset.id_aset,
+//         nama_aset.nama_aset,
+//         aset.jumlah,
+//         aset.nilai,
+//         lokasi.nama_lokasi,
+//         aset.created_at
+//       FROM aset
+//       JOIN nama_aset ON aset.id_aset = nama_aset.id_aset
+//       JOIN lokasi ON aset.id_lokasi = lokasi.id
+//       WHERE aset.created_at BETWEEN '${startDate}' AND '${endDate}';
+//     `;
+
+//     const results = await new Promise((resolve, reject) => {
+//       connection.query(sqlQuery, (error, results, fields) => {
+//         if (error) reject(error);
+//         resolve(results);
+//       });
+//     });
+
+//     // Hitung total jumlah dan nilai
+//     const { totalJumlah, totalNilai } = calculateTotal(results);
+
+//     // Baca template HTML dari file
+//     const template = fs.readFileSync(
+//       path.join(__dirname, "views", "admin", "template", "aset.ejs"),
+//       "utf-8"
+//     );
+
+//     // Render template dengan data menggunakan EJS
+//     const htmlContent = ejs.render(template, {
+//       aset: results,
+//       totalJumlah: totalJumlah,
+//       totalNilai: totalNilai,
+//     });
+
+//     // Generate report berdasarkan format yang dipilih
+//     if (format === "pdf") {
+//       generatePDF(res, htmlContent);
+//     } else if (format === "excel") {
+//       generateExcel(res, results, totalJumlah, totalNilai);
+//     } else {
+//       res.status(400).send("Invalid format");
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
 // Fungsi untuk generate PDF
-const generatePDF = async (res, htmlContent) => {
+
+const generatePDF = async (res, htmlContent, laporan) => {
   try {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -1401,7 +1617,10 @@ const generatePDF = async (res, htmlContent) => {
     await browser.close();
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=report_${laporan}.pdf`
+    );
     res.send(pdfBuffer);
   } catch (error) {
     console.error(error);
@@ -1410,73 +1629,77 @@ const generatePDF = async (res, htmlContent) => {
 };
 
 // Fungsi untuk generate Excel
-const generateExcel = async (res, results, totalJumlah, totalNilai) => {
+const generateExcel = async (
+  res,
+  results,
+  totalJumlah,
+  totalNilai,
+  reportHeader,
+  laporan
+) => {
   try {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Aset Data");
 
-    // Menambahkan header ke worksheet dengan gaya yang ditingkatkan
-    const headerRow = worksheet.addRow([
-      "ID Aset",
-      "Nama Aset",
-      "Jumlah",
-      "Nilai",
-      "Lokasi",
-      "Dibuat pada",
-    ]);
-    headerRow.font = { bold: true }; // Membuat teks header menjadi tebal
+    const headerRow = worksheet.addRow(reportHeader);
+    headerRow.font = { bold: true };
     headerRow.fill = {
       type: "pattern",
       pattern: "solid",
-      fgColor: { argb: "DDDDDD" }, // Warna latar belakang header
+      fgColor: { argb: "DDDDDD" },
     };
-    worksheet.getColumn(1).width = 30; // Mengatur lebar kolom ID Aset
-    worksheet.getColumn(2).width = 30; // Mengatur lebar kolom Nama Aset
-    worksheet.getColumn(3).width = 30; // Mengatur lebar kolom Jumlah
-    worksheet.getColumn(4).width = 30; // Mengatur lebar kolom Nilai
-    worksheet.getColumn(5).width = 30; // Mengatur lebar kolom Lokasi
-    worksheet.getColumn(6).width = 30; // Mengatur lebar kolom Created at
 
-    // Menambahkan data ke worksheet dengan gaya yang ditingkatkan
+    // Set column widths
+    for (let i = 1; i <= reportHeader.length; i++) {
+      worksheet.getColumn(i).width = 30;
+    }
+
+    // Add data to worksheet
     results.forEach((aset) => {
       const row = worksheet.addRow([
+        aset.nama_lokasi || aset.nama_kategori || aset.nama_jenis, // Adjust columns for the specific report type
         aset.id_aset,
         aset.nama_aset,
         aset.jumlah,
         aset.nilai,
-        aset.nama_lokasi,
         aset.created_at,
       ]);
 
-      // Mengatur rata tengah untuk kolom ID Aset, Nama Aset, Jumlah, Nilai, dan Lokasi
       row.alignment = { horizontal: "left" };
     });
 
-    // Menambahkan total jumlah dan total nilai ke worksheet dengan gaya yang ditingkatkan
+    // Add total jumlah and total nilai to worksheet
     const totalJumlahRow = worksheet.addRow([
       "Total Jumlah Aset :",
       totalJumlah.toString(),
       "",
       "",
+      "",
+      "",
     ]);
     totalJumlahRow.font = { bold: true };
-    totalJumlahRow.alignment = { horizontal: "left" }; // Mengatur rata tengah untuk sel total jumlah
+    totalJumlahRow.alignment = { horizontal: "left" };
 
     const totalNilaiRow = worksheet.addRow([
       "Total Nilai :",
       `Rp ${totalNilai.toString()}`,
       "",
       "",
+      "",
+      "",
     ]);
     totalNilaiRow.font = { bold: true };
-    totalNilaiRow.alignment = { horizontal: "left" }; // Mengatur rata tengah untuk sel total nilai
+    totalNilaiRow.alignment = { horizontal: "left" };
 
-    // Menghasilkan file Excel dan mengirimkannya sebagai respons HTTP
+    // Generate Excel file and send it as an HTTP response
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     );
-    res.setHeader("Content-Disposition", "attachment; filename=aset_data.xlsx");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=aset_data_${laporan}.xlsx`
+    );
 
     await workbook.xlsx.write(res);
     res.end();
@@ -1486,33 +1709,10 @@ const generateExcel = async (res, results, totalJumlah, totalNilai) => {
   }
 };
 
-app.get("/", (req, res) => {
-  // Tampilkan formulir di sini
-  res.send(`
-    <form action="/generateReport" method="get">
-      <label for="startDate">Mulai Tanggal:</label>
-      <input type="date" id="startDate" name="startDate" required>
-
-      <label for="endDate">Sampai Tanggal:</label>
-      <input type="date" id="endDate" name="endDate" required>
-
-      <label for="format">Pilih Format:</label>
-      <select id="format" name="format" required>
-        <option value="pdf">PDF</option>
-        <option value="excel">Excel</option>
-      </select>
-
-      <button type="submit">Generate Report</button>
-    </form>
-  `);
-});
-
-// Mendefinisikan rute untuk generate report
 app.get("/generateReport", async (req, res) => {
   try {
-    const { startDate, endDate, format } = req.query;
+    const { startDate, endDate, format, laporan } = req.query;
 
-    // Lakukan validasi atau manipulasi tanggal sesuai kebutuhan
     // Validasi Format Tanggal
     const isValidDateFormat = (dateString) => {
       const regex = /^\d{4}-\d{2}-\d{2}$/;
@@ -1543,20 +1743,85 @@ app.get("/generateReport", async (req, res) => {
       return res.status(400).send("Date range exceeds maximum allowed");
     }
 
-    // Buat SQL Query berdasarkan rentang tanggal
-    const sqlQuery = `
+    // Buat SQL Query berdasarkan rentang tanggal dan jenis laporan
+    let sqlQuery = "";
+    let reportHeader = [];
+    let templateFileName = "";
+
+    if (laporan === "lokasi") {
+      sqlQuery = `
+        SELECT
+          aset.id_aset,
+          lokasi.nama_lokasi,
+          nama_aset.nama_aset,
+          aset.jumlah,
+          aset.nilai,
+          aset.created_at
+        FROM aset
+        JOIN nama_aset ON aset.id_aset = nama_aset.id_aset
+        JOIN lokasi ON aset.id_lokasi = lokasi.id
+        WHERE aset.created_at BETWEEN '${startDate}' AND '${endDate}';
+      `;
+      reportHeader = [
+        "Lokasi",
+        "ID Aset",
+        "Nama Aset",
+        "Jumlah",
+        "Nilai",
+        "Dibuat pada",
+      ];
+      templateFileName = "perLokasi";
+    } else if (laporan === "kategori") {
+      // Tambahkan query dan header untuk laporan per kategori
+      sqlQuery = `
       SELECT
-        aset.id_aset,
-        nama_aset.nama_aset,
-        aset.jumlah,
-        aset.nilai,
-        lokasi.nama_lokasi,
-        aset.created_at
-      FROM aset
-      JOIN nama_aset ON aset.id_aset = nama_aset.id_aset
-      JOIN lokasi ON aset.id_lokasi = lokasi.id
-      WHERE aset.created_at BETWEEN '${startDate}' AND '${endDate}';
-    `;
+      aset.id_aset,
+      kategori.nama_kategori,
+      nama_aset.nama_aset,
+      aset.jumlah,
+      aset.nilai,
+      aset.created_at
+    FROM aset
+    JOIN nama_aset ON aset.id_aset = nama_aset.id_aset
+    JOIN kategori ON nama_aset.id_kategori = kategori.id_kategori
+        WHERE aset.created_at BETWEEN '${startDate}' AND '${endDate}';
+      `;
+      reportHeader = [
+        "Nama Kategori",
+        "ID Aset",
+        "Nama Aset",
+        "Jumlah",
+        "Nilai",
+        "Dibuat pada",
+      ];
+      templateFileName = "perKategori";
+    } else if (laporan === "jenis") {
+      // Tambahkan query dan header untuk laporan per jenis
+      sqlQuery = `
+        SELECT
+          aset.id_aset,
+          jenis.nama_jenis,
+          nama_aset.nama_aset,
+          aset.jumlah,
+          aset.nilai,
+          aset.created_at
+        FROM aset
+        JOIN nama_aset ON aset.id_aset = nama_aset.id_aset
+        JOIN jenis ON nama_aset.id_jenis = jenis.id_jenis
+        WHERE aset.created_at BETWEEN '${startDate}' AND '${endDate}';
+      `;
+      reportHeader = [
+        "Nama Jenis",
+        "ID Aset",
+        "Nama Aset",
+        "Jumlah",
+        "Nilai",
+        "Dibuat pada",
+      ];
+      templateFileName = "perJenis";
+    } else {
+      return res.status(400).send("Invalid report type");
+    }
 
     const results = await new Promise((resolve, reject) => {
       connection.query(sqlQuery, (error, results, fields) => {
@@ -1570,7 +1835,13 @@ app.get("/generateReport", async (req, res) => {
 
     // Baca template HTML dari file
     const template = fs.readFileSync(
-      path.join(__dirname, "views", "admin", "template", "aset.ejs"),
+      path.join(
+        __dirname,
+        "views",
+        "admin",
+        "template",
+        `${templateFileName}.ejs`
+      ),
       "utf-8"
     );
 
@@ -1579,13 +1850,21 @@ app.get("/generateReport", async (req, res) => {
       aset: results,
       totalJumlah: totalJumlah,
       totalNilai: totalNilai,
+      reportHeader: reportHeader,
     });
 
     // Generate report berdasarkan format yang dipilih
     if (format === "pdf") {
-      generatePDF(res, htmlContent);
+      generatePDF(res, htmlContent, templateFileName);
     } else if (format === "excel") {
-      generateExcel(res, results, totalJumlah, totalNilai);
+      generateExcel(
+        res,
+        results,
+        totalJumlah,
+        totalNilai,
+        reportHeader,
+        templateFileName
+      );
     } else {
       res.status(400).send("Invalid format");
     }
