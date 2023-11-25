@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aset Admin</title>
+    <title>Lokasi Admin</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-       <!-- Datatable CSS -->
+    <!-- Datatable CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <!-- <link rel="stylesheet" href="/css/admin-aset.css" /> -->
     <link rel="stylesheet" href="/css/style.css" />
@@ -47,7 +47,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/aset/user">
+              <a class="nav-link" href="/aset">
                 <img src="/images/aset.png" alt="Logo" class="logo-sidebar" />
                 Data Aset
               </a>
@@ -67,7 +67,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/laporan/user">
+              <a class="nav-link" href="/laporan">
                 <img
                   src="/images/laporan.png"
                   alt="Logo"
@@ -81,65 +81,47 @@
 
         <div class="col-8 content-box mb-5">
           <!-- Konten dalam kotak -->
-          <h2>Data Aset</h2>
-          <!-- Tombol "Add" -->
-          <a href="/aset/tambah/user" class="btn btn-primary my-4" >Tambah +</a>
+          <h2>Lokasi</h2>
+          <!-- Tombol "Tambah" -->
+          <a href="/lokasi/tambah/user" class="btn btn-primary my-4">Tambah +</a>
+          <!-- Elemen tabel -->
           <div class="row mb-3">
-            <table id="aset" class="display" style="width: 100%;">
+          <table id="location" class="display" style="width: 100%;">
             <thead>
               <tr>
-                <th scope="col">ID Aset</th>
-                <th scope="col">Nama Aset</th>
-                <th scope="col">Jumlah</th>
-                <th scope="col">Nilai</th>
                 <th scope="col">Lokasi</th>
                 <th scope="col">Aksi</th>
-              </tr>
+               </tr>
             </thead>
             <tbody>
-              <% aset.forEach(function(aset) { %>
-                <tr data-href="/aset/detail/<%= aset.id %>">
-                    <td><%= aset.id_aset %></td>
-                    <td><%= aset.nama_aset %></td>
-                    <td><%= aset.jumlah %></td>
-                    <td><%= aset.nilai %></td>
-                    <td><%= aset.nama_lokasi %></td>
-                    <td>
-                        <!-- Tambahkan tombol edit dan hapus sesuai kebutuhan -->
-                        <a href="/aset/edit/user/<%= aset.id %>" class="btn btn-sm btn-primary">edit</a>
-                        <!-- Tambahkan tombol hapus dengan menggunakan form untuk mengonfirmasi penghapusan -->
-                        <a onclick="return confirm('Anda yakin akan menghapus data ini?')" href="/aset/delete/user/<%= aset.id %>" class="btn btn-sm btn-danger">Hapus</a>
-                    </td>
-                </tr>
-            <% }); %>
-              <!-- Tambahkan lebih banyak baris sesuai dengan data Anda -->
+              <% lokasi.forEach(function(lokal) { %>
+                  <tr>
+                    <td><%= lokal.nama_lokasi %></td>
+                    <td><a href="/lokasi/edit/user/<%= lokal.id %>" class="btn btn-sm btn-primary">Edit</a>
+                      <a onclick="return confirm('Anda yakin akan menghapus data ini?')" href="/lokasi/delete/user/<%= lokal.id %>" class="btn btn-sm btn-danger">Hapus</a></td>
+                  </tr>
+              <% }); %>
             </tbody>
           </table>
         </div>
-        </div>
         
+        
+    
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
-
     <!-- Datatable js -->
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <!-- Panggil Datatable -->
     <script>
-      document.querySelectorAll("tr[data-href]").forEach(function(row) {
-        row.style.cursor = "pointer";
-        row.addEventListener("click", function() {
-          window.location.href = this.getAttribute("data-href");
-        });
-      });
-      new DataTable('#aset', {
+      new DataTable('#location', {
         lengthMenu: [5, 10, 15]
       });
-      </script>
+    </script>
   </body>
 </html>

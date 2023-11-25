@@ -26,24 +26,24 @@
 
         <div class="col-8 content-box mb-5">
           <!-- Konten dalam kotak -->
-          <h2>Lokasi</h2>
+          <h2>Sumber</h2>
           <!-- Tombol "Tambah" -->
-          <a href="/lokasi/tambah" class="btn btn-primary my-4">Tambah +</a>
+          <a href="/sumber/tambah" class="btn btn-primary my-4">Tambah +</a>
           <!-- Elemen tabel -->
-          <div class="row mb-3">
-          <table id="location" class="display" style="width: 100%;">
+          <div class="rosw mb-3">
+          <table id="source" class="display" style="width: 100%;">
             <thead>
               <tr>
-                <th scope="col">Lokasi</th>
+                <th scope="col">Sumber</th>
                 <th scope="col">Aksi</th>
                </tr>
             </thead>
             <tbody>
-              <% lokasi.forEach(function(lokal) { %>
+              <% sumbers.forEach(function(sumber) { %>
                   <tr>
-                    <td><%= lokal.nama_lokasi %></td>
-                    <td><a href="/lokasi/edit/<%= lokal.id %>" class="btn btn-sm btn-primary">Edit</a>
-                      <a onclick="return confirm('Apakah Anda yakin mau dihapus?')" href="/lokasi/delete/<%= lokal.id %>" class="btn btn-sm btn-danger">Hapus</a></td>
+                    <td><%= sumber.nama_sumber %></td>
+                    <td><a href="/sumber/edit/<%= sumber.id %>" class="btn btn-sm btn-primary">Edit</a>
+                      <a onclick="return confirm('Apakah Anda yakin mau dihapus?')" href="/sumber/delete/<%= sumber.id %>" class="btn btn-sm btn-danger">Hapus</a></td>
                   </tr>
               <% }); %>
             </tbody>
@@ -64,7 +64,7 @@
 
     <!-- Panggil Datatable -->
     <script>
-      new DataTable('#location', {
+      new DataTable('#source', {
         lengthMenu: [5, 10, 15]
       });
     </script>

@@ -22,22 +22,24 @@
         <%- include('sidebar.ejs') %>
 
         <div class="col-md-8 content-box mb-5">
-          <h2>Edit Lokasi</h2>
+          <h2>Tambah Sumber</h2>
           <div class="row">
             <div class="col-md-6">
-              <form action="/lokasi/edit/<%= lokasi.id %>" method="post">
+              <form action="/sumber/tambah" method="post">
                 <div class="form-group">
-                  <label for="nama_lokasi">Nama Lokasi:</label>
+                  <label for="Sumber">Sumber :</label>
                   <input
                     type="text"
-                    id="nama_lokasi"
-                    name="nama_lokasi"
-                    value="<%= lokasi.nama_lokasi %>"
+                    id="Sumber"
+                    name="Sumber"
                     required
+                    class="form-control"
                   />
                 </div>
-                <button type="submit" class="btn btn-primary me-2">Ubah</button>
-                <a href="/lokasi" class="btn btn-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary me-2">
+                  Tambah
+                </button>
+                <a href="/sumber" class="btn btn-secondary">Batal</a>
               </form>
             </div>
           </div>

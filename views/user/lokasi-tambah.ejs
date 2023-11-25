@@ -3,16 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aset Admin</title>
+    <title>Tambah Aset Admin</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-     <!-- Datatable CSS -->
-     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <!-- <link rel="stylesheet" href="/css/admin-aset.css" /> -->
+    <!-- <link rel="stylesheet" href="/css/admin-tambah.css" /> -->
     <link rel="stylesheet" href="/css/style.css" />
   </head>
 
@@ -37,7 +35,11 @@
         <div class="sidebar">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/dashboard/user">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/dashboard/admin"
+              >
                 <img
                   src="/images/Dashboard.png"
                   alt="Logo"
@@ -67,7 +69,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/laporan/user">
+              <a class="nav-link" href="/laporan">
                 <img
                   src="/images/laporan.png"
                   alt="Logo"
@@ -79,44 +81,36 @@
           </ul>
         </div>
 
-        <div class="col-8 content-box mb-5">
-          <!-- Konten dalam kotak -->
-          <h2>Data Aset</h2>
-          <!-- Tombol "Add" -->
-          <!-- <a href="/aset/tambah" class="btn btn-primary my-4" >Tambah +</a> -->
-          <!-- <div class="row mb-3"> -->
-            <% aset.forEach(function(aset) { %>
-            <div class="card mt-5" style="width: 100%;">
-              <div class="card-header text-capitalize fs-3 text-center">
-                <%= aset.nama_aset %>
-              </div>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">Lokasi : <%= aset.nama_lokasi %></li>
-                <li class="list-group-item">Jumlah : <%= aset.jumlah %></li>
-                <li class="list-group-item">Nilai : <%= aset.nilai %></li>
-                <li class="list-group-item">Kondisi : <%= aset.kondisi %></li>
-                <li class="list-group-item">Sumber : <%= aset.sumber %></li>
-              </ul>
+        <div class="col-md-8 content-box">
+          <h2>Tambah Lokasi</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <form action="/lokasi/tambah/user" method="post">
+                <div class="form-group">
+                  <label for="Lokasi">Lokasi :</label>
+                  <input
+                    type="text"
+                    id="Lokasi"
+                    name="Lokasi"
+                    required
+                    class="form-control"
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary me-2">
+                  Tambah
+                </button>
+                <a href="/lokasi/user" class="btn btn-secondary">Batal</a>
+              </form>
             </div>
-            <% }); %>
-        <!-- </div> -->
+          </div>
         </div>
-        
+      </div>
+    </div>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
-    <!-- Datatable js -->
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-    <!-- Panggil Datatable -->
-    <script>
-      new DataTable('#detail', {
-        lengthMenu: [5, 10, 15]
-      });
-      </script>
   </body>
 </html>

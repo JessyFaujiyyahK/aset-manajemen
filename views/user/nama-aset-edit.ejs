@@ -3,16 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aset Admin</title>
+    <title>Tambah Jenis Admin</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-       <!-- Datatable CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <!-- <link rel="stylesheet" href="/css/admin-aset.css" /> -->
+    <!-- <link rel="stylesheet" href="/css/admin-tambah.css" /> -->
     <link rel="stylesheet" href="/css/style.css" />
   </head>
 
@@ -31,7 +29,6 @@
         </div>
       </div>
     </nav>
-
     <div class="container-fluid">
       <div class="row">
         <div class="sidebar">
@@ -47,7 +44,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/aset/user">
+              <a class="nav-link" href="/aset">
                 <img src="/images/aset.png" alt="Logo" class="logo-sidebar" />
                 Data Aset
               </a>
@@ -67,7 +64,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/laporan/user">
+              <a class="nav-link" href="/laporan">
                 <img
                   src="/images/laporan.png"
                   alt="Logo"
@@ -79,67 +76,34 @@
           </ul>
         </div>
 
-        <div class="col-8 content-box mb-5">
-          <!-- Konten dalam kotak -->
-          <h2>Data Aset</h2>
-          <!-- Tombol "Add" -->
-          <a href="/aset/tambah/user" class="btn btn-primary my-4" >Tambah +</a>
-          <div class="row mb-3">
-            <table id="aset" class="display" style="width: 100%;">
-            <thead>
-              <tr>
-                <th scope="col">ID Aset</th>
-                <th scope="col">Nama Aset</th>
-                <th scope="col">Jumlah</th>
-                <th scope="col">Nilai</th>
-                <th scope="col">Lokasi</th>
-                <th scope="col">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% aset.forEach(function(aset) { %>
-                <tr data-href="/aset/detail/<%= aset.id %>">
-                    <td><%= aset.id_aset %></td>
-                    <td><%= aset.nama_aset %></td>
-                    <td><%= aset.jumlah %></td>
-                    <td><%= aset.nilai %></td>
-                    <td><%= aset.nama_lokasi %></td>
-                    <td>
-                        <!-- Tambahkan tombol edit dan hapus sesuai kebutuhan -->
-                        <a href="/aset/edit/user/<%= aset.id %>" class="btn btn-sm btn-primary">edit</a>
-                        <!-- Tambahkan tombol hapus dengan menggunakan form untuk mengonfirmasi penghapusan -->
-                        <a onclick="return confirm('Anda yakin akan menghapus data ini?')" href="/aset/delete/user/<%= aset.id %>" class="btn btn-sm btn-danger">Hapus</a>
-                    </td>
-                </tr>
-            <% }); %>
-              <!-- Tambahkan lebih banyak baris sesuai dengan data Anda -->
-            </tbody>
-          </table>
-        </div>
+        <div class="col-md-8 content-box">
+          <h2>Edit Nama Aset</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <form action="/nama/aset/edit/user" method="post">
+                <div class="form-group">
+                  <label for="nama_aset">Nama Aset :</label>
+                  <input 
+                  type="text" 
+                  id="nama_aset" 
+                  name="nama_aset" 
+                  required class="form-control" 
+                  value="<%= nama_aset %>"/>
+                </div>
+                <input type="hidden" name="idAset" value="<%= id_aset %>" />
+                <button type="submit" class="btn btn-primary me-2">
+                  Edit
+                </button>
+                <a href="/nama/aset/user" class="btn btn-secondary">Batal</a>
+              </form>
+            </div>
+          </div>
         </div>
         
-
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
-
-    <!-- Datatable js -->
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-    <!-- Panggil Datatable -->
-    <script>
-      document.querySelectorAll("tr[data-href]").forEach(function(row) {
-        row.style.cursor = "pointer";
-        row.addEventListener("click", function() {
-          window.location.href = this.getAttribute("data-href");
-        });
-      });
-      new DataTable('#aset', {
-        lengthMenu: [5, 10, 15]
-      });
-      </script>
   </body>
 </html>

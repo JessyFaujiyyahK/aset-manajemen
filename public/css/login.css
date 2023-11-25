@@ -1,8 +1,10 @@
 body {
   background-image: url("/images/manajemen-aset.png");
-  background-size: cover;
+  /* background-size: cover;  */
   background-repeat: no-repeat;
   background-position: center;
+  margin: 0; /* Menghilangkan margin default dari body */
+  padding: 0; /* Menghilangkan padding default dari body */
 }
 
 .card {

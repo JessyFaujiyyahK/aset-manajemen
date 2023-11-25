@@ -47,10 +47,24 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/aset">
+              <a class="nav-link" href="/aset/user">
                 <img src="/images/aset.png" alt="Logo" class="logo-sidebar" />
                 Data Aset
               </a>
+              <ul class="submenu">
+                <li class="nav-item">
+                  <a class="nav-link" href="/aset/user">Aset</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/jenis/user">Jenis</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/nama/aset/user">Nama Aset</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/lokasi/user">Lokasi</a>
+                </li>
+              </ul>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/laporan/user">
@@ -65,7 +79,7 @@
           </ul>
         </div>
 
-        <div class="col-md-8 content-box">
+        <div class="col-md-8 content-box  mb-5">
           <h2>Tambah Data Aset</h2>
           <div class="row">
             <div class="col-md-6">
@@ -81,26 +95,6 @@
                     <% }); %>
                   </select>
                 </div>
-                <div class="form-group">
-                  <label for="nilai">Nilai :</label>
-                  <input
-                    type="number"
-                    id="nilai"
-                    name="nilai"
-                    required
-                    class="form-control"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="Jumlah">Jumlah :</label>
-                  <input
-                    type="number"
-                    id="Jumlah"
-                    name="jumlah"
-                    required
-                    class="form-control"
-                  />
-                </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
@@ -115,16 +109,46 @@
                   <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
                 </select>
               </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-group">
-                <label for="sumber">Sumber :</label>
+                <label for="Jumlah">Jumlah :</label>
                 <input
-                  type="string"
-                  id="sumber"
-                  name="sumber"
+                  type="number"
+                  id="Jumlah"
+                  name="jumlah"
                   required
                   class="form-control"
                 />
               </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="sumber">Sumber :</label>
+                <select id="sumber" name="sumber" class="form-select" required>
+                  <option selected>Open this select menu</option>
+                  <% sumber.forEach(function(sumber) { %>
+                  <option value="<%= sumber.id %>">
+                    <%= sumber.nama_sumber %>
+                  </option>
+                  <% }); %>
+                  <!-- Tambahkan opsi sesuai dengan kebutuhan Anda -->
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="nilai">Nilai :</label>
+                <input
+                  type="number"
+                  id="nilai"
+                  name="nilai"
+                  required
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="kondisi">Kondisi :</label>
                 <select
@@ -144,7 +168,7 @@
           </div>
           <div class="d-flex justify-content-center mt-3">
             <button type="submit" class="btn btn-primary me-2">Tambah</button>
-            <a href="/aset/user" type="button" class="btn btn-secondary">Batal</a>
+            <a href="/aset/user" class="btn btn-secondary">Batal</a>
           </div>
         </form>
         </div>

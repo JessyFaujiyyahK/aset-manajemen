@@ -17,17 +17,73 @@
   </head>
 
   <body>
-    <%- include('navbar.ejs') %>
-    
+    <nav class="navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="/images/logo.png" class="logo-stmik" />
+        </a>
+        <p class="navbar-brand-judul" href="#">Manajemen Aset</p>
+        <div class="user-container">
+          <p class="username"><%= userName %></p>
+          <div class="logout">
+            <a href="/logout" class="btn custom-btn">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
     <div class="container-fluid">
       <div class="row">
-        <%- include('sidebar.ejs') %>
+        <div class="sidebar">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/dashboard/admin">
+                <img
+                  src="/images/Dashboard.png"
+                  alt="Logo"
+                  class="logo-sidebar"
+                />
+                Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/aset">
+                <img src="/images/aset.png" alt="Logo" class="logo-sidebar" />
+                Data Aset
+              </a>
+              <ul class="submenu">
+                <li class="nav-item">
+                  <a class="nav-link" href="/aset/user">Aset</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/jenis/user">Jenis</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/nama/aset/user">Nama Aset</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/lokasi/user">Lokasi</a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/laporan">
+                <img
+                  src="/images/laporan.png"
+                  alt="Logo"
+                  class="logo-sidebar"
+                />
+                Laporan
+              </a>
+            </li>
+          </ul>
+        </div>
+
         <div class="col-8 content-box mb-5">
           <!-- Konten dalam kotak -->
           <h2>Jenis</h2>
           <!-- Tombol "Add" -->
-          <a href="/jenis/tambah" class="btn btn-primary my-4">Tambah +</a>
+          <a href="/jenis/tambah/user" class="btn btn-primary my-4">Tambah +</a>
           <div class="row mb-3">
               <table id="jenis" class="display" style="width: 100%;">
                 <thead>
@@ -46,9 +102,9 @@
                             <td><%= jenis.nama_jenis %></td>
                             <td>
                                 <!-- Tambahkan tombol edit dan hapus sesuai kebutuhan -->
-                                <a href="/jenis/edit/<%= jenis.id_jenis %>" class="btn btn-sm btn-primary">Edit</a>
+                                <a href="/jenis/edit/user/<%= jenis.id_jenis %>" class="btn btn-sm btn-primary">Edit</a>
                                 <!-- Tambahkan tombol hapus dengan menggunakan form untuk mengonfirmasi penghapusan -->
-                                <a onclick="return confirm('Apakah Anda yakin mau dihapus?')" href="/jenis/delete/<%= jenis.id_jenis %>" class="btn btn-sm btn-danger">Hapus</a>
+                                <a onclick="return confirm('Anda yakin akan menghapus data ini?')" href="/jenis/delete/user/<%= jenis.id_jenis %>" class="btn btn-sm btn-danger">Hapus</a>
                             </td>
                         </tr>
                     <% }); %>

@@ -1,32 +1,17 @@
 body {
   background-color: #edf2f4;
-  margin: 0;
-  overflow-x: auto;
 }
 
-/* -----------------------NAVBAR------------------------------ */
-
-/* Navbar styling */
+/* General styles for navbar */
 .navbar {
-  background-color: #ffffff;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  background-color: #e2eef3;
+  padding: 10px; /* Add padding for better spacing */
 }
 
-/* Logo styling */
-.logo-stmik {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Navbar brand styling */
 .navbar-brand {
-  display: flex;
-  flex-direction: column; /* Mengatur tata letak menjadi kolom */
-  align-items: center; /* Pusatkan elemen di dalam .navbar-brand */
-  margin-left: 10px;
+  line-height: 33px;
+  color: #000000;
+  margin-left: 10px; /* Adjust margin for better spacing */
 }
 
 .navbar-brand-judul {
@@ -34,12 +19,12 @@ body {
   font-family: "Inter";
   font-style: normal;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 24px; /* Adjust font size for smaller screens */
   line-height: 33px;
-  color: #181717;
+  color: #665b5b;
   text-decoration: none;
-  text-align: center;
-  margin-bottom: 0;
+  text-align: center; /* Center the text on smaller screens */
+  margin-bottom: 10px; /* Add margin bottom for better spacing */
 }
 
 .navbar-brand-admin {
@@ -50,59 +35,46 @@ body {
   font-size: 18px;
   line-height: 33px;
   color: #665b5b;
-  text-align: center;
+  text-align: center; /* Center the text on smaller screens */
 }
 
-/* Responsive rules for smaller screens */
-@media (max-width: 767px) {
-  .navbar {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .navbar-brand {
-    margin-left: 0;
-  }
-
-  .navbar-brand-admin {
-    margin-left: 0;
-  }
-
-  .logo-stmik {
-    margin: 0 auto 10px;
-  }
-
+/* Styles for larger screens */
+@media (min-width: 768px) {
   .navbar-brand-judul {
-    margin-right: 0;
+    margin-right: 20px;
+    text-align: left; /* Align text to the left for larger screens */
+    margin-bottom: 0; /* Remove margin bottom for larger screens */
   }
 
   .navbar-brand-admin {
-    margin-left: 0;
-  }
-
-  .logout {
-    height: auto;
-    margin-left: 0;
-    margin-top: 10px; /* Adjust the value as needed */
-  }
-
-  .custom-btn {
-    background-color: #d9d9d9;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-left: auto;
+    text-align: right; /* Align text to the right for larger screens */
   }
 }
 
-/* -----------------------SIDEBAR------------------------------ */
+.logo-stmik {
+  max-width: 75%; /* Pastikan logo tidak melebihi lebar kontainer */
+  height: auto;
+  margin-right: 10px; /* Sesuaikan margin untuk penataan yang lebih baik */
+
+  /* Aturan responsif untuk layar yang lebih kecil */
+  @media (max-width: 767px) {
+    margin-right: 0; /* Hapus margin kanan pada layar yang lebih kecil */
+    margin-bottom: 10px; /* Tambahkan margin bawah pada layar yang lebih kecil */
+    display: block; /* Atur tampilan logo menjadi block untuk penataan yang lebih baik */
+    margin-left: auto; /* Pusatkan logo pada layar yang lebih kecil */
+    margin-right: auto;
+  }
+}
+
+/* General styles for the sidebar */
 .sidebar {
-  width: 200px;
+  width: 250px;
   height: 100vh;
-  background-color: #ffffff;
+  background-color: #f8f9fa;
   padding: 20px;
-  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
-  flex: 0 0 220px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex: 0 0 250px;
   position: sticky;
   top: 0;
   bottom: 0;
@@ -171,71 +143,42 @@ body {
 /* Responsive styles for smaller screens */
 @media (max-width: 767px) {
   .sidebar {
-    width: 100%;
-    position: static;
-    box-shadow: none;
+    width: 100%; /* Buat sidebar full-width pada layar yang lebih kecil */
+    position: static; /* Hapus posisi sticky pada layar yang lebih kecil */
+    box-shadow: none; /* Hapus box-shadow pada layar yang lebih kecil */
   }
 
   .nav-link {
-    padding: 10px;
+    padding: 10px; /* Sesuaikan padding untuk tautan navigasi pada layar yang lebih kecil */
   }
 
   .submenu {
-    padding-left: 10px;
+    padding-left: 10px; /* Sesuaikan padding untuk submenu pada layar yang lebih kecil */
   }
 
   .nav-item {
-    margin-bottom: 5px;
+    margin-bottom: 5px; /* Sesuaikan margin untuk item navigasi pada layar yang lebih kecil */
   }
 
   .submenu .nav-link {
-    margin-left: 10px;
+    margin-left: 10px; /* Sesuaikan margin untuk tautan submenu pada layar yang lebih kecil */
   }
 
   .logo-sidebar {
-    width: 15px;
-    margin-right: 5px;
+    width: 15px; /* Sesuaikan lebar logo pada layar yang lebih kecil */
+    margin-right: 5px; /* Sesuaikan margin kanan untuk logo pada layar yang lebih kecil */
   }
 }
 
-/* -----------------------CONTENT BOX------------------------------ */
-/* Styling for small screens and medium screens */
-@media (max-width: 800px) {
-  .content-box {
-    width: 90%;
-    margin: 20px auto;
-    background-color: #ffffff;
-    border-radius: 5px;
-    padding: 15px;
-    /* height: auto; */
-  }
-
-  .row {
-    flex-direction: column;
-  }
-
-  .col-md-6 {
-    width: 100%;
-  }
-}
-
-/* Styling for larger screens */
-@media (min-width: 750px) {
-  .content-box {
-    width: 70%;
-    margin: 20px auto;
-    background-color: #ffffff;
-    border-radius: 5px;
-    padding: 20px;
-  }
-
-  .row {
-    flex-direction: row;
-  }
-
-  .col-md-6 {
-    width: 50%;
-  }
+.content-box {
+  width: 70%;
+  margin-left: 5%;
+  margin-bottom: auto;
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .card {
@@ -257,10 +200,19 @@ body {
   font-size: 1.2rem;
 }
 
+.custom-btn {
+  background-color: #d9d9d9;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .info-box {
   background-color: #edf0f1;
   color: #0e0d0d;
   padding: 10px;
+  /* border-radius: 10px; */
   width: 200px;
   height: 100px;
   text-align: center;
@@ -269,37 +221,24 @@ body {
   flex-direction: column;
   justify-content: center;
   font-size: 15px;
+  /* font-weight: bold; */
 }
 
-.row.mb-3 {
-  margin-bottom: 50px; /* Adjust the value as needed to create space between the table and search */
+.table {
+  width: 100%; /* Menyesuaikan lebar tabel dengan parentnya */
+  font-size: 14px; /* Mengurangi ukuran font dalam tabel */
+  margin-top: 40px; /* Mengatur margin atas */
 }
 
 th:last-child {
-  width: 20%;
+  width: 20%; /* Sesuaikan dengan persentase yang diinginkan */
 }
 
-/* .table th,
+.table th,
 .table td {
-  padding: 10px;
-  text-align: center;
+  padding: 10px; /* Mengatur padding dalam sel tabel */
+  text-align: center; /* Pusatkan teks dalam sel tabel */
   height: 10%;
-} */
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: 100%;
-}
-
-th,
-td {
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #f2f2f2;
 }
 
 .btn-primary {
@@ -308,8 +247,8 @@ tr:nth-child(even) {
   color: #665b5b;
   font-size: 15px;
   font-weight: bold;
-  width: auto;
-  height: auto;
+  width: auto; /* Atur lebar kotak */
+  height: auto; /* Atur tinggi kotak */
   transition: color 0.1s ease;
 }
 
@@ -336,6 +275,7 @@ tr:nth-child(even) {
   color: #665b5b;
   padding: 10px;
   border-radius: 5px;
+  /* Efek transisi saat berubah warna */
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -346,49 +286,49 @@ tr:nth-child(even) {
   color: #665b5b;
   border: none;
   border-radius: 5px;
-  margin-left: -1px;
+  margin-left: -1px; /* Menghilangkan spasi antara input dan tombol */
+  /* Efek transisi saat berubah warna */
   transition: background-color 0.1s ease, color 0.1s ease;
 }
 
 .input-group:hover button {
-  background-color: blue;
-  color: white;
+  background-color: blue; /* Ubah warna latar belakang tombol menjadi biru saat dihover */
+  color: white; /* Ubah warna teks tombol menjadi putih saat dihover */
 }
-
-td .btn-primary,
+*/ td .btn-primary,
 td .btn-danger {
-  margin-top: 3px;
+  margin-top: 3px; /* Memberi ruang sebelah kanan antara tombol "Edit" dan "Hapus" */
   height: 30px;
   font-size: 15px;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* Mengatur teks secara horizontal di tengah tombol */
+  align-items: center; /* Mengatur teks secara vertikal di tengah tombol */
 }
 
-/* #aset {
+#asset-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
-} */
+}
 
-/* #aset th,
-#aset td {
+#asset-table th,
+#asset-table td {
   padding: 10px;
   text-align: left;
   border: 1px solid #ccc;
-} */
+}
 
-/* #aset th {
+#asset-table th {
   background-color: #f2f2f2;
 }
 
-#aset tbody tr:nth-child(even) {
+#asset-table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-#aset tbody tr:hover {
+#asset-table tbody tr:hover {
   background-color: #d9edf7;
   cursor: pointer;
-} */
+}
 
 button {
   background-color: #4c77af;
@@ -549,8 +489,12 @@ p {
   font-size: 16px;
 }
 
+.logout {
+  margin-left: auto;
+}
+
 canvas {
   max-width: 100%;
   height: auto;
-  width: auto\9;
+  width: auto\9; /* ie8 */
 }
