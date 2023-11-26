@@ -2352,17 +2352,25 @@ const generateExcel = async (
 const tambahkanBarisTotal = (worksheet, label, totalJumlah, totalNilai) => {
   // Cek apakah label kategori adalah 'undefined' atau 'Uncategorized'
   if (label && !["undefined", "uncategorized"].includes(label.toLowerCase())) {
+    const totalLabel = "Total " + label; // Tambahkan "Total" pada label
     const row = worksheet.addRow([
-      label,
+      totalLabel,
+      "",
+      "",
       totalJumlah ? totalJumlah.toString() : "",
-      "",
-      "",
       totalNilai ? totalNilai.toString() : "",
       "",
     ]);
 
     row.font = { bold: true };
     row.alignment = { horizontal: "left" };
+
+    // Tambahkan baris kosong setelah setiap kelompok
+    worksheet.addRow([]);
+
+    // Atur style untuk baris kosong
+    const emptyRow = worksheet.lastRow;
+    emptyRow.border = { bottom: { style: "thin" } };
   }
 };
 
