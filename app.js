@@ -2213,6 +2213,167 @@ const generatePDF = async (res, htmlContent, laporan) => {
   }
 };
 
+// const generateExcel = async (
+//   res,
+//   results,
+//   totalJumlah,
+//   totalNilai,
+//   reportHeader,
+//   laporan
+// ) => {
+//   try {
+//     const workbook = new ExcelJS.Workbook();
+//     const worksheet = workbook.addWorksheet("Data Aset");
+
+//     const headerRow = worksheet.addRow(reportHeader);
+//     headerRow.font = { bold: true };
+//     headerRow.fill = {
+//       type: "pattern",
+//       pattern: "solid",
+//       fgColor: { argb: "DDDDDD" },
+//     };
+
+//     // Setel lebar kolom
+//     for (let i = 1; i <= reportHeader.length; i++) {
+//       worksheet.getColumn(i).width = 30;
+//     }
+
+//     // Menggunakan objek untuk melacak total jumlah setiap kategori dan jenis
+//     const totalJumlahPerCategory = {};
+//     const totalJumlahPerType = {};
+//     const totalJumlahPerLocation = {};
+
+//     // Urutkan hasil berdasarkan lokasi, jenis, dan kategori
+//     results.sort((a, b) => {
+//       const keyA = a.nama_lokasi || a.nama_jenis || a.nama_kategori;
+//       const keyB = b.nama_lokasi || b.nama_jenis || b.nama_kategori;
+//       return keyA.localeCompare(keyB);
+//     });
+
+//     results.forEach((aset) => {
+//       const category = aset.nama_kategori; // Kategori default jika tidak ada
+//       const type = aset.nama_jenis;
+//       const location = aset.nama_lokasi;
+
+//       // Inisialisasi total untuk kategori jika belum ada
+//       if (!totalJumlahPerCategory[category]) {
+//         totalJumlahPerCategory[category] = {
+//           totalJumlah: 0,
+//           totalNilai: 0,
+//         };
+//       }
+
+//       // Inisialisasi total untuk jenis jika belum ada
+//       if (!totalJumlahPerType[type]) {
+//         totalJumlahPerType[type] = {
+//           totalJumlah: 0,
+//           totalNilai: 0,
+//         };
+//       }
+
+//       // Inisialisasi total untuk jenis jika belum ada
+//       if (!totalJumlahPerLocation[location]) {
+//         totalJumlahPerLocation[location] = {
+//           totalJumlah: 0,
+//           totalNilai: 0,
+//         };
+//       }
+
+//       // Tambahkan jumlah dan nilai aset ke total kategori dan jenis
+//       totalJumlahPerCategory[category].totalJumlah += aset.jumlah;
+//       totalJumlahPerCategory[category].totalNilai += aset.nilai;
+
+//       totalJumlahPerType[type].totalJumlah += aset.jumlah;
+//       totalJumlahPerType[type].totalNilai += aset.nilai;
+
+//       totalJumlahPerLocation[location].totalJumlah += aset.jumlah;
+//       totalJumlahPerLocation[location].totalNilai += aset.nilai;
+
+//       // Tambahkan baris aset
+//       const row = worksheet.addRow([
+//         type || location || category,
+//         aset.id_aset,
+//         aset.nama_aset,
+//         aset.jumlah,
+//         aset.nilai,
+//         aset.created_at,
+//       ]);
+
+//       row.alignment = { horizontal: "left" };
+//     });
+
+//     // Tambahkan baris total untuk setiap kategori
+//     for (const category in totalJumlahPerCategory) {
+//       const { totalJumlah, totalNilai } = totalJumlahPerCategory[category];
+
+//       tambahkanBarisTotal(worksheet, category, totalJumlah, totalNilai);
+//     }
+
+//     // Tambahkan baris total untuk setiap jenis
+//     for (const type in totalJumlahPerType) {
+//       const { totalJumlah, totalNilai } = totalJumlahPerType[type];
+
+//       tambahkanBarisTotal(worksheet, type, totalJumlah, totalNilai);
+//     }
+
+//     // Tambahkan baris total untuk setiap jenis
+//     for (const location in totalJumlahPerLocation) {
+//       const { totalJumlah, totalNilai } = totalJumlahPerLocation[location];
+
+//       tambahkanBarisTotal(worksheet, location, totalJumlah, totalNilai);
+//     }
+
+//     // Tambahkan total jumlah dan total nilai ke lembar kerja
+//     tambahkanBarisTotal(
+//       worksheet,
+//       "Total Keseluruhan",
+//       totalJumlah,
+//       totalNilai
+//     );
+
+//     // Hasilkan file Excel dan kirim sebagai respons HTTP
+//     res.setHeader(
+//       "Content-Type",
+//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+//     );
+//     res.setHeader(
+//       "Content-Disposition",
+//       `attachment; filename=data_aset_${laporan}.xlsx`
+//     );
+
+//     await workbook.xlsx.write(res);
+//     res.end();
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Error generating Excel");
+//   }
+// };
+
+// const tambahkanBarisTotal = (worksheet, label, totalJumlah, totalNilai) => {
+//   // Cek apakah label kategori adalah 'undefined' atau 'Uncategorized'
+//   if (label && !["undefined", "uncategorized"].includes(label.toLowerCase())) {
+//     const totalLabel = "Total " + label; // Tambahkan "Total" pada label
+//     const row = worksheet.addRow([
+//       totalLabel,
+//       "",
+//       "",
+//       totalJumlah ? totalJumlah.toString() : "",
+//       totalNilai ? totalNilai.toString() : "",
+//       "",
+//     ]);
+
+//     row.font = { bold: true };
+//     row.alignment = { horizontal: "left" };
+
+//     // Tambahkan baris kosong setelah setiap kelompok
+//     worksheet.addRow([]);
+
+//     // Atur style untuk baris kosong
+//     const emptyRow = worksheet.lastRow;
+//     emptyRow.border = { bottom: { style: "thin" } };
+//   }
+// };
+
 const generateExcel = async (
   res,
   results,
@@ -2238,7 +2399,7 @@ const generateExcel = async (
       worksheet.getColumn(i).width = 30;
     }
 
-    // Menggunakan objek untuk melacak total jumlah setiap kategori dan jenis
+    // Menggunakan objek untuk melacak total jumlah setiap kategori, jenis, dan lokasi
     const totalJumlahPerCategory = {};
     const totalJumlahPerType = {};
     const totalJumlahPerLocation = {};
@@ -2250,10 +2411,44 @@ const generateExcel = async (
       return keyA.localeCompare(keyB);
     });
 
+    let currentCategory = "";
+    let currentType = "";
+    let currentLocation = "";
+
     results.forEach((aset) => {
-      const category = aset.nama_kategori; // Kategori default jika tidak ada
+      const category = aset.nama_kategori;
       const type = aset.nama_jenis;
       const location = aset.nama_lokasi;
+
+      if (currentCategory !== category) {
+        tambahkanBarisTotal(
+          worksheet,
+          currentCategory,
+          totalJumlahPerCategory[currentCategory]?.totalJumlah,
+          totalJumlahPerCategory[currentCategory]?.totalNilai
+        );
+        currentCategory = category;
+      }
+
+      if (currentType !== type) {
+        tambahkanBarisTotal(
+          worksheet,
+          currentType,
+          totalJumlahPerType[currentType]?.totalJumlah,
+          totalJumlahPerType[currentType]?.totalNilai
+        );
+        currentType = type;
+      }
+
+      if (currentLocation !== location) {
+        tambahkanBarisTotal(
+          worksheet,
+          currentLocation,
+          totalJumlahPerLocation[currentLocation]?.totalJumlah,
+          totalJumlahPerLocation[currentLocation]?.totalNilai
+        );
+        currentLocation = location;
+      }
 
       // Inisialisasi total untuk kategori jika belum ada
       if (!totalJumlahPerCategory[category]) {
@@ -2271,7 +2466,7 @@ const generateExcel = async (
         };
       }
 
-      // Inisialisasi total untuk jenis jika belum ada
+      // Inisialisasi total untuk lokasi jika belum ada
       if (!totalJumlahPerLocation[location]) {
         totalJumlahPerLocation[location] = {
           totalJumlah: 0,
@@ -2279,7 +2474,7 @@ const generateExcel = async (
         };
       }
 
-      // Tambahkan jumlah dan nilai aset ke total kategori dan jenis
+      // Tambahkan jumlah dan nilai aset ke total kategori, jenis, dan lokasi
       totalJumlahPerCategory[category].totalJumlah += aset.jumlah;
       totalJumlahPerCategory[category].totalNilai += aset.nilai;
 
@@ -2302,26 +2497,27 @@ const generateExcel = async (
       row.alignment = { horizontal: "left" };
     });
 
-    // Tambahkan baris total untuk setiap kategori
-    for (const category in totalJumlahPerCategory) {
-      const { totalJumlah, totalNilai } = totalJumlahPerCategory[category];
+    // Tambahkan total terakhir setelah semua data
+    tambahkanBarisTotal(
+      worksheet,
+      currentCategory,
+      totalJumlahPerCategory[currentCategory]?.totalJumlah,
+      totalJumlahPerCategory[currentCategory]?.totalNilai
+    );
 
-      tambahkanBarisTotal(worksheet, category, totalJumlah, totalNilai);
-    }
+    tambahkanBarisTotal(
+      worksheet,
+      currentType,
+      totalJumlahPerType[currentType]?.totalJumlah,
+      totalJumlahPerType[currentType]?.totalNilai
+    );
 
-    // Tambahkan baris total untuk setiap jenis
-    for (const type in totalJumlahPerType) {
-      const { totalJumlah, totalNilai } = totalJumlahPerType[type];
-
-      tambahkanBarisTotal(worksheet, type, totalJumlah, totalNilai);
-    }
-
-    // Tambahkan baris total untuk setiap jenis
-    for (const location in totalJumlahPerLocation) {
-      const { totalJumlah, totalNilai } = totalJumlahPerLocation[location];
-
-      tambahkanBarisTotal(worksheet, location, totalJumlah, totalNilai);
-    }
+    tambahkanBarisTotal(
+      worksheet,
+      currentLocation,
+      totalJumlahPerLocation[currentLocation]?.totalJumlah,
+      totalJumlahPerLocation[currentLocation]?.totalNilai
+    );
 
     // Tambahkan total jumlah dan total nilai ke lembar kerja
     tambahkanBarisTotal(
@@ -2364,13 +2560,6 @@ const tambahkanBarisTotal = (worksheet, label, totalJumlah, totalNilai) => {
 
     row.font = { bold: true };
     row.alignment = { horizontal: "left" };
-
-    // Tambahkan baris kosong setelah setiap kelompok
-    worksheet.addRow([]);
-
-    // Atur style untuk baris kosong
-    const emptyRow = worksheet.lastRow;
-    emptyRow.border = { bottom: { style: "thin" } };
   }
 };
 
