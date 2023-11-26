@@ -2243,6 +2243,13 @@ const generateExcel = async (
     const totalJumlahPerType = {};
     const totalJumlahPerLocation = {};
 
+    // Urutkan hasil berdasarkan lokasi, jenis, dan kategori
+    results.sort((a, b) => {
+      const keyA = a.nama_lokasi || a.nama_jenis || a.nama_kategori;
+      const keyB = b.nama_lokasi || b.nama_jenis || b.nama_kategori;
+      return keyA.localeCompare(keyB);
+    });
+
     results.forEach((aset) => {
       const category = aset.nama_kategori; // Kategori default jika tidak ada
       const type = aset.nama_jenis;
