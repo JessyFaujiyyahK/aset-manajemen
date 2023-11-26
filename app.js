@@ -2241,10 +2241,12 @@ const generateExcel = async (
     // Menggunakan objek untuk melacak total jumlah setiap kategori dan jenis
     const totalJumlahPerCategory = {};
     const totalJumlahPerType = {};
+    const totalJumlahPerLocation = {};
 
     results.forEach((aset) => {
-      const category = aset.nama_kategori || "Uncategorized"; // Kategori default jika tidak ada
+      const category = aset.nama_kategori; // Kategori default jika tidak ada
       const type = aset.nama_jenis;
+      const location = aset.nama_lokasi;
 
       // Inisialisasi total untuk kategori jika belum ada
       if (!totalJumlahPerCategory[category]) {
@@ -2262,6 +2264,14 @@ const generateExcel = async (
         };
       }
 
+      // Inisialisasi total untuk jenis jika belum ada
+      if (!totalJumlahPerLocation[location]) {
+        totalJumlahPerLocation[location] = {
+          totalJumlah: 0,
+          totalNilai: 0,
+        };
+      }
+
       // Tambahkan jumlah dan nilai aset ke total kategori dan jenis
       totalJumlahPerCategory[category].totalJumlah += aset.jumlah;
       totalJumlahPerCategory[category].totalNilai += aset.nilai;
@@ -2269,9 +2279,12 @@ const generateExcel = async (
       totalJumlahPerType[type].totalJumlah += aset.jumlah;
       totalJumlahPerType[type].totalNilai += aset.nilai;
 
+      totalJumlahPerLocation[location].totalJumlah += aset.jumlah;
+      totalJumlahPerLocation[location].totalNilai += aset.nilai;
+
       // Tambahkan baris aset
       const row = worksheet.addRow([
-        "", // Kolom pertama tetap kosong untuk indentasi
+        type || location || category,
         aset.id_aset,
         aset.nama_aset,
         aset.jumlah,
@@ -2294,6 +2307,13 @@ const generateExcel = async (
       const { totalJumlah, totalNilai } = totalJumlahPerType[type];
 
       tambahkanBarisTotal(worksheet, type, totalJumlah, totalNilai);
+    }
+
+    // Tambahkan baris total untuk setiap jenis
+    for (const location in totalJumlahPerLocation) {
+      const { totalJumlah, totalNilai } = totalJumlahPerLocation[location];
+
+      tambahkanBarisTotal(worksheet, location, totalJumlah, totalNilai);
     }
 
     // Tambahkan total jumlah dan total nilai ke lembar kerja
