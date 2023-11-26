@@ -2238,32 +2238,36 @@ const generateExcel = async (
       worksheet.getColumn(i).width = 30;
     }
 
-    // Tambahkan data ke lembar kerja
-    let currentLocation = null;
-    let totalJumlahLocation = 0;
-    let totalNilaiLocation = 0;
+    // Menggunakan objek untuk melacak total jumlah setiap kategori dan jenis
+    const totalJumlahPerCategory = {};
+    const totalJumlahPerType = {};
 
     results.forEach((aset) => {
-      // Jika lokasi berubah, tambahkan baris yang digabungkan untuk lokasi sebelumnya
-      if (currentLocation !== aset.nama_lokasi) {
-        if (currentLocation !== null) {
-          tambahkanBarisYangDigabungkan(
-            worksheet,
-            currentLocation,
-            totalJumlahLocation,
-            totalNilaiLocation
-          );
-        }
+      const category = aset.nama_kategori || "Uncategorized"; // Kategori default jika tidak ada
+      const type = aset.nama_jenis;
 
-        // Reset total untuk lokasi baru
-        currentLocation = aset.nama_lokasi;
-        totalJumlahLocation = 0;
-        totalNilaiLocation = 0;
+      // Inisialisasi total untuk kategori jika belum ada
+      if (!totalJumlahPerCategory[category]) {
+        totalJumlahPerCategory[category] = {
+          totalJumlah: 0,
+          totalNilai: 0,
+        };
       }
 
-      // Perbarui total untuk lokasi saat ini
-      totalJumlahLocation += aset.jumlah;
-      totalNilaiLocation += aset.nilai;
+      // Inisialisasi total untuk jenis jika belum ada
+      if (!totalJumlahPerType[type]) {
+        totalJumlahPerType[type] = {
+          totalJumlah: 0,
+          totalNilai: 0,
+        };
+      }
+
+      // Tambahkan jumlah dan nilai aset ke total kategori dan jenis
+      totalJumlahPerCategory[category].totalJumlah += aset.jumlah;
+      totalJumlahPerCategory[category].totalNilai += aset.nilai;
+
+      totalJumlahPerType[type].totalJumlah += aset.jumlah;
+      totalJumlahPerType[type].totalNilai += aset.nilai;
 
       // Tambahkan baris aset
       const row = worksheet.addRow([
@@ -2278,14 +2282,18 @@ const generateExcel = async (
       row.alignment = { horizontal: "left" };
     });
 
-    // Tambahkan baris yang digabungkan terakhir
-    if (currentLocation !== null) {
-      tambahkanBarisYangDigabungkan(
-        worksheet,
-        currentLocation,
-        totalJumlahLocation,
-        totalNilaiLocation
-      );
+    // Tambahkan baris total untuk setiap kategori
+    for (const category in totalJumlahPerCategory) {
+      const { totalJumlah, totalNilai } = totalJumlahPerCategory[category];
+
+      tambahkanBarisTotal(worksheet, category, totalJumlah, totalNilai);
+    }
+
+    // Tambahkan baris total untuk setiap jenis
+    for (const type in totalJumlahPerType) {
+      const { totalJumlah, totalNilai } = totalJumlahPerType[type];
+
+      tambahkanBarisTotal(worksheet, type, totalJumlah, totalNilai);
     }
 
     // Tambahkan total jumlah dan total nilai ke lembar kerja
@@ -2314,40 +2322,21 @@ const generateExcel = async (
   }
 };
 
-// Fungsi untuk menambahkan baris yang digabungkan ke lembar kerja
-const tambahkanBarisYangDigabungkan = (
-  lembarKerja,
-  lokasi,
-  totalJumlah,
-  totalNilai
-) => {
-  const barisDigabungkan = lembarKerja.addRow([
-    "", // Kolom pertama tetap kosong untuk indentasi
-    lokasi,
-    "",
-    totalJumlah ? totalJumlah.toString() : "",
-    "",
-    totalNilai ? totalNilai.toString() : "",
-    "",
-  ]);
+const tambahkanBarisTotal = (worksheet, label, totalJumlah, totalNilai) => {
+  // Cek apakah label kategori adalah 'undefined' atau 'Uncategorized'
+  if (label && !["undefined", "uncategorized"].includes(label.toLowerCase())) {
+    const row = worksheet.addRow([
+      label,
+      totalJumlah ? totalJumlah.toString() : "",
+      "",
+      "",
+      totalNilai ? totalNilai.toString() : "",
+      "",
+    ]);
 
-  barisDigabungkan.font = { bold: true };
-  barisDigabungkan.alignment = { horizontal: "left" };
-};
-
-// Fungsi untuk menambahkan baris total ke lembar kerja
-const tambahkanBarisTotal = (lembarKerja, nama, totalJumlah, totalNilai) => {
-  const barisTotal = lembarKerja.addRow([
-    nama,
-    totalJumlah ? totalJumlah.toString() : "",
-    "",
-    "",
-    totalNilai ? totalNilai.toString() : "",
-    "",
-  ]);
-
-  barisTotal.font = { bold: true };
-  barisTotal.alignment = { horizontal: "left" };
+    row.font = { bold: true };
+    row.alignment = { horizontal: "left" };
+  }
 };
 
 app.get("/generateReport", async (req, res) => {
