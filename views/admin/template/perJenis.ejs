@@ -54,6 +54,37 @@
             <span style="float: right">Rp <%= totalNilai %></span>
           </td>
         </tr>
+        <% for (const jenis in totalJumlahPerJenis) { %>
+        <tr>
+          <td colspan="6">
+            <strong>Total <%= jenis %> :</strong>
+            <span style="float: right">
+              <%= totalJumlahPerJenis[jenis] %> (Jumlah) - <%=
+              totalNilaiPerJenis[jenis] %> (Nilai)
+            </span>
+          </td>
+        </tr>
+        <% } %> <% for (const location in totalJumlahPerLocation) { %>
+        <tr>
+          <td colspan="6">
+            <strong>Total <%= location %> :</strong>
+            <span style="float: right">
+              <%= totalJumlahPerLocation[location] %> (Jumlah) - <%=
+              totalNilaiPerLocation[location] %> (Nilai)
+            </span>
+          </td>
+        </tr>
+        <% } %> <% for (const category in totalJumlahPerCategory) { %>
+        <tr>
+          <td colspan="6">
+            <strong>Total <%= category %> :</strong>
+            <span style="float: right">
+              <%= totalJumlahPerCategory[category] %> (Jumlah) - <%=
+              totalNilaiPerCategory[category] %> (Nilai)
+            </span>
+          </td>
+        </tr>
+        <% } %>
       </tbody>
     </table>
   </body>

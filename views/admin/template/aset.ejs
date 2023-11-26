@@ -23,35 +23,105 @@
     <table>
       <thead>
         <tr>
+          <th>Nama Jenis</th>
           <th>ID Aset</th>
           <th>Nama Aset</th>
           <th>Jumlah</th>
           <th>Nilai</th>
-          <th>Lokasi</th>
           <th>Dibuat pada</th>
         </tr>
       </thead>
       <tbody>
-        <% aset.forEach(function(aset) { %>
+        <% let currentType = null; %> <% let currentLocation = null; %> <% let
+        currentCategory = null; %> <% results.forEach(function(aset) { %> <% if
+        (currentLocation !== aset.nama_lokasi) { %>
         <tr>
+          <td colspan="6">
+            <strong>Total <%= currentLocation || 'Keseluruhan' %> :</strong>
+            <span style="float: right"
+              ><%= totalJumlahPerLocation[currentLocation] %></span
+            >
+            <span style="float: right; margin-right: 10px"
+              >Rp <%= totalNilaiPerLocation[currentLocation] %></span
+            >
+          </td>
+        </tr>
+        <% currentLocation = aset.nama_lokasi; %> <% } %> <% if (currentCategory
+        !== aset.nama_kategori) { %>
+        <tr>
+          <td colspan="6">
+            <strong>Total <%= currentCategory || 'Keseluruhan' %> :</strong>
+            <span style="float: right"
+              ><%= totalJumlahPerCategory[currentCategory] %></span
+            >
+            <span style="float: right; margin-right: 10px"
+              >Rp <%= totalNilaiPerCategory[currentCategory] %></span
+            >
+          </td>
+        </tr>
+        <% currentCategory = aset.nama_kategori; %> <% } %> <% if (currentType
+        !== aset.nama_jenis) { %>
+        <tr>
+          <td colspan="6">
+            <strong>Total <%= currentType || 'Keseluruhan' %> :</strong>
+            <span style="float: right"
+              ><%= totalJumlahPerJenis[currentType] %></span
+            >
+            <span style="float: right; margin-right: 10px"
+              >Rp <%= totalNilaiPerJenis[currentType] %></span
+            >
+          </td>
+        </tr>
+        <% currentType = aset.nama_jenis; %> <% } %>
+        <tr>
+          <td><%= aset.nama_jenis %></td>
           <td><%= aset.id_aset %></td>
           <td><%= aset.nama_aset %></td>
           <td><%= aset.jumlah %></td>
-          <td><%= aset.nilai %></td>
-          <td><%= aset.nama_lokasi %></td>
-          <td><%= new Date(aset.created_at).toLocaleDateString() %></td>
+          <td>Rp <%= aset.nilai %></td>
+          <td><%= aset.created_at %></td>
         </tr>
         <% }); %>
         <tr>
           <td colspan="6">
-            <strong>Total Jumlah Aset :</strong>
-            <span style="float: right"><%= totalJumlah %></span>
+            <strong>Total <%= currentType || 'Keseluruhan' %> :</strong>
+            <span style="float: right"
+              ><%= totalJumlahPerJenis[currentType] %></span
+            >
+            <span style="float: right; margin-right: 10px"
+              >Rp <%= totalNilaiPerJenis[currentType] %></span
+            >
           </td>
         </tr>
         <tr>
           <td colspan="6">
-            <strong>Total Nilai :</strong>
-            <span style="float: right">Rp <%= totalNilai %></span>
+            <strong>Total <%= currentCategory || 'Keseluruhan' %> :</strong>
+            <span style="float: right"
+              ><%= totalJumlahPerCategory[currentCategory] %></span
+            >
+            <span style="float: right; margin-right: 10px"
+              >Rp <%= totalNilaiPerCategory[currentCategory] %></span
+            >
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6">
+            <strong>Total <%= currentLocation || 'Keseluruhan' %> :</strong>
+            <span style="float: right"
+              ><%= totalJumlahPerLocation[currentLocation] %></span
+            >
+            <span style="float: right; margin-right: 10px"
+              >Rp <%= totalNilaiPerLocation[currentLocation] %></span
+            >
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6">
+            <strong>Total Keseluruhan :</strong>
+            <span style="float: right"><%= totalJumlah %></span>
+            <span style="float: right; margin-right: 10px"
+              >Rp <%= totalNilai %></span
+            >
           </td>
         </tr>
       </tbody>

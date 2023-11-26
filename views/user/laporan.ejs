@@ -53,24 +53,6 @@
               <!-- Tambahkan lebih banyak baris sesuai dengan data Anda -->
             </tbody>
           </table>
-          <!-- Tambahkan tombol download PDF -->
-          <!-- <form action="/generateReport" method="get">
-            <h6>Generate Laporan</h6>
-            <label for="startDate">Mulai Tanggal:</label>
-            <input type="date" id="startDate" name="startDate" required>
-      
-            <label for="endDate">Sampai Tanggal:</label>
-            <input type="date" id="endDate" name="endDate" required>
-      
-            <label for="format">Pilih Format:</label>
-            <select id="format" name="format" required>
-              <option value="pdf">PDF</option>
-              <option value="excel">Excel</option>
-            </select>
-      
-            <button type="submit">Generate Report</button>
-          </form> -->
-          <!-- Tambahkan formulir untuk memilih lokasi, jenis, dan kategori -->
 
           <form action="/generateReport" method="get">
             <h6>Generate Laporan</h6>
@@ -78,7 +60,7 @@
             <!-- Pilihan untuk memilih laporan berdasarkan lokasi, jenis, atau kategori -->
             <label for="laporan">Pilih Laporan Berdasarkan:</label>
             <select id="laporan" name="laporan">
-              <option value="semua">Semua Data</option>
+              <!-- <option value="semua"></option> -->
               <option value="lokasi">Lokasi</option>
               <option value="kategori">Kategori</option>
               <option value="jenis">Jenis</option>
@@ -91,16 +73,10 @@
             <!-- Tanggal Akhir -->
             <label for="endDate">Sampai Tanggal:</label>
             <input type="date" id="endDate" name="endDate" required>
-          
-            <!-- Pilihan Format (PDF/Excel) -->
-            <label for="format">Pilih Format:</label>
-            <select id="format" name="format" required>
-              <option value="pdf">PDF</option>
-              <option value="excel">Excel</option>
-            </select>
+  
           
             <!-- Tombol Submit -->
-            <button type="submit">Generate Report</button>
+            <button type="submit">Download Excel</button>
           </form>
           
         </div>
@@ -130,11 +106,6 @@
       });
       </script>
       <script>
-        document.getElementById("downloadPdfBtn").addEventListener("click", function() {
-          // Mengarahkan ke rute /generatePDF untuk mengunduh PDF
-          window.location.href = "/generatePDF";
-        });
-
         document.getElementById('downloadExcelBtn').addEventListener('click', function() {
           // Mengarahkan ke rute /generateExcel untuk mengunduh file Excel
           window.location.href = '/generateExcel';

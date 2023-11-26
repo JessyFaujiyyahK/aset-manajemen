@@ -53,22 +53,30 @@
               <!-- Tambahkan lebih banyak baris sesuai dengan data Anda -->
             </tbody>
           </table>
-    <form action="/generateReport" method="get">
-      <h6>Generate Laporan</h6>
-      <label for="startDate">Mulai Tanggal:</label>
-      <input type="date" id="startDate" name="startDate" required>
-
-      <label for="endDate">Sampai Tanggal:</label>
-      <input type="date" id="endDate" name="endDate" required>
-
-      <label for="format">Pilih Format:</label>
-      <select id="format" name="format" required>
-        <option value="pdf">PDF</option>
-        <option value="excel">Excel</option>
-      </select>
-
-      <button type="submit">Generate Report</button>
-    </form>
+          <form action="/generateReport" method="get">
+            <h6>Generate Laporan</h6>
+          
+            <!-- Pilihan untuk memilih laporan berdasarkan lokasi, jenis, atau kategori -->
+            <label for="laporan">Pilih Laporan Berdasarkan:</label>
+            <select id="laporan" name="laporan">
+              <!-- <option value="semua"></option> -->
+              <option value="lokasi">Lokasi</option>
+              <option value="kategori">Kategori</option>
+              <option value="jenis">Jenis</option>
+            </select>
+          
+            <!-- Tanggal Mulai -->
+            <label for="startDate">Mulai Tanggal:</label>
+            <input type="date" id="startDate" name="startDate" required>
+          
+            <!-- Tanggal Akhir -->
+            <label for="endDate">Sampai Tanggal:</label>
+            <input type="date" id="endDate" name="endDate" required>
+  
+          
+            <!-- Tombol Submit -->
+            <button type="submit">Download Excel</button>
+          </form>
         </div>
         </div>
         

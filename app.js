@@ -2165,10 +2165,7 @@ app.get("/laporan/user", (req, res) => {
 // });
 
 const fs = require("fs");
-const puppeteer = require("puppeteer");
 const ExcelJS = require("exceljs");
-// const cheerio = require("cheerio");
-// const path = require("path");
 const ejs = require("ejs");
 const html2canvas = require("html2canvas");
 
@@ -2184,196 +2181,6 @@ const calculateTotal = (results) => {
   return { totalJumlah, totalNilai };
 };
 
-const generatePDF = async (res, htmlContent, laporan) => {
-  try {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setContent(htmlContent);
-
-    // Format created_at before adding it to the PDF
-    const formattedHtmlContent = htmlContent.replace(
-      /aset\.created_at/g,
-      "new Date(aset.created_at).toLocaleDateString()"
-    );
-
-    await page.setContent(formattedHtmlContent);
-
-    const pdfBuffer = await page.pdf();
-    await browser.close();
-
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=report_${laporan}.pdf`
-    );
-    res.send(pdfBuffer);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error generating PDF");
-  }
-};
-
-// const generateExcel = async (
-//   res,
-//   results,
-//   totalJumlah,
-//   totalNilai,
-//   reportHeader,
-//   laporan
-// ) => {
-//   try {
-//     const workbook = new ExcelJS.Workbook();
-//     const worksheet = workbook.addWorksheet("Data Aset");
-
-//     const headerRow = worksheet.addRow(reportHeader);
-//     headerRow.font = { bold: true };
-//     headerRow.fill = {
-//       type: "pattern",
-//       pattern: "solid",
-//       fgColor: { argb: "DDDDDD" },
-//     };
-
-//     // Setel lebar kolom
-//     for (let i = 1; i <= reportHeader.length; i++) {
-//       worksheet.getColumn(i).width = 30;
-//     }
-
-//     // Menggunakan objek untuk melacak total jumlah setiap kategori dan jenis
-//     const totalJumlahPerCategory = {};
-//     const totalJumlahPerType = {};
-//     const totalJumlahPerLocation = {};
-
-//     // Urutkan hasil berdasarkan lokasi, jenis, dan kategori
-//     results.sort((a, b) => {
-//       const keyA = a.nama_lokasi || a.nama_jenis || a.nama_kategori;
-//       const keyB = b.nama_lokasi || b.nama_jenis || b.nama_kategori;
-//       return keyA.localeCompare(keyB);
-//     });
-
-//     results.forEach((aset) => {
-//       const category = aset.nama_kategori; // Kategori default jika tidak ada
-//       const type = aset.nama_jenis;
-//       const location = aset.nama_lokasi;
-
-//       // Inisialisasi total untuk kategori jika belum ada
-//       if (!totalJumlahPerCategory[category]) {
-//         totalJumlahPerCategory[category] = {
-//           totalJumlah: 0,
-//           totalNilai: 0,
-//         };
-//       }
-
-//       // Inisialisasi total untuk jenis jika belum ada
-//       if (!totalJumlahPerType[type]) {
-//         totalJumlahPerType[type] = {
-//           totalJumlah: 0,
-//           totalNilai: 0,
-//         };
-//       }
-
-//       // Inisialisasi total untuk jenis jika belum ada
-//       if (!totalJumlahPerLocation[location]) {
-//         totalJumlahPerLocation[location] = {
-//           totalJumlah: 0,
-//           totalNilai: 0,
-//         };
-//       }
-
-//       // Tambahkan jumlah dan nilai aset ke total kategori dan jenis
-//       totalJumlahPerCategory[category].totalJumlah += aset.jumlah;
-//       totalJumlahPerCategory[category].totalNilai += aset.nilai;
-
-//       totalJumlahPerType[type].totalJumlah += aset.jumlah;
-//       totalJumlahPerType[type].totalNilai += aset.nilai;
-
-//       totalJumlahPerLocation[location].totalJumlah += aset.jumlah;
-//       totalJumlahPerLocation[location].totalNilai += aset.nilai;
-
-//       // Tambahkan baris aset
-//       const row = worksheet.addRow([
-//         type || location || category,
-//         aset.id_aset,
-//         aset.nama_aset,
-//         aset.jumlah,
-//         aset.nilai,
-//         aset.created_at,
-//       ]);
-
-//       row.alignment = { horizontal: "left" };
-//     });
-
-//     // Tambahkan baris total untuk setiap kategori
-//     for (const category in totalJumlahPerCategory) {
-//       const { totalJumlah, totalNilai } = totalJumlahPerCategory[category];
-
-//       tambahkanBarisTotal(worksheet, category, totalJumlah, totalNilai);
-//     }
-
-//     // Tambahkan baris total untuk setiap jenis
-//     for (const type in totalJumlahPerType) {
-//       const { totalJumlah, totalNilai } = totalJumlahPerType[type];
-
-//       tambahkanBarisTotal(worksheet, type, totalJumlah, totalNilai);
-//     }
-
-//     // Tambahkan baris total untuk setiap jenis
-//     for (const location in totalJumlahPerLocation) {
-//       const { totalJumlah, totalNilai } = totalJumlahPerLocation[location];
-
-//       tambahkanBarisTotal(worksheet, location, totalJumlah, totalNilai);
-//     }
-
-//     // Tambahkan total jumlah dan total nilai ke lembar kerja
-//     tambahkanBarisTotal(
-//       worksheet,
-//       "Total Keseluruhan",
-//       totalJumlah,
-//       totalNilai
-//     );
-
-//     // Hasilkan file Excel dan kirim sebagai respons HTTP
-//     res.setHeader(
-//       "Content-Type",
-//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-//     );
-//     res.setHeader(
-//       "Content-Disposition",
-//       `attachment; filename=data_aset_${laporan}.xlsx`
-//     );
-
-//     await workbook.xlsx.write(res);
-//     res.end();
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Error generating Excel");
-//   }
-// };
-
-// const tambahkanBarisTotal = (worksheet, label, totalJumlah, totalNilai) => {
-//   // Cek apakah label kategori adalah 'undefined' atau 'Uncategorized'
-//   if (label && !["undefined", "uncategorized"].includes(label.toLowerCase())) {
-//     const totalLabel = "Total " + label; // Tambahkan "Total" pada label
-//     const row = worksheet.addRow([
-//       totalLabel,
-//       "",
-//       "",
-//       totalJumlah ? totalJumlah.toString() : "",
-//       totalNilai ? totalNilai.toString() : "",
-//       "",
-//     ]);
-
-//     row.font = { bold: true };
-//     row.alignment = { horizontal: "left" };
-
-//     // Tambahkan baris kosong setelah setiap kelompok
-//     worksheet.addRow([]);
-
-//     // Atur style untuk baris kosong
-//     const emptyRow = worksheet.lastRow;
-//     emptyRow.border = { bottom: { style: "thin" } };
-//   }
-// };
-
 const generateExcel = async (
   res,
   results,
@@ -2386,6 +2193,13 @@ const generateExcel = async (
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Data Aset");
 
+    // Gabungkan beberapa sel untuk teks "Data Aset STMIK JABAR"
+    worksheet.mergeCells("A1:F1");
+    const titleCell = worksheet.getCell("A1");
+    titleCell.value = "Data Aset STMIK JABAR";
+    titleCell.font = { bold: true, size: 16 };
+    titleCell.alignment = { horizontal: "center" };
+
     const headerRow = worksheet.addRow(reportHeader);
     headerRow.font = { bold: true };
     headerRow.fill = {
@@ -2394,9 +2208,16 @@ const generateExcel = async (
       fgColor: { argb: "DDDDDD" },
     };
 
-    // Setel lebar kolom
     for (let i = 1; i <= reportHeader.length; i++) {
-      worksheet.getColumn(i).width = 30;
+      if (i === 2 || i === 4) {
+        // Kolom ID Aset (indeks 2) dan Jumlah (indeks 4)
+        worksheet.getColumn(i).width = 10;
+      } else if (i === 5 || i === 6) {
+        // Kolom ID Aset (indeks 2) dan Jumlah (indeks 4)
+        worksheet.getColumn(i).width = 15;
+      } else {
+        worksheet.getColumn(i).width = 30;
+      }
     }
 
     // Menggunakan objek untuk melacak total jumlah setiap kategori, jenis, dan lokasi
@@ -2527,6 +2348,16 @@ const generateExcel = async (
       totalNilai
     );
 
+    // Tambahkan warna latar belakang pada label total keseluruhan
+    const totalKeseluruhanRow = worksheet.lastRow;
+    for (let i = 1; i <= 6; i++) {
+      totalKeseluruhanRow.getCell(i).fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "ADD8E6" }, // Warna latar belakang biru
+      };
+    }
+
     // Hasilkan file Excel dan kirim sebagai respons HTTP
     res.setHeader(
       "Content-Type",
@@ -2560,6 +2391,16 @@ const tambahkanBarisTotal = (worksheet, label, totalJumlah, totalNilai) => {
 
     row.font = { bold: true };
     row.alignment = { horizontal: "left" };
+
+    // Tambahkan warna latar belakang pada label total
+    // Tambahkan warna latar belakang pada label total untuk 6 kolom pertama
+    for (let i = 1; i <= 6; i++) {
+      row.getCell(i).fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "87CEEB" },
+      };
+    }
   }
 };
 
@@ -2687,41 +2528,15 @@ app.get("/generateReport", async (req, res) => {
     // Hitung total jumlah dan nilai
     const { totalJumlah, totalNilai } = calculateTotal(results);
 
-    // Baca template HTML dari file
-    const template = fs.readFileSync(
-      path.join(
-        __dirname,
-        "views",
-        "admin",
-        "template",
-        `${templateFileName}.ejs`
-      ),
-      "utf-8"
+    // Generate dan kirim file Excel
+    generateExcel(
+      res,
+      results,
+      totalJumlah,
+      totalNilai,
+      reportHeader,
+      templateFileName
     );
-
-    // Render template dengan data menggunakan EJS
-    const htmlContent = ejs.render(template, {
-      aset: results,
-      totalJumlah: totalJumlah,
-      totalNilai: totalNilai,
-      reportHeader: reportHeader,
-    });
-
-    // Generate report berdasarkan format yang dipilih
-    if (format === "pdf") {
-      generatePDF(res, htmlContent, templateFileName);
-    } else if (format === "excel") {
-      generateExcel(
-        res,
-        results,
-        totalJumlah,
-        totalNilai,
-        reportHeader,
-        templateFileName
-      );
-    } else {
-      res.status(400).send("Invalid format");
-    }
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
