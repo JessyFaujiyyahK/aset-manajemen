@@ -18,11 +18,10 @@
 
   <body>
     <%- include('navbar.ejs') %>
-    
+
     <div class="container-fluid">
       <div class="row">
         <%- include('sidebar.ejs') %>
-
         <div class="col-8 content-box mb-5">
           <!-- Konten dalam kotak -->
           <h2>Data Aset</h2>
@@ -39,7 +38,7 @@
                 <li class="list-group-item">Jumlah : <%= aset.jumlah %></li>
                 <li class="list-group-item">Nilai : <%= aset.nilai %></li>
                 <li class="list-group-item">Kondisi : <%= aset.kondisi %></li>
-                <li class="list-group-item">Sumber : <%= aset.sumber %></li>
+                <li class="list-group-item">Sumber : <%= aset.nama_sumber %></li>
                 <li class="list-group-item">
                   <img src="<%= aset.images %>" alt="test">
                 </li>

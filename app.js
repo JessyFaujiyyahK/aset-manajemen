@@ -158,7 +158,7 @@ app.get("/dashboard/admin", (req, res) => {
       "SELECT l.nama_lokasi AS lokasi, SUM(a.nilai) as total FROM aset a JOIN kategori k ON LEFT(a.id_aset, LOCATE('.', a.id_aset) - 1) = k.id_kategori JOIN lokasi l ON a.id_lokasi = l.id GROUP BY lokasi";
 
     const querySumber =
-      "SELECT a.sumber, SUM(a.jumlah) as total FROM aset a GROUP BY a.sumber";
+      "SELECT s.nama_sumber, SUM(a.jumlah) as total FROM aset a JOIN sumber s ON a.id_sumber = s.id GROUP BY s.nama_sumber";
 
     const queryTotalAset = "SELECT SUM(jumlah) as totalAset FROM aset";
     const queryTotalNilai = "SELECT SUM(nilai) as totalNilai FROM aset";
@@ -281,7 +281,7 @@ app.post("/aset/tambah", (req, res) => {
       // const jumlahAsetSekarang = results[0];
       // const updateJumlah = 'UPDATE aset SET jumlah = '
       // } else {
-      const insertQuery = `INSERT INTO aset (id_aset, nilai, jumlah, id_lokasi, sumber, kondisi) VALUES ('${aset}',${nilai}, ${jumlah}, ${lokasi}, '${sumber}', '${kondisi}')`;
+      const insertQuery = `INSERT INTO aset (id_aset, nilai, jumlah, id_lokasi, id_sumber, kondisi) VALUES ('${aset}',${nilai}, ${jumlah}, ${lokasi}, '${sumber}', '${kondisi}')`;
       connection.query(insertQuery, (error, results, fields) => {
         if (error) throw error;
         console.log("Aset added successfully!");
@@ -303,7 +303,7 @@ app.get("/aset/edit/:id", (req, res) => {
     connection.query(sql, (error, results) => {
       if (error) throw error;
       console.log(results[2][0]);
-      const sumberLama = results[3][0].sumber;
+      // const sumberLama = results[3][0].sumber;
       const jumlah = results[3][0].jumlah;
       const nilai = results[3][0].nilai;
       const kondisi = results[3][0].kondisi;
@@ -311,13 +311,15 @@ app.get("/aset/edit/:id", (req, res) => {
       const namaAset = results[3][0].nama_aset;
       const namaLokasi = results[3][0].nama_lokasi;
       const lokasiID = results[3][0].id_lokasi;
+      const namaSumber = results[3][0].nama_sumber;
+      const sumberID = results[3][0].id_sumber;
       // const sumberID = results[3][0].id_sumber
       // console.log(results[2][0]);
       res.render("admin/aset-edit", {
         aset: results[0],
         lokasi: results[1],
         sumber: results[2],
-        sumberLama,
+        // sumberLama,
         jumlah,
         nilai,
         kondisi,
@@ -326,7 +328,8 @@ app.get("/aset/edit/:id", (req, res) => {
         namaAset,
         namaLokasi,
         lokasiID,
-        // sumberID
+        namaSumber,
+        sumberID,
         userName: req.session.username,
       });
     });
@@ -339,7 +342,7 @@ app.get("/aset/edit/:id", (req, res) => {
 app.post("/aset/edit/:id", (req, res) => {
   const asetID = req.params.id;
   const { lokasi, aset, nilai, jumlah, sumber, kondisi } = req.body;
-  const query = `UPDATE aset SET id_lokasi = ${lokasi}, id_aset = '${aset}', nilai = ${nilai}, jumlah=${jumlah}, sumber = '${sumber}', kondisi = '${kondisi}' WHERE id = ${asetID}`;
+  const query = `UPDATE aset SET id_lokasi = ${lokasi}, id_aset = '${aset}', nilai = ${nilai}, jumlah=${jumlah}, id_sumber = '${sumber}', kondisi = '${kondisi}' WHERE id = ${asetID}`;
   connection.query(query, (error, results) => {
     if (error) throw error;
     console.log("Aset updated successfully!");
@@ -347,12 +350,10 @@ app.post("/aset/edit/:id", (req, res) => {
   });
 });
 
-// Menampilkan aset detail
 app.get("/aset/detail/:id", (req, res) => {
   const asetId = req.params.id;
-  const query = `select * from aset JOIN nama_aset ON aset.id_aset=nama_aset.id_aset JOIN lokasi ON aset.id_lokasi=lokasi.id WHERE aset.id = ${asetId}`;
+  const query = `select * from aset JOIN nama_aset ON aset.id_aset=nama_aset.id_aset JOIN lokasi ON aset.id_lokasi=lokasi.id JOIN sumber ON aset.id_sumber=sumber.id WHERE aset.id = ${asetId}`;
   connection.query(query, (error, results, fields) => {
-    console.log(results);
     if (error) throw error;
     res.render("admin/detail-aset", {
       aset: results,
@@ -1142,7 +1143,7 @@ app.get("/sumber", (req, res) => {
 
 // Menampilkan tampilan tambah sumber (GET request)
 app.get("/sumber/tambah", (req, res) => {
-  res.render("admin/sumber-tambah", { userName: req.session.username }); // Ganti "tambah-kategori" dengan nama file EJS Anda
+  res.render("admin/sumber-tambah", { userName: req.session.username });
 });
 
 // Handle POST request to add a new sumber
@@ -1160,7 +1161,7 @@ app.post("/sumber/tambah", (req, res) => {
         return res.send(`
           <script>
             alert("${errorMessage}");
-            window.source.href = "/sumber";
+            window.location.href = "/sumber";
           </script>
         `);
       }
@@ -1171,7 +1172,7 @@ app.post("/sumber/tambah", (req, res) => {
         return res.send(`
           <script>
             alert("${errorMessage}");
-            window.source.href = "/sumber";
+            window.location.href = "/sumber";
           </script>
         `);
       } else {
@@ -1184,7 +1185,7 @@ app.post("/sumber/tambah", (req, res) => {
             return res.send(`
               <script>
                 alert("${errorMessage}");
-                window.sumber.href = "/sumber";
+                window.location.href = "/sumber";
               </script>
             `);
           }
@@ -1194,7 +1195,7 @@ app.post("/sumber/tambah", (req, res) => {
       }
     });
   } else {
-    res.redirect("/sumber");
+    res.redirect("/");
   }
 });
 
@@ -1228,7 +1229,7 @@ app.post("/sumber/edit/:id", (req, res) => {
       return res.send(`
         <script>
           alert("${errorMessage}");
-          window.source.href = "/sumber";
+          window.location.href = "/sumber";
         </script>
       `);
     }
@@ -1239,7 +1240,7 @@ app.post("/sumber/edit/:id", (req, res) => {
       return res.send(`
         <script>
           alert("${errorMessage}");
-          window.source.href = "/source";
+          window.location.href = "/sumber";
         </script>
       `);
     } else {
@@ -1253,7 +1254,7 @@ app.post("/sumber/edit/:id", (req, res) => {
             return res.send(`
               <script>
                 alert("${errorMessage}");
-                window.sumber.href = "/sumber";
+                window.location.href = "/sumber";
               </script>
             `);
           }
@@ -1312,7 +1313,7 @@ app.get("/dashboard/user", (req, res) => {
       "SELECT l.nama_lokasi AS lokasi, SUM(a.nilai) as total FROM aset a JOIN kategori k ON LEFT(a.id_aset, LOCATE('.', a.id_aset) - 1) = k.id_kategori JOIN lokasi l ON a.id_lokasi = l.id GROUP BY lokasi";
 
     const querySumber =
-      "SELECT a.sumber, SUM(a.jumlah) as total FROM aset a GROUP BY a.sumber";
+      "SELECT s.nama_sumber, SUM(a.jumlah) as total FROM aset a JOIN sumber s ON a.id_sumber = s.id GROUP BY s.nama_sumber";
 
     const queryTotalAset = "SELECT SUM(jumlah) as totalAset FROM aset";
     const queryTotalNilai = "SELECT SUM(nilai) as totalNilai FROM aset";
@@ -1387,8 +1388,6 @@ app.get("/aset/user", (req, res) => {
       "SELECT *, nama_aset.nama_aset, lokasi.nama_lokasi, aset.id as id FROM aset JOIN nama_aset ON aset.id_aset=nama_aset.id_aset JOIN lokasi ON aset.id_lokasi=lokasi.id",
       (error, results) => {
         if (error) throw error;
-        // Menampilkan halaman kategori dengan data kategori
-        // console.log(results);
         res.render("user/aset", {
           aset: results,
           userName: req.session.username,
@@ -1435,7 +1434,7 @@ app.post("/aset/tambah/user", (req, res) => {
       // const jumlahAsetSekarang = results[0];
       // const updateJumlah = 'UPDATE aset SET jumlah = '
       // } else {
-      const insertQuery = `INSERT INTO aset (id_aset, nilai, jumlah, id_lokasi, sumber, kondisi) VALUES ('${aset}',${nilai}, ${jumlah}, ${lokasi}, '${sumber}', '${kondisi}')`;
+      const insertQuery = `INSERT INTO aset (id_aset, nilai, jumlah, id_lokasi, id_sumber, kondisi) VALUES ('${aset}',${nilai}, ${jumlah}, ${lokasi}, '${sumber}', '${kondisi}')`;
       connection.query(insertQuery, (error, results, fields) => {
         if (error) throw error;
         console.log("Aset added successfully!");
@@ -1457,7 +1456,7 @@ app.get("/aset/edit/user/:id", (req, res) => {
     connection.query(sql, (error, results) => {
       if (error) throw error;
       console.log(results[2][0]);
-      const sumberLama = results[3][0].sumber;
+      // const sumberLama = results[3][0].sumber;
       const jumlah = results[3][0].jumlah;
       const nilai = results[3][0].nilai;
       const kondisi = results[3][0].kondisi;
@@ -1465,13 +1464,15 @@ app.get("/aset/edit/user/:id", (req, res) => {
       const namaAset = results[3][0].nama_aset;
       const namaLokasi = results[3][0].nama_lokasi;
       const lokasiID = results[3][0].id_lokasi;
+      const namaSumber = results[3][0].nama_sumber;
+      const sumberID = results[3][0].id_sumber;
       // const sumberID = results[3][0].id_sumber
       // console.log(results[2][0]);
       res.render("user/aset-edit", {
         aset: results[0],
         lokasi: results[1],
         sumber: results[2],
-        sumberLama,
+        // sumberLama,
         jumlah,
         nilai,
         kondisi,
@@ -1480,7 +1481,8 @@ app.get("/aset/edit/user/:id", (req, res) => {
         namaAset,
         namaLokasi,
         lokasiID,
-        // sumberID
+        namaSumber,
+        sumberID,
         userName: req.session.username,
       });
     });
@@ -1493,7 +1495,7 @@ app.get("/aset/edit/user/:id", (req, res) => {
 app.post("/aset/edit/user/:id", (req, res) => {
   const asetID = req.params.id;
   const { lokasi, aset, nilai, jumlah, sumber, kondisi } = req.body;
-  const query = `UPDATE aset SET id_lokasi = ${lokasi}, id_aset = '${aset}', nilai = ${nilai}, jumlah=${jumlah}, sumber = '${sumber}', kondisi = '${kondisi}' WHERE id = ${asetID}`;
+  const query = `UPDATE aset SET id_lokasi = ${lokasi}, id_aset = '${aset}', nilai = ${nilai}, jumlah=${jumlah}, id_sumber = '${sumber}', kondisi = '${kondisi}' WHERE id = ${asetID}`;
   connection.query(query, (error, results) => {
     if (error) throw error;
     console.log("Aset updated successfully!");
@@ -1501,10 +1503,9 @@ app.post("/aset/edit/user/:id", (req, res) => {
   });
 });
 
-// Menampilkan aset detail
 app.get("/aset/detail/user/:id", (req, res) => {
   const asetId = req.params.id;
-  const query = `select * from aset JOIN nama_aset ON aset.id_aset=nama_aset.id_aset JOIN lokasi ON aset.id_lokasi=lokasi.id WHERE aset.id = ${asetId}`;
+  const query = `select * from aset JOIN nama_aset ON aset.id_aset=nama_aset.id_aset JOIN lokasi ON aset.id_lokasi=lokasi.id JOIN sumber ON aset.id_sumber=sumber.id WHERE aset.id = ${asetId}`;
   connection.query(query, (error, results, fields) => {
     if (error) throw error;
     res.render("user/detail-aset", {
@@ -1524,7 +1525,6 @@ app.get("/aset/delete/user/:id", (req, res) => {
     res.redirect("/aset/user");
   });
 });
-
 // -------------------------------- JENIS USER -------------------------------- //
 
 // Endpoint untuk menampilkan daftar jenis
@@ -2073,14 +2073,38 @@ app.post("/lokasi/edit/user/:id", (req, res) => {
 
 app.get("/lokasi/delete/user/:id", (req, res) => {
   const lokasiId = req.params.id;
-  // Hapus data lokasi berdasarkan ID
+
+  // Periksa apakah ada aset terkait dengan lokasi yang akan dihapus
   connection.query(
-    "DELETE FROM lokasi WHERE id = ?",
+    "SELECT COUNT(*) AS jumlahAset FROM aset WHERE id_lokasi = ?",
     [lokasiId],
     (error, results, fields) => {
       if (error) throw error;
-      // Redirect ke halaman lokasi setelah menghapus data
-      res.redirect("/lokasi/user");
+
+      const jumlahAset = results[0].jumlahAset;
+
+      // Jika ada aset terkait, tampilkan pesan kesalahan dan kembali ke halaman lokasi
+      if (jumlahAset > 0) {
+        const errorMessage =
+          "Tidak dapat menghapus lokasi karena masih terdapat aset terkait.";
+        return res.send(`
+          <script>
+            alert("${errorMessage}");
+            window.location.href = "/lokasi";
+          </script>
+        `);
+      }
+
+      // Jika tidak ada aset terkait, lanjutkan dengan menghapus lokasi
+      connection.query(
+        "DELETE FROM lokasi WHERE id = ?",
+        [lokasiId],
+        (error, results, fields) => {
+          if (error) throw error;
+          // Redirect ke halaman lokasi setelah menghapus data
+          res.redirect("/lokasi/user");
+        }
+      );
     }
   );
 });
@@ -2216,129 +2240,30 @@ const generateExcel = async (
 
     // Tambahkan data ke lembar kerja
     let currentLocation = null;
-    let currentCategory = null;
-    let currentType = null;
-
     let totalJumlahLocation = 0;
     let totalNilaiLocation = 0;
 
-    let totalJumlahCategory = 0;
-    let totalNilaiCategory = 0;
-
-    let totalJumlahType = 0;
-    let totalNilaiType = 0;
-
     results.forEach((aset) => {
-      // Tambahkan subtotal untuk lokasi sebelumnya
+      // Jika lokasi berubah, tambahkan baris yang digabungkan untuk lokasi sebelumnya
       if (currentLocation !== aset.nama_lokasi) {
         if (currentLocation !== null) {
-          const subtotalRow = worksheet.addRow([
-            "", // Kolom pertama tetap kosong untuk indentasi
-            `Total ${currentLocation} :`,
-            totalJumlahLocation ? totalJumlahLocation.toString() : "", // Periksa apakah totalJumlahLocation terdefinisi
-            "",
-            "",
-            totalNilaiLocation ? totalNilaiLocation.toString() : "", // Periksa apakah totalNilaiLocation terdefinisi
-            "",
-          ]);
-          subtotalRow.font = { bold: true };
-          subtotalRow.alignment = { horizontal: "left" };
-
-          // Reset total untuk lokasi baru
-          totalJumlahLocation = 0;
-          totalNilaiLocation = 0;
+          tambahkanBarisYangDigabungkan(
+            worksheet,
+            currentLocation,
+            totalJumlahLocation,
+            totalNilaiLocation
+          );
         }
 
-        // Mulai grup baru untuk lokasi saat ini
-        const groupRow = worksheet.addRow([
-          aset.nama_lokasi,
-          "",
-          "",
-          "",
-          "",
-          "",
-        ]);
-        groupRow.font = { bold: true };
-        groupRow.alignment = { horizontal: "left" };
-
+        // Reset total untuk lokasi baru
         currentLocation = aset.nama_lokasi;
+        totalJumlahLocation = 0;
+        totalNilaiLocation = 0;
       }
 
-      // Tambahkan subtotal untuk kategori sebelumnya
-      if (currentCategory !== aset.nama_kategori) {
-        if (currentCategory !== null) {
-          const subtotalRow = worksheet.addRow([
-            "",
-            `Total ${currentCategory} :`,
-            totalJumlahCategory ? totalJumlahCategory.toString() : "", // Periksa apakah totalJumlahCategory terdefinisi
-            "",
-            "",
-            totalNilaiCategory ? totalNilaiCategory.toString() : "", // Periksa apakah totalNilaiCategory terdefinisi
-            "",
-          ]);
-          subtotalRow.font = { bold: true };
-          subtotalRow.alignment = { horizontal: "left" };
-
-          // Reset total untuk kategori baru
-          totalJumlahCategory = 0;
-          totalNilaiCategory = 0;
-        }
-
-        // Mulai grup baru untuk kategori saat ini
-        const groupRow = worksheet.addRow([
-          aset.nama_kategori,
-          "",
-          "",
-          "",
-          "",
-          "",
-        ]);
-        groupRow.font = { bold: true };
-        groupRow.alignment = { horizontal: "left" };
-
-        currentCategory = aset.nama_kategori;
-      }
-
-      // Tambahkan subtotal untuk jenis sebelumnya
-      if (currentType !== aset.nama_jenis) {
-        if (currentType !== null) {
-          const subtotalRow = worksheet.addRow([
-            "",
-            "",
-            `Total ${currentType} :`,
-            totalJumlahType ? totalJumlahType.toString() : "", // Periksa apakah totalJumlahType terdefinisi
-            "",
-            "",
-            totalNilaiType ? totalNilaiType.toString() : "", // Periksa apakah totalNilaiType terdefinisi
-            "",
-          ]);
-          subtotalRow.font = { bold: true };
-          subtotalRow.alignment = { horizontal: "left" };
-
-          // Reset total untuk jenis baru
-          totalJumlahType = 0;
-          totalNilaiType = 0;
-        }
-
-        // Mulai grup baru untuk jenis saat ini
-        const groupRow = worksheet.addRow([
-          aset.nama_jenis,
-          "",
-          "",
-          "",
-          "",
-          "",
-        ]);
-        groupRow.font = { bold: true };
-        groupRow.alignment = { horizontal: "left" };
-        groupRow.fill = {
-          type: "pattern",
-          pattern: "solid",
-          fgColor: { argb: "DDDDDD" }, // Warna abu-abu
-        };
-
-        currentType = aset.nama_jenis;
-      }
+      // Perbarui total untuk lokasi saat ini
+      totalJumlahLocation += aset.jumlah;
+      totalNilaiLocation += aset.nilai;
 
       // Tambahkan baris aset
       const row = worksheet.addRow([
@@ -2351,76 +2276,25 @@ const generateExcel = async (
       ]);
 
       row.alignment = { horizontal: "left" };
-
-      // Perbarui total untuk setiap kategori
-      totalJumlahLocation += aset.jumlah;
-      totalNilaiLocation += aset.nilai;
-
-      totalJumlahCategory += aset.jumlah;
-      totalNilaiCategory += aset.nilai;
-
-      totalJumlahType += aset.jumlah;
-      totalNilaiType += aset.nilai;
     });
 
-    // Tambahkan subtotal untuk lokasi terakhir
+    // Tambahkan baris yang digabungkan terakhir
     if (currentLocation !== null) {
-      const subtotalRow = worksheet.addRow([
-        "", // Kolom pertama tetap kosong untuk indentasi
-        `Total ${currentLocation} :`,
-        totalJumlahLocation ? totalJumlahLocation.toString() : "", // Periksa apakah totalJumlahLocation terdefinisi
-        "",
-        "",
-        totalNilaiLocation ? totalNilaiLocation.toString() : "", // Periksa apakah totalNilaiLocation terdefinisi
-        "",
-      ]);
-      subtotalRow.font = { bold: true };
-      subtotalRow.alignment = { horizontal: "left" };
-    }
-
-    // Tambahkan subtotal untuk kategori terakhir
-    if (currentCategory !== null) {
-      const subtotalRow = worksheet.addRow([
-        "",
-        `Total ${currentCategory} :`,
-        totalJumlahCategory ? totalJumlahCategory.toString() : "", // Periksa apakah totalJumlahCategory terdefinisi
-        "",
-        "",
-        totalNilaiCategory ? totalNilaiCategory.toString() : "", // Periksa apakah totalNilaiCategory terdefinisi
-        "",
-      ]);
-      subtotalRow.font = { bold: true };
-      subtotalRow.alignment = { horizontal: "left" };
-    }
-
-    // Tambahkan subtotal untuk jenis terakhir
-    if (currentType !== null) {
-      const subtotalRow = worksheet.addRow([
-        "",
-        "",
-        `Total ${currentType} :`,
-        totalJumlahType ? totalJumlahType.toString() : "", // Periksa apakah totalJumlahType terdefinisi
-        "",
-        "",
-        totalNilaiType ? totalNilaiType.toString() : "", // Periksa apakah totalNilaiType terdefinisi
-        "",
-      ]);
-      subtotalRow.font = { bold: true };
-      subtotalRow.alignment = { horizontal: "left" };
+      tambahkanBarisYangDigabungkan(
+        worksheet,
+        currentLocation,
+        totalJumlahLocation,
+        totalNilaiLocation
+      );
     }
 
     // Tambahkan total jumlah dan total nilai ke lembar kerja
-    const totalJumlahRow = worksheet.addRow([
-      "Total Keseluruhan :",
-      totalJumlah ? totalJumlah.toString() : "", // Periksa apakah totalJumlah terdefinisi
-      "",
-      "",
-      totalNilai ? totalNilai.toString() : "", // Periksa apakah totalNilai terdefinisi
-      "",
-    ]);
-
-    totalJumlahRow.font = { bold: true };
-    totalJumlahRow.alignment = { horizontal: "left" };
+    tambahkanBarisTotal(
+      worksheet,
+      "Total Keseluruhan",
+      totalJumlah,
+      totalNilai
+    );
 
     // Hasilkan file Excel dan kirim sebagai respons HTTP
     res.setHeader(
@@ -2438,6 +2312,42 @@ const generateExcel = async (
     console.error(error);
     res.status(500).send("Error generating Excel");
   }
+};
+
+// Fungsi untuk menambahkan baris yang digabungkan ke lembar kerja
+const tambahkanBarisYangDigabungkan = (
+  lembarKerja,
+  lokasi,
+  totalJumlah,
+  totalNilai
+) => {
+  const barisDigabungkan = lembarKerja.addRow([
+    "", // Kolom pertama tetap kosong untuk indentasi
+    lokasi,
+    "",
+    totalJumlah ? totalJumlah.toString() : "",
+    "",
+    totalNilai ? totalNilai.toString() : "",
+    "",
+  ]);
+
+  barisDigabungkan.font = { bold: true };
+  barisDigabungkan.alignment = { horizontal: "left" };
+};
+
+// Fungsi untuk menambahkan baris total ke lembar kerja
+const tambahkanBarisTotal = (lembarKerja, nama, totalJumlah, totalNilai) => {
+  const barisTotal = lembarKerja.addRow([
+    nama,
+    totalJumlah ? totalJumlah.toString() : "",
+    "",
+    "",
+    totalNilai ? totalNilai.toString() : "",
+    "",
+  ]);
+
+  barisTotal.font = { bold: true };
+  barisTotal.alignment = { horizontal: "left" };
 };
 
 app.get("/generateReport", async (req, res) => {

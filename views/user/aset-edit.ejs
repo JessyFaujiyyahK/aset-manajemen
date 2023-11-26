@@ -17,114 +17,11 @@
   </head>
 
   <body>
-    <nav class="navbar">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img src="/images/logo.png" class="logo-stmik" />
-        </a>
-        <p class="navbar-brand-judul" href="#">Manajemen Aset</p>
-        <div class="user-container">
-          <p class="username"><%= userName %></p>
-          <div class="logout">
-            <a href="/logout" class="btn custom-btn">Logout</a>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <%- include('navbar.ejs') %>
 
     <div class="container-fluid">
       <div class="row">
-        <div class="sidebar">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/dashboard/admin">
-                <img
-                  src="/images/Dashboard.png"
-                  alt="Logo"
-                  class="logo-sidebar"
-                />
-                Dashboard
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/aset/user">
-                <img src="/images/aset.png" alt="Logo" class="logo-sidebar" />
-                Data Aset
-              </a>
-              <ul class="submenu">
-                <li class="nav-item">
-                  <a class="nav-link" href="/aset/user">Aset</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/jenis/user">Jenis</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/nama/aset/user">Nama Aset</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/lokasi/user">Lokasi</a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/laporan/user">
-                <img
-                  src="/images/laporan.png"
-                  alt="Logo"
-                  class="logo-sidebar"
-                />
-                Laporan
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="container-fluid">
-          <div class="row">
-            <div class="sidebar">
-              <ul class="nav flex-column">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/dashboard/admin">
-                    <img
-                      src="/images/Dashboard.png"
-                      alt="Logo"
-                      class="logo-sidebar"
-                    />
-                    Dashboard
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/aset/user">
-                    <img src="/images/aset.png" alt="Logo" class="logo-sidebar" />
-                    Data Aset
-                  </a>
-                  <ul class="submenu">
-                    <li class="nav-item">
-                      <a class="nav-link" href="/aset/user">Aset</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/jenis/user">Jenis</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/nama/aset/user">Nama Aset</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/lokasi/user">Lokasi</a>
-                    </li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/laporan/user">
-                    <img
-                      src="/images/laporan.png"
-                      alt="Logo"
-                      class="logo-sidebar"
-                    />
-                    Laporan
-                  </a>
-                </li>
-              </ul>
-            </div>
+        <%- include('sidebar.ejs') %>
             <div class="col-md-8 content-box mb-5">
               <h2>Edit Data Aset</h2>
               <div class="row">
@@ -181,8 +78,7 @@
                   <div class="form-group">
                     <label for="sumber">sumber :</label>
                     <select id="sumber" name="sumber" class="form-select" required>
-                      <option selected value="<%= sumberLama %>"><%= sumberLama %></option>
-                      <!-- <option selected value=""><%= sumberLama %></option> -->
+                      <option selected value="<%= sumberID %>"><%= namaSumber %></option>
                       <% sumber.forEach(function(sumber) { %>
                       <option value="<%= sumber.id %>">
                         <%= sumber.nama_sumber %>
@@ -209,15 +105,13 @@
                 </div>
               </div>
               <div class="d-flex justify-content-center mt-3">
-                <button type="submit" class="btn btn-primary me-2">Tambah</button>
+                <button type="submit" class="btn btn-primary me-2">Ubah</button>
                 <a href="/aset/user" class="btn btn-secondary">Batal</a>
               </div>
             </form>
             </div>
           </div>
         </div>
-      </div>
-    </div>
     <!-- JS Bootstrap -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

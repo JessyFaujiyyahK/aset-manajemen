@@ -78,8 +78,8 @@
               <div class="form-group">
                 <label for="sumber">sumber :</label>
                 <select id="sumber" name="sumber" class="form-select" required>
-                  <option selected value="<%= sumberLama %>"><%= sumberLama %></option>
-                  <!-- <option selected value=""><%= sumberLama %></option> -->
+                  <option selected value="<%= sumberID %>"><%= namaSumber %></option>
+                  
                   <% sumber.forEach(function(sumber) { %>
                   <option value="<%= sumber.id %>">
                     <%= sumber.nama_sumber %>
@@ -106,7 +106,7 @@
             </div>
           </div>
           <div class="d-flex justify-content-center mt-3">
-            <button type="submit" class="btn btn-primary me-2">Tambah</button>
+            <button type="submit" class="btn btn-primary me-2">Ubah</button>
             <a href="/aset" class="btn btn-secondary">Batal</a>
           </div>
         </form>

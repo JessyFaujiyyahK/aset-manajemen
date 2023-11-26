@@ -53,6 +53,18 @@ body {
   text-align: center;
 }
 
+.custom-btn {
+  /* Your existing styles for the button */
+  display: flex;
+  align-items: center; /* Center items vertically */
+}
+
+.logout-icon {
+  width: 20px; /* Adjust the width as needed */
+  height: auto;
+  margin-right: 5px; /* Adjust the spacing between the icon and text */
+}
+
 /* Responsive rules for smaller screens */
 @media (max-width: 767px) {
   .navbar {
@@ -80,18 +92,16 @@ body {
     margin-left: 0;
   }
 
-  .logout {
-    height: auto;
-    margin-left: 0;
-    margin-top: 10px; /* Adjust the value as needed */
+  .custom-btn {
+    /* Your existing styles for the button */
+    display: flex;
+    align-items: center; /* Center items vertically */
   }
 
-  .custom-btn {
-    background-color: #d9d9d9;
+  .logout-icon {
+    width: 20px; /* Adjust the width as needed */
     height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-right: 5px; /* Adjust the spacing between the icon and text */
   }
 }
 
@@ -351,7 +361,7 @@ tr:nth-child(even) {
 }
 
 .input-group:hover button {
-  background-color: blue;
+  background-color: rgb(53, 53, 202);
   color: white;
 }
 
