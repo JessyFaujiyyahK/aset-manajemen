@@ -146,8 +146,8 @@ app.get("/dashboard/admin", (req, res) => {
       "SELECT l.nama_lokasi AS lokasi, SUM(a.nilai) as total FROM aset a JOIN kategori k ON LEFT(a.id_aset, LOCATE('.', a.id_aset) - 1) = k.id_kategori JOIN lokasi l ON a.id_lokasi = l.id GROUP BY lokasi";
 
     const querySumber =
-      "SELECT s.nama_sumber, SUM(a.jumlah) as total FROM aset a JOIN sumber s ON a.id_sumber = s.id GROUP BY s.nama_sumber";
-
+      // "SELECT s.nama_sumber, SUM(a.jumlah) as total FROM aset a JOIN sumber s ON a.id_sumber = s.id GROUP BY s.nama_sumber";
+      "SELECT l.nama_sumber AS sumber, SUM(a.nilai) as total FROM aset a JOIN kategori k ON LEFT(a.id_aset, LOCATE('.', a.id_aset) - 1) = k.id_kategori JOIN sumber l ON a.id_sumber = l.id GROUP BY sumber";
     const queryTotalAset = "SELECT SUM(jumlah) as totalAset FROM aset";
     const queryTotalNilai = "SELECT SUM(nilai) as totalNilai FROM aset";
 
@@ -1417,7 +1417,8 @@ app.get("/dashboard/user", (req, res) => {
       "SELECT l.nama_lokasi AS lokasi, SUM(a.nilai) as total FROM aset a JOIN kategori k ON LEFT(a.id_aset, LOCATE('.', a.id_aset) - 1) = k.id_kategori JOIN lokasi l ON a.id_lokasi = l.id GROUP BY lokasi";
 
     const querySumber =
-      "SELECT s.nama_sumber, SUM(a.jumlah) as total FROM aset a JOIN sumber s ON a.id_sumber = s.id GROUP BY s.nama_sumber";
+      // "SELECT s.nama_sumber, SUM(a.jumlah) as total FROM aset a JOIN sumber s ON a.id_sumber = s.id GROUP BY s.nama_sumber";
+      "SELECT l.nama_sumber AS sumber, SUM(a.nilai) as total FROM aset a JOIN kategori k ON LEFT(a.id_aset, LOCATE('.', a.id_aset) - 1) = k.id_kategori JOIN sumber l ON a.id_sumber = l.id GROUP BY sumber";
 
     const queryTotalAset = "SELECT SUM(jumlah) as totalAset FROM aset";
     const queryTotalNilai = "SELECT SUM(nilai) as totalNilai FROM aset";

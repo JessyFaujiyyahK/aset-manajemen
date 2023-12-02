@@ -70,119 +70,118 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var ctxKategori = document.getElementById('assetChartKategori').getContext('2d');
-            var dataKategori = <%- JSON.stringify(dataKategori) %>;
-            var labelsKategori = dataKategori.map(item => item.nama_kategori);
-            var valuesKategori = dataKategori.map(item => item.total);
+            document.addEventListener("DOMContentLoaded", function() {
+                var ctxKategori = document.getElementById('assetChartKategori').getContext('2d');
+                var dataKategori = <%- JSON.stringify(dataKategori) %>;
+                var labelsKategori = dataKategori.map(item => item.nama_kategori);
+                var valuesKategori = dataKategori.map(item => item.total);
 
-            var backgroundColorsKategori = generateRandomColors(dataKategori.length);
+                var backgroundColorsKategori = generateRandomColors(dataKategori.length);
 
-            var assetChartKategori = new Chart(ctxKategori, {
-            type: 'bar',
-            data: {
-            labels: labelsKategori,
-            datasets: [{
-              data: valuesKategori,
-              backgroundColor: backgroundColorsKategori,
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1
-            }]
-          },
-            options: {
-            plugins: {
+                var assetChartKategori = new Chart(ctxKategori, {
+                type: 'bar',
+                data: {
+                labels: labelsKategori,
+                datasets: [{
+                  data: valuesKategori,
+                  backgroundColor: backgroundColorsKategori,
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+                }]
+              },
+                options: {
+                plugins: {
+                title: {
+                  display: true,
+                  text: 'Jumlah Aset per Kategori'
+                },
+                  legend: {
+                  display: false, // Menyembunyikan legend
+                }
+              }
+            }
+          });
+
+
+
+                var ctxNilaiLokasi = document.getElementById('assetChartNilaiLokasi').getContext('2d');
+                var dataNilaiLokasi = <%- JSON.stringify(dataNilaiLokasi) %>;
+                var labelsNilaiLokasi = dataNilaiLokasi.map(item => item.lokasi);
+                var valuesNilaiLokasi = dataNilaiLokasi.map(item => item.total);
+
+                var backgroundColorsNilaiLokasi = generateRandomColors(dataNilaiLokasi.length);
+
+                var assetChartNilaiLokasi = new Chart(ctxNilaiLokasi, {
+                  type: 'line',
+                  data: {
+                    labels: labelsNilaiLokasi,
+                    datasets: [{
+                      // label: 'Nilai Aset per Lokasi',
+                      data: valuesNilaiLokasi,
+                      backgroundColor: backgroundColorsNilaiLokasi,
+                      borderColor: 'rgba(255, 99, 132, 1)',
+                      borderWidth: 1
+                    }]
+                  },
+                  options: {
+                    plugins: {
+                      title: {
+                        display: true,
+                        text: 'Nilai Aset per Lokasi'
+                      },
+                      legend: {
+                      display: false, // Menyembunyikan legend
+                    }
+                    }
+                  }
+                });
+
+                var ctxSumber = document.getElementById('assetChartSumber').getContext('2d');
+                var dataSumber = <%- JSON.stringify(dataSumber) %>;
+
+                var labelsSumber = dataSumber.map(item => item.sumber);
+                var valuesSumber = dataSumber.map(item => item.total);
+
+                var backgroundColorsSumber = generateRandomColors(dataSumber.length);
+
+                var assetChartSumber = new Chart(ctxSumber, {
+        type: 'pie',
+        data: {
+          labels: labelsSumber,
+          datasets: [{
+            data: valuesSumber,
+            backgroundColor: backgroundColorsSumber,
+            borderColor: backgroundColorsSumber,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
             title: {
               display: true,
-              text: 'Jumlah Aset per Kategori'
+              text: 'Jumlah Aset per Sumber'
             },
-              legend: {
+            legend: {
               display: false, // Menyembunyikan legend
             }
           }
         }
       });
-
-
-
-            var ctxNilaiLokasi = document.getElementById('assetChartNilaiLokasi').getContext('2d');
-            var dataNilaiLokasi = <%- JSON.stringify(dataNilaiLokasi) %>;
-            var labelsNilaiLokasi = dataNilaiLokasi.map(item => item.lokasi);
-            var valuesNilaiLokasi = dataNilaiLokasi.map(item => item.total);
-
-            var backgroundColorsNilaiLokasi = generateRandomColors(dataNilaiLokasi.length);
-
-            var assetChartNilaiLokasi = new Chart(ctxNilaiLokasi, {
-              type: 'line',
-              data: {
-                labels: labelsNilaiLokasi,
-                datasets: [{
-                  // label: 'Nilai Aset per Lokasi',
-                  data: valuesNilaiLokasi,
-                  backgroundColor: backgroundColorsNilaiLokasi,
-                  borderColor: 'rgba(255, 99, 132, 1)',
-                  borderWidth: 1
-                }]
-              },
-              options: {
-                plugins: {
-                  title: {
-                    display: true,
-                    text: 'Nilai Aset per Lokasi'
-                  },
-                  legend: {
-                  display: false, // Menyembunyikan legend
+                // Fungsi untuk menghasilkan warna acak
+                function generateRandomColors(count) {
+                  var colors = [];
+                  for (var i = 0; i < count; i++) {
+                    var color = 'rgba(' + getRandomInt(0, 255) + ',' + getRandomInt(0, 255) + ',' + getRandomInt(0, 255) + ', 0.2)';
+                    colors.push(color);
+                  }
+                  return colors;
                 }
+
+                // Fungsi untuk mendapatkan angka bulat acak
+                function getRandomInt(min, max) {
+                  return Math.floor(Math.random() * (max - min + 1)) + min;
                 }
-              }
-            });
-
-            var ctxSumber = document.getElementById('assetChartSumber').getContext('2d');
-            var dataSumber = <%- JSON.stringify(dataSumber) %>;
-
-            var labelsSumber = dataSumber.map(item => item.sumber);
-            var valuesSumber = dataSumber.map(item => item.total);
-
-            var backgroundColorsSumber = generateRandomColors(dataSumber.length);
-
-            var assetChartSumber = new Chart(ctxSumber, {
-              type: 'pie',
-              data: {
-                labels: labelsSumber,
-                datasets: [{
-                  data: valuesSumber,
-                  backgroundColor: backgroundColorsSumber,
-                  borderColor: backgroundColorsSumber,
-                  borderWidth: 1
-                }]
-              },
-              options: {
-                plugins: {
-                  title: {
-                    display: true,
-                    text: 'Jumlah Aset per Sumber'
-                  },
-              legend: {
-              display: false, // Menyembunyikan legend
-            }
-                }
-              }
-            });
-
-            // Fungsi untuk menghasilkan warna acak
-            function generateRandomColors(count) {
-              var colors = [];
-              for (var i = 0; i < count; i++) {
-                var color = 'rgba(' + getRandomInt(0, 255) + ',' + getRandomInt(0, 255) + ',' + getRandomInt(0, 255) + ', 0.2)';
-                colors.push(color);
-              }
-              return colors;
-            }
-
-            // Fungsi untuk mendapatkan angka bulat acak
-            function getRandomInt(min, max) {
-              return Math.floor(Math.random() * (max - min + 1)) + min;
-            }
-          });
+              });
     </script>
   </body>
 </html>
