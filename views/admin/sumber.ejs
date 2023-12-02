@@ -12,7 +12,7 @@
     />
     <!-- Datatable CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <!-- <link rel="stylesheet" href="/css/admin-aset.css" /> -->
+    <link rel="icon" href="/images/logo2.png" type="image/x-icon" />
     <link rel="stylesheet" href="/css/style.css" />
   </head>
 
@@ -43,7 +43,7 @@
                   <tr>
                     <td><%= sumber.nama_sumber %></td>
                     <td><a href="/sumber/edit/<%= sumber.id %>" class="btn btn-sm btn-primary">Edit</a>
-                      <a onclick="return confirm('Apakah Anda yakin mau dihapus?')" href="/sumber/delete/<%= sumber.id %>" class="btn btn-sm btn-danger">Hapus</a></td>
+                      <a onclick="return confirm('Apakah Anda yakin akan menghapus data ini?')" href="/sumber/delete/<%= sumber.id %>" class="btn btn-sm btn-danger">Hapus</a></td>
                   </tr>
               <% }); %>
             </tbody>

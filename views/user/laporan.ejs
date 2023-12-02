@@ -12,7 +12,7 @@
     />
        <!-- Datatable CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <!-- <link rel="stylesheet" href="/css/admin-aset.css" /> -->
+    <link rel="icon" href="/images/logo2.png" type="image/x-icon" />
     <link rel="stylesheet" href="/css/style.css" />
     
   </head>
@@ -41,7 +41,7 @@
             </thead>
             <tbody>
               <% aset.forEach(function(aset) { %>
-                <tr data-href="/aset/detail/<%= aset.id %>">
+                <tr data-href="/aset/detail/user/<%= aset.id %>">
                     <td><%= aset.id_aset %></td>
                     <td><%= aset.nama_aset %></td>
                     <td><%= aset.jumlah %></td>
@@ -55,7 +55,7 @@
           </table>
 
           <form action="/generateReport" method="get">
-            <h6>Generate Laporan</h6>
+            <h6>Buat Laporan Data Aset</h6>
           
             <!-- Pilihan untuk memilih laporan berdasarkan lokasi, jenis, atau kategori -->
             <label for="laporan">Pilih Laporan Berdasarkan:</label>
@@ -76,7 +76,7 @@
   
           
             <!-- Tombol Submit -->
-            <button type="submit">Download Excel</button>
+            <button type="submit">Download</button>
           </form>
           
         </div>

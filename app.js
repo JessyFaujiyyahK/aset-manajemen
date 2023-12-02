@@ -95,25 +95,13 @@ app.post("/auth-mhs", (req, res) => {
             res.redirect("/dashboard/user");
           }
         } else {
-          res.send(`
-          <html>
-          <head>
-            <title>Login Failed</title>
-            <style>
-              .alert {
-                padding: 15px;
-                background-color: #f44336;
-                color: white;
-              }
-              .nostyle {
-                text-decoration: none;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="alert">Login Failed. Please <a href="/" class="nostyle">try again</a>.</div>
-          </body>
-          </html>
+          const failureMessage = "Login Failed. Please try again.";
+
+          return res.send(`
+    <script>
+      alert("${failureMessage}");
+      window.location.href = "/";
+    </script>
         `);
 
           // res.redirect("/");
@@ -397,26 +385,44 @@ app.get("/kategori/tambah", (req, res) => {
 app.post("/kategori/tambah", (req, res) => {
   if (req.session.isadmin) {
     const { kategori } = req.body;
-    const checkQuery = `SELECT * FROM kategori WHERE nama_kategori = '${kategori}'`;
-    const sql = `SELECT * FROM kategori WHERE nama_kategori = '${kategori}';SELECT MAX(id_kategori) AS lastIdKategori FROM kategori`;
-    connection.query(sql, (error, results, fields) => {
+    const checkQuery = `SELECT * FROM kategori WHERE nama_kategori = ?`;
+    const sql = `SELECT * FROM kategori WHERE nama_kategori = ?; SELECT MAX(id_kategori) AS lastIdKategori FROM kategori`;
+
+    connection.query(sql, [kategori, kategori], (error, results, fields) => {
       if (error) throw error;
 
       if (results[0].length > 0) {
-        // Jika kategori sudah ada, kirim tanggapan ke client
-        res.status(400).json({ message: "Category already exists!" });
+        // Jika kategori sudah ada, kirim tanggapan ke client dengan alert
+        const errorMessage = "Kategori sudah ada! Tidak dapat menambahkan.";
+        return res.send(`
+          <script>
+            alert("${errorMessage}");
+            window.location.href = "/kategori";
+          </script>
+        `);
       } else {
         const lastIdKategori = results[1][0].lastIdKategori || 0;
         const idkategori = parseInt(lastIdKategori) + 1;
         console.log(idkategori);
-        const insertQuery = `INSERT INTO kategori (id_kategori, nama_kategori) VALUES (${parseInt(
-          idkategori
-        )}, '${kategori}')`;
-        connection.query(insertQuery, (error, results, fields) => {
-          if (error) throw error;
-          console.log("Category added successfully!");
-          res.redirect("/kategori");
-        });
+        const insertQuery = `INSERT INTO kategori (id_kategori, nama_kategori) VALUES (?, ?)`;
+
+        connection.query(
+          insertQuery,
+          [idkategori, kategori],
+          (error, results, fields) => {
+            if (error) throw error;
+            console.log("Kategori berhasil ditambahkan!");
+
+            // Jika berhasil tambah kategori, kirim tanggapan ke client dengan alert
+            const successMessage = "Kategori berhasil ditambahkan!";
+            return res.send(`
+            <script>
+              alert("${successMessage}");
+              window.location.href = "/kategori";
+            </script>
+          `);
+          }
+        );
       }
     });
   }
@@ -443,76 +449,94 @@ app.post("/kategori/edit/:id", (req, res) => {
   const categoryId = req.params.id;
   const { idkategori, kategori } = req.body;
 
-  // Check if the new idkategori or kategori already exists in the database
-  const checkExistingQuery = `SELECT * FROM kategori WHERE (id_kategori = ${idkategori} OR nama_kategori = '${kategori}') AND id_kategori != ${categoryId}`;
+  // Periksa apakah idkategori atau kategori baru sudah ada di database
+  const checkExistingQuery = `SELECT * FROM kategori WHERE (id_kategori = ? OR nama_kategori = ?) AND id_kategori != ?`;
 
-  connection.query(checkExistingQuery, (error, results) => {
-    if (error) {
-      const errorMessage = "Terjadi kesalahan pada server.";
-      return res.send(`
+  connection.query(
+    checkExistingQuery,
+    [idkategori, kategori, categoryId],
+    (error, results) => {
+      if (error) {
+        const errorMessage = "Terjadi kesalahan pada server.";
+        return res.send(`
         <script>
           alert("${errorMessage}");
           window.location.href = "/kategori";
         </script>
       `);
-    }
+      }
 
-    if (results.length > 0) {
-      // New idkategori or kategori already exists, return an error message
-      const errorMessage = "Nama Kategori sudah digunakan";
-      return res.send(`
+      if (results.length > 0) {
+        // Idkategori atau kategori baru sudah ada, kembalikan pesan kesalahan
+        const errorMessage = "Nama Kategori sudah digunakan";
+        return res.send(`
         <script>
           alert("${errorMessage}");
           window.location.href = "/kategori";
         </script>
       `);
-    } else {
-      // Check if the category is associated with jenis or nama aset
-      const checkAssociationQuery = `SELECT * FROM jenis WHERE id_kategori = ${categoryId} OR id_kategori = ${idkategori}`;
+      } else {
+        // Periksa apakah kategori terkait dengan jenis atau nama aset
+        const checkAssociationQuery = `SELECT * FROM jenis WHERE id_kategori = ? OR id_kategori = ?`;
 
-      connection.query(checkAssociationQuery, (error, results) => {
-        if (error) {
-          const errorMessage = "Terjadi kesalahan pada server.";
-          return res.send(`
-            <script>
-              alert("${errorMessage}");
-              window.location.href = "/kategori";
-            </script>
-          `);
-        }
-
-        if (results.length > 0) {
-          // Category is associated with jenis or nama aset, return an error message
-          const errorMessage =
-            "Kategori terhubung dengan jenis atau nama aset dan tidak dapat diedit.";
-          return res.send(`
-            <script>
-              alert("${errorMessage}");
-              window.location.href = "/kategori";
-            </script>
-          `);
-        } else {
-          // Category is not associated, proceed with the update
-          const updateQuery = `UPDATE kategori SET id_kategori = ${idkategori}, nama_kategori = '${kategori}' WHERE id_kategori = ${categoryId}`;
-
-          connection.query(updateQuery, (error, results) => {
+        connection.query(
+          checkAssociationQuery,
+          [categoryId, idkategori],
+          (error, results) => {
             if (error) {
-              const errorMessage = "Gagal mengedit kategori.";
+              const errorMessage = "Terjadi kesalahan pada server.";
               return res.send(`
+            <script>
+              alert("${errorMessage}");
+              window.location.href = "/kategori";
+            </script>
+          `);
+            }
+
+            if (results.length > 0) {
+              // Kategori terkait dengan jenis atau nama aset, kembalikan pesan kesalahan
+              const errorMessage =
+                "Kategori terhubung dengan jenis atau nama aset dan tidak dapat diedit.";
+              return res.send(`
+            <script>
+              alert("${errorMessage}");
+              window.location.href = "/kategori";
+            </script>
+          `);
+            } else {
+              // Kategori tidak terkait, lanjutkan dengan pembaruan
+              const updateQuery = `UPDATE kategori SET id_kategori = ?, nama_kategori = ? WHERE id_kategori = ?`;
+
+              connection.query(
+                updateQuery,
+                [idkategori, kategori, categoryId],
+                (error, results) => {
+                  if (error) {
+                    const errorMessage = "Gagal mengedit kategori.";
+                    return res.send(`
                 <script>
                   alert("${errorMessage}");
                   window.location.href = "/kategori";
                 </script>
               `);
-            }
+                  }
 
-            console.log("Category updated successfully!");
-            res.redirect("/kategori");
-          });
-        }
-      });
+                  console.log("Kategori berhasil diperbarui!");
+                  const successMessage = "Kategori berhasil diperbarui!";
+                  return res.send(`
+              <script>
+                alert("${successMessage}");
+                window.location.href = "/kategori";
+              </script>
+            `);
+                }
+              );
+            }
+          }
+        );
+      }
     }
-  });
+  );
 });
 
 // Handle GET request to delete a category
@@ -524,7 +548,7 @@ app.get("/kategori/delete/:id", (req, res) => {
       // Periksa apakah pesan kesalahan terkait dengan foreign key constraint
       if (error.errno === 1451) {
         const errorMessage =
-          "Baris ini tidak dapat dihapus karena memiliki ketergantungan dengan tabel lain.";
+          "Kategori ini tidak dapat dihapus karena memiliki ketergantungan dengan data lain.";
         res.send(`
           <script>
             alert("${errorMessage}");
@@ -608,7 +632,7 @@ app.post("/jenis/tambah", (req, res) => {
     }
 
     if (results.length > 0) {
-      const errorMessage = "Jenis sudah ada di database.";
+      const errorMessage = "Jenis sudah ada! Tidak dapat menambahkan.";
       return res.send(`
         <script>
           alert("${errorMessage}");
@@ -648,7 +672,7 @@ app.post("/jenis/tambah", (req, res) => {
             </script>
           `);
         } else {
-          const successMessage = "Jenis berhasil ditambahkan ke database.";
+          const successMessage = "Jenis berhasil ditambahkan.";
           return res.send(`
             <script>
               alert("${successMessage}");
@@ -681,15 +705,71 @@ app.get("/jenis/edit/:id", (req, res) => {
 // Endpoint untuk menangani pengeditan jenis
 app.post("/jenis/edit", (req, res) => {
   const { jenis, idJenis } = req.body;
-  const query = `UPDATE jenis SET nama_jenis = '${jenis}' WHERE id_jenis = ${idJenis}`;
 
-  connection.query(query, (error, results, fields) => {
+  // Periksa apakah jenis baru sudah ada di database
+  const checkExistingQuery = `SELECT * FROM jenis WHERE nama_jenis = ? AND id_jenis != ?`;
+
+  connection.query(checkExistingQuery, [jenis, idJenis], (error, results) => {
     if (error) {
-      // return res.status(500).send("Gagal mengedit jenis");
-      throw error;
+      const errorMessage = "Terjadi kesalahan pada server.";
+      return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/jenis";
+        </script>
+      `);
     }
 
-    res.redirect("/jenis");
+    if (results.length > 0) {
+      // Jenis baru sudah ada, kirim pesan kesalahan
+      const errorMessage = "Nama jenis sudah digunakan.";
+      return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/jenis";
+        </script>
+      `);
+    } else {
+      // Jenis baru belum ada, lanjutkan dengan perintah UPDATE
+      const updateQuery = `UPDATE jenis SET nama_jenis = ? WHERE id_jenis = ?`;
+
+      connection.query(
+        updateQuery,
+        [jenis, idJenis],
+        (error, results, fields) => {
+          if (error) {
+            const errorMessage = "Gagal mengedit jenis.";
+            return res.send(`
+            <script>
+              alert("${errorMessage}");
+              window.location.href = "/jenis";
+            </script>
+          `);
+          }
+
+          // Periksa apakah ada baris yang terpengaruh (apakah jenis berhasil diupdate)
+          if (results.affectedRows > 0) {
+            // Jika berhasil diupdate, kirim pesan keberhasilan
+            const successMessage = "Jenis berhasil diperbarui!";
+            return res.send(`
+            <script>
+              alert("${successMessage}");
+              window.location.href = "/jenis";
+            </script>
+          `);
+          } else {
+            // Jika tidak ada baris yang terpengaruh, kirim pesan bahwa jenis tidak ditemukan
+            const errorMessage = "Jenis tidak ditemukan.";
+            return res.send(`
+            <script>
+              alert("${errorMessage}");
+              window.location.href = "/jenis";
+            </script>
+          `);
+          }
+        }
+      );
+    }
   });
 });
 
@@ -701,7 +781,7 @@ app.get("/jenis/delete/:id", (req, res) => {
       // Periksa apakah pesan kesalahan terkait dengan foreign key constraint
       if (error.errno === 1451) {
         const errorMessage =
-          "Baris ini tidak dapat dihapus karena memiliki ketergantungan dengan tabel lain.";
+          "Jenis ini tidak dapat dihapus karena memiliki ketergantungan dengan data lain.";
         res.send(`
           <script>
             alert("${errorMessage}");
@@ -986,7 +1066,7 @@ app.post("/lokasi/tambah", (req, res) => {
 
       if (results.length > 0) {
         // Location already exists, return an error message
-        const errorMessage = "Lokasi sudah ada di database.";
+        const errorMessage = "Lokasi sudah ada.";
         return res.send(`
           <script>
             alert("${errorMessage}");
@@ -1268,14 +1348,38 @@ app.post("/sumber/edit/:id", (req, res) => {
 
 app.get("/sumber/delete/:id", (req, res) => {
   const sumberId = req.params.id;
-  // Hapus data lokasi berdasarkan ID
+
+  // Periksa apakah sumber terhubung dengan data di database lain (misalnya, tabel lain)
+  const checkAssociationQuery = "SELECT * FROM aset WHERE id_sumber = ?";
+
   connection.query(
-    "DELETE FROM sumber WHERE id = ?",
+    checkAssociationQuery,
     [sumberId],
     (error, results, fields) => {
       if (error) throw error;
-      // Redirect ke halaman lokasi setelah menghapus data
-      res.redirect("/sumber");
+
+      if (results.length > 0) {
+        // Sumber terhubung dengan data di database lain, kirim pesan kesalahan
+        const errorMessage =
+          "Sumber terhubung dengan data di database lain dan tidak dapat dihapus.";
+        return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/sumber";
+        </script>
+      `);
+      } else {
+        // Tidak ada hubungan dengan data di database lain, lanjutkan dengan menghapus sumber
+        connection.query(
+          "DELETE FROM sumber WHERE id = ?",
+          [sumberId],
+          (error, results, fields) => {
+            if (error) throw error;
+            // Redirect ke halaman sumber setelah menghapus data
+            res.redirect("/sumber");
+          }
+        );
+      }
     }
   );
 });
@@ -1581,7 +1685,7 @@ app.post("/jenis/tambah/user", (req, res) => {
     }
 
     if (results.length > 0) {
-      const errorMessage = "Jenis sudah ada di database.";
+      const errorMessage = "Jenis sudah ada! Tidak dapat menambahkan.";
       return res.send(`
         <script>
           alert("${errorMessage}");
@@ -1621,7 +1725,7 @@ app.post("/jenis/tambah/user", (req, res) => {
             </script>
           `);
         } else {
-          const successMessage = "Jenis berhasil ditambahkan ke database.";
+          const successMessage = "Jenis berhasil ditambahkan.";
           return res.send(`
             <script>
               alert("${successMessage}");
@@ -1654,15 +1758,71 @@ app.get("/jenis/edit/user/:id", (req, res) => {
 // Endpoint untuk menangani pengeditan jenis
 app.post("/jenis/edit/user", (req, res) => {
   const { jenis, idJenis } = req.body;
-  const query = `UPDATE jenis SET nama_jenis = '${jenis}' WHERE id_jenis = ${idJenis}`;
 
-  connection.query(query, (error, results, fields) => {
+  // Periksa apakah jenis baru sudah ada di database
+  const checkExistingQuery = `SELECT * FROM jenis WHERE nama_jenis = ? AND id_jenis != ?`;
+
+  connection.query(checkExistingQuery, [jenis, idJenis], (error, results) => {
     if (error) {
-      // return res.status(500).send("Gagal mengedit jenis");
-      throw error;
+      const errorMessage = "Terjadi kesalahan pada server.";
+      return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/jenis/user";
+        </script>
+      `);
     }
 
-    res.redirect("/jenis/user");
+    if (results.length > 0) {
+      // Jenis baru sudah ada, kirim pesan kesalahan
+      const errorMessage = "Nama jenis sudah digunakan.";
+      return res.send(`
+        <script>
+          alert("${errorMessage}");
+          window.location.href = "/jenis/user";
+        </script>
+      `);
+    } else {
+      // Jenis baru belum ada, lanjutkan dengan perintah UPDATE
+      const updateQuery = `UPDATE jenis SET nama_jenis = ? WHERE id_jenis = ?`;
+
+      connection.query(
+        updateQuery,
+        [jenis, idJenis],
+        (error, results, fields) => {
+          if (error) {
+            const errorMessage = "Gagal mengedit jenis.";
+            return res.send(`
+            <script>
+              alert("${errorMessage}");
+              window.location.href = "/jenis/user";
+            </script>
+          `);
+          }
+
+          // Periksa apakah ada baris yang terpengaruh (apakah jenis berhasil diupdate)
+          if (results.affectedRows > 0) {
+            // Jika berhasil diupdate, kirim pesan keberhasilan
+            const successMessage = "Jenis berhasil diperbarui!";
+            return res.send(`
+            <script>
+              alert("${successMessage}");
+              window.location.href = "/jenis/user";
+            </script>
+          `);
+          } else {
+            // Jika tidak ada baris yang terpengaruh, kirim pesan bahwa jenis tidak ditemukan
+            const errorMessage = "Jenis tidak ditemukan.";
+            return res.send(`
+            <script>
+              alert("${errorMessage}");
+              window.location.href = "/jenis/user";
+            </script>
+          `);
+          }
+        }
+      );
+    }
   });
 });
 
@@ -1674,7 +1834,7 @@ app.get("/jenis/delete/user/:id", (req, res) => {
       // Periksa apakah pesan kesalahan terkait dengan foreign key constraint
       if (error.errno === 1451) {
         const errorMessage =
-          "Baris ini tidak dapat dihapus karena memiliki ketergantungan dengan tabel lain.";
+          "Jenis ini tidak dapat dihapus karena memiliki ketergantungan dengan data lain.";
         res.send(`
           <script>
             alert("${errorMessage}");
@@ -1880,7 +2040,7 @@ app.get("/nama/aset/delete/user/:id", (req, res) => {
     // Jika masih ada keterkaitan data, beri pesan kesalahan ke pengguna
     if (checkResults.length > 0) {
       const errorMessage =
-        "Nama aset tidak dapat dihapus karena masih digunakan di tempat lain.";
+        "Tidak dapat menghapus data karena masih terdapat aset terkait.";
       res.send(`
         <script>
           alert("${errorMessage}");
@@ -1973,7 +2133,7 @@ app.post("/lokasi/tambah/user", (req, res) => {
 
       if (results.length > 0) {
         // Location already exists, return an error message
-        const errorMessage = "Lokasi sudah ada di database.";
+        const errorMessage = "Lokasi sudah ada.";
         return res.send(`
           <script>
             alert("${errorMessage}");
@@ -2463,7 +2623,7 @@ app.get("/generateReport", async (req, res) => {
         "Nama Aset",
         "Jumlah",
         "Nilai",
-        "Dibuat pada",
+        "Tanggal Tambah",
       ];
       templateFileName = "perLokasi";
     } else if (laporan === "kategori") {
@@ -2487,7 +2647,8 @@ app.get("/generateReport", async (req, res) => {
         "Nama Aset",
         "Jumlah",
         "Nilai",
-        "Dibuat pada",
+        "Tanggal Tambah",
+        ,
       ];
       templateFileName = "perKategori";
     } else if (laporan === "jenis") {
@@ -2511,7 +2672,8 @@ app.get("/generateReport", async (req, res) => {
         "Nama Aset",
         "Jumlah",
         "Nilai",
-        "Dibuat pada",
+        "Tanggal Tambah",
+        ,
       ];
       templateFileName = "perJenis";
     } else {

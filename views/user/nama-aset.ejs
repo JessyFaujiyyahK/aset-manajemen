@@ -12,7 +12,7 @@
     />
     <!-- Datatable CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <!-- <link rel="stylesheet" href="/css/admin-aset.css" /> -->
+    <link rel="icon" href="/images/logo2.png" type="image/x-icon" />
     <link rel="stylesheet" href="/css/style.css" />
   </head>
 
@@ -51,7 +51,7 @@
                               <!-- Tambahkan tombol edit dan hapus sesuai kebutuhan -->
                               <a href="/nama/aset/edit/user/<%= aset.id_aset %>" class="btn btn-sm btn-primary">Edit</a>
                               <!-- Tambahkan tombol hapus dengan menggunakan form untuk mengonfirmasi penghapusan -->
-                              <a onclick="return confirm('Anda yakin akan menghapus data ini?')" href="/nama/aset/delete/user/<%= aset.id_aset %>" class="btn btn-sm btn-danger">Hapus</a>
+                              <a onclick="return confirm('Apakah Anda yakin akan menghapus data ini?')" href="/nama/aset/delete/user/<%= aset.id_aset %>" class="btn btn-sm btn-danger">Hapus</a>
                           </td>
                       </tr>
                   <% }); %>
